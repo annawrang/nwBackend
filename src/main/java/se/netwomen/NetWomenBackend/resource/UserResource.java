@@ -35,17 +35,18 @@ public class UserResource {
     }
 
     // Ska ej användas pga säkerhet, använd POST istället för att få användare när lösen och känslig data skickas
-//    @GET
-//    public Response getUserByUsernameAndPassword(@QueryParam("userName") String userName,
-//                                                 @QueryParam("password") String password) {
-//        Optional<User> user = service.findByUserNameAndPassword(userName, password);
-//        if (user.isPresent()) {
-//            return Response.ok(user.get())
-//                    .build();
-//        } else {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }
-//    }
+    @GET
+    public Response getUserByUsernameAndPassword(@QueryParam("userName") String userName,
+                                                 @QueryParam("password") String password) {
+        Optional<User> user = service.findByUserNameAndPassword(userName, password);
+        if (user.isPresent()) {
+            String setCookie = createSetCookie(userName, password);
+            return Response.ok(user.get())
+                    .header("Set-Cookie", "").build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 
     // Ska ersätta GET ovan, pga säkerhet används POST när man skickar känslig data
     @POST
@@ -67,5 +68,11 @@ public class UserResource {
         service.save(user);
         return Response.ok()
                 .build();
+    }
+
+    // Här skapas Set-Cookie
+    private String createSetCookie(String userName, String password) {
+        String cookie = "name=" + userName + password + ";";
+        return cookie;
     }
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-public class Comment {
+public class PostLike {
     @Id
     @GeneratedValue
     private Long id;
@@ -12,14 +12,14 @@ public class Comment {
     private User user;
     @ManyToOne
     private Post post;
-    private String text;
-    private Timestamp creationTimestamp;
+    private Timestamp timestamp; // Måste läggas till & sättas i konstruktor
 
-    public Comment(User user, Post post, String text) {
+    public PostLike(User user, Post post) {
         this.user = user;
         this.post = post;
-        this.text = text;
     }
+
+    protected PostLike(){}
 
     public Long getId() {
         return id;
@@ -33,13 +33,7 @@ public class Comment {
         return post;
     }
 
-    public String getText() {
-        return text;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
-
-    public Timestamp getCreationTimestamp() {
-        return creationTimestamp;
-    }
-
-    protected Comment(){}
 }
