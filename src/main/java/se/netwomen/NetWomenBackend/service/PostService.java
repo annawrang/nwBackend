@@ -1,7 +1,6 @@
 package se.netwomen.NetWomenBackend.service;
 
 import org.glassfish.jersey.internal.guava.Lists;
-import org.hibernate.MultiIdentifierLoadAccess;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete;
@@ -10,13 +9,13 @@ import se.netwomen.NetWomenBackend.repository.DTO.PostLikeRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.PostRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.UserRepository;
 import se.netwomen.NetWomenBackend.resource.param.PostParam;
+import se.netwomen.NetWomenBackend.service.Parsers.PostParser;
 
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PostService {

@@ -1,4 +1,4 @@
-package se.netwomen.NetWomenBackend.service;
+package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete;

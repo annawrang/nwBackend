@@ -36,6 +36,7 @@ public class PostResource {
     @GET
     public Response getPosts(@BeanParam PostParam param){
 //        if(postService.validateCookie(requestHeaders)) {
+
             List<PostComplete> posts = postService.getPostsAndLikes(param);
 
             return Response.ok(posts).build();

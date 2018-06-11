@@ -18,6 +18,7 @@ public class JerseyConfig extends ResourceConfig{
         register(PostResource.class);
     }
 
+    // To enable CORS
     @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
