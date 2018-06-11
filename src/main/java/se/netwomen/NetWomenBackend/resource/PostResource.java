@@ -31,7 +31,7 @@ public class PostResource {
 
         return Response.ok().build();
     }
-
+    //Test claudia
     // Paging, vilken sida + antal per sida (default 10 per sida)
     @GET
     public Response getPosts(@BeanParam PostParam param){
