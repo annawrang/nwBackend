@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.repository.DTO.UserRepository;
 
+import javax.ws.rs.core.NewCookie;
 import java.util.Optional;
 
 @Service
@@ -26,5 +27,13 @@ public class UserService {
 
     public Optional<User> findById(Long id) {
         return repository.findById(id);
+    }
+
+    public void setCookie(String userName, String password, NewCookie cookie) {
+        Optional<User> optionalUser = repository.findByUserNameAndPassword(userName, password);
+        if (optionalUser.isPresent()){
+            optionalUser.get().setCookie(cookie);
+            repository.save(optionalUser.get());
+        }
     }
 }

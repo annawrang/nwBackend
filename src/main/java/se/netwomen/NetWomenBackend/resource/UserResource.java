@@ -7,8 +7,10 @@ import se.netwomen.NetWomenBackend.service.UserService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @Path("users")
@@ -23,47 +25,40 @@ public class UserResource {
         this.service = userService;
     }
 
-    @GET
-    @Path("{id}")
-    public Response getUserById(@PathParam("id") Long id) {
-        Optional<User> user = service.findById(id);
-        if (user.isPresent()) {
-            return Response.ok(user.get()).header("Access-Control-Allow-Origin", "*").build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
 
     // Ska ej användas pga säkerhet, använd POST istället för att få användare när lösen och känslig data skickas
     @GET
+    @Path("authenticate")
     public Response getUserByUsernameAndPassword(@QueryParam("userName") String userName,
                                                  @QueryParam("password") String password) {
+
         Optional<User> user = service.findByUserNameAndPassword(userName, password);
         if (user.isPresent()) {
-            String setCookie = createSetCookie(userName, password);
+            NewCookie setCookie = createSetCookie(userName, password);
             return Response.ok(user.get())
-                    .header("Set-Cookie", "").build();
+                    .cookie(setCookie).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
 
     // Ska ersätta GET ovan, pga säkerhet används POST när man skickar känslig data
-    @POST
-    public Response getUserByUserNameAndPasswordSafely(@QueryParam("userName") String userName,
-                                                       @QueryParam("password") String password){
-        Optional<User> user = service.findByUserNameAndPassword(userName, password);
-        if (user.isPresent()) {
-            return Response.ok(user.get())
-                    .build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
+//    @POST
+//    @Path("authenticate")
+//    public Response getUserByUserNameAndPasswordSafely(@QueryParam("userName") String userName,
+//                                                       @QueryParam("password") String password){
+//        Optional<User> user = service.findByUserNameAndPassword(userName, password);
+//        if (user.isPresent()) {
+//            return Response.ok(user.get())
+//                    .build();
+//        } else {
+//            return Response.status(Response.Status.NOT_FOUND).build();
+//        }
+//    }
 
-    // den heter det sålänge, för att kunna skiljas från metoden ovan
+    // skapar en ny användare
     @POST
-    @Path("create")
     public Response createNewUser(User user) {
         service.save(user);
         return Response.ok()
@@ -71,8 +66,11 @@ public class UserResource {
     }
 
     // Här skapas Set-Cookie
-    private String createSetCookie(String userName, String password) {
-        String cookie = "name=" + userName + password + ";";
-        return cookie;
+    private NewCookie createSetCookie(String userName, String password) {
+        UUID uuid = UUID.randomUUID();
+        String cookie = userName + uuid;
+        NewCookie newCookie = new NewCookie("name", cookie, "/", "", "comment", 100, false);
+        service.setCookie(userName, password, newCookie);
+        return newCookie;
     }
 }

@@ -5,7 +5,7 @@ import javax.ws.rs.QueryParam;
 
 public final class PostParam {
 
-    @QueryParam("page")
+    @QueryParam("page") @DefaultValue("1")
     public Integer page;
 
     @QueryParam("numbersPerPage") @DefaultValue("10")

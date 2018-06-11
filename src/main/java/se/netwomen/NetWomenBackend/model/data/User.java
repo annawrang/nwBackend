@@ -3,6 +3,8 @@ package se.netwomen.NetWomenBackend.model.data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.ws.rs.core.NewCookie;
 
 @Entity
 public class User {
@@ -14,6 +16,7 @@ public class User {
     private String userName;
     private String email;
     private String password;
+    private String cookie;
 
     protected User(){}
 
@@ -47,5 +50,13 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(NewCookie cookie) {
+        this.cookie = cookie.toString();
     }
 }
