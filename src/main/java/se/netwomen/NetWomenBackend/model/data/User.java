@@ -1,16 +1,7 @@
 package se.netwomen.NetWomenBackend.model.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.ws.rs.core.NewCookie;
+public final class User {
 
-@Entity
-public class User {
-    @Id
-    @GeneratedValue
-    private Long id;
     private String firstName;
     private String surName;
     private String userName;
@@ -30,10 +21,6 @@ public class User {
 
     public String getUserName() {
         return userName;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getFirstName() {
@@ -56,7 +43,7 @@ public class User {
         return cookie;
     }
 
-    public void setCookie(NewCookie cookie) {
-        this.cookie = cookie.toString();
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
     }
 }

@@ -1,28 +1,22 @@
 package se.netwomen.NetWomenBackend.model.data;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity
-public class PostLike {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @ManyToOne
+public final class PostLike {
+
     private User user;
-    @ManyToOne
     private Post post;
-    private Timestamp timestamp; // Måste läggas till & sättas i konstruktor
+    private Timestamp creationTimestamp;
 
     public PostLike(User user, Post post) {
         this.user = user;
         this.post = post;
     }
 
-    protected PostLike(){}
-
-    public Long getId() {
-        return id;
+    public PostLike(User user, Post post, Timestamp creationTimestamp) {
+        this.user = user;
+        this.post = post;
+        this.creationTimestamp = creationTimestamp;
     }
 
     public User getUser() {
@@ -33,7 +27,7 @@ public class PostLike {
         return post;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Timestamp getCreationTimestamp() {
+        return creationTimestamp;
     }
 }
