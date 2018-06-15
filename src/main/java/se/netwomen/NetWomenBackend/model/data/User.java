@@ -27,6 +27,12 @@ public class User {
         this.email = email;
         this.password = password;
     }
+    //Konstruktor som kommer att användas i Profil sidan
+    public User(String firstName, String surName, String email){
+        this.firstName = firstName;
+        this.surName = surName;
+        this.email = email;
+    }
 
     public String getUserName() {
         return userName;
