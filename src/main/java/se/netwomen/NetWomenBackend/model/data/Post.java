@@ -1,49 +1,46 @@
 package se.netwomen.NetWomenBackend.model.data;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity
-public class Post {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @ManyToOne
+public final class Post {
+
     private User user;
-    private String pictureUrl;
     private String text;
-    private Timestamp creationTimestamp; // Måste läggas till i konstruktor etc
+    private String pictureUrl;
+    private Timestamp creationTimestamp;
 
     protected Post(){}
 
-    public Post(User user, String text) {
+    public Post(User user, String text, String pictureUrl) {
         this.user = user;
         this.text = text;
-    }
-
-    public Post(User user, String pictureUrl, String text) {
-        this.user = user;
         this.pictureUrl = pictureUrl;
-        this.text = text;
     }
 
-    public Long getId() {
-        return id;
+    public Post(User user, String text, String pictureUrl, Timestamp creationTimestamp) {
+        this.user = user;
+        this.text = text;
+        this.pictureUrl = pictureUrl;
+        this.creationTimestamp = creationTimestamp;
     }
 
     public User getUser() {
         return user;
     }
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
     public String getText() {
         return text;
     }
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
     public Timestamp getCreationTimestamp() {
         return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(Timestamp creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
     }
 }

@@ -1,19 +1,13 @@
 package se.netwomen.NetWomenBackend.model.data;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity
-public class Comment {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @ManyToOne
+public final class Comment {
+
     private User user;
-    @ManyToOne
     private Post post;
     private String text;
-    private Timestamp creationTimestamp;
+    private Timestamp createdTimestamp;
 
     public Comment(User user, Post post, String text) {
         this.user = user;
@@ -21,8 +15,11 @@ public class Comment {
         this.text = text;
     }
 
-    public Long getId() {
-        return id;
+    public Comment(User user, Post post, String text, Timestamp createdTimestamp) {
+        this.user = user;
+        this.post = post;
+        this.text = text;
+        this.createdTimestamp = createdTimestamp;
     }
 
     public User getUser() {
@@ -37,9 +34,11 @@ public class Comment {
         return text;
     }
 
-    public Timestamp getCreationTimestamp() {
-        return creationTimestamp;
+    public Timestamp getCreatedTimestamp() {
+        return createdTimestamp;
     }
 
-    protected Comment(){}
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
 }

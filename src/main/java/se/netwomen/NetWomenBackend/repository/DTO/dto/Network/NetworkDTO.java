@@ -1,13 +1,11 @@
-package se.netwomen.NetWomenBackend.model.data;
+package se.netwomen.NetWomenBackend.repository.DTO.dto.Network;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class Network {
+public class NetworkDTO {
     @Id
     @GeneratedValue
     private Long id;
@@ -19,7 +17,7 @@ public class Network {
     private String country;
     // private List<String> tags = new ArrayList<>();
 
-    public Network(String name, String description, String link) {
+    public NetworkDTO(String name, String description, String link) {
         this.name = name;
         this.description = description;
         this.link = link;

@@ -7,17 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import se.netwomen.NetWomenBackend.resource.PostResource;
-import se.netwomen.NetWomenBackend.resource.ProfileResource;
-import se.netwomen.NetWomenBackend.resource.UserResource;
 
 @Configuration
 public class JerseyConfig extends ResourceConfig{
 
     public JerseyConfig(){
-        register(UserResource.class);
-        register(PostResource.class);
-        register(ProfileResource.class);
+        packages("se.netwomen.NetWomenBackend.resource");
     }
 
     // To enable CORS

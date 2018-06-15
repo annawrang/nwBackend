@@ -9,7 +9,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -32,10 +31,10 @@ public class UserResource {
     public Response getUserByUsernameAndPassword(@QueryParam("userName") String userName,
                                                  @QueryParam("password") String password) {
 
-        Optional<User> user = service.findByUserNameAndPassword(userName, password);
-        if (user.isPresent()) {
+        User user = service.findByUserNameAndPassword(userName, password);
+        if (user != null) {
             NewCookie setCookie = createSetCookie(userName, password);
-            return Response.ok(user.get())
+            return Response.ok(user)
                     .cookie(setCookie).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -67,10 +66,9 @@ public class UserResource {
 
     // Här skapas Set-Cookie
     private NewCookie createSetCookie(String userName, String password) {
-        UUID uuid = UUID.randomUUID();
-        String cookie = userName + uuid;
-        NewCookie newCookie = new NewCookie("name", cookie, "/", "", "comment", 100, false);
-        service.setCookie(userName, password, newCookie);
+        String cookie = userName + UUID.randomUUID();
+        service.setCookie(userName, password, cookie);
+        NewCookie newCookie = new NewCookie("name", cookie);
         return newCookie;
     }
 }
