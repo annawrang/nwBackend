@@ -3,6 +3,7 @@ package se.netwomen.NetWomenBackend.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.service.ProfileService;
 import se.netwomen.NetWomenBackend.service.UserService;
 
 import javax.ws.rs.*;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class UserResource {
 
     private final UserService service;
+    private final ProfileService profileService;/*CLAUDIA*/
 
     @Autowired
-    public UserResource(UserService userService) {
+    public UserResource(UserService userService, ProfileService profileService) {
         this.service = userService;
+        this.profileService = profileService; /*CLAUDIA*/
     }
 
 
@@ -62,6 +65,13 @@ public class UserResource {
         service.save(user);
         return Response.ok()
                 .build();
+    }
+
+    /*CLAUDIAS- Hämta profil baserat på förstanamn*/
+    @GET
+    @Path("{id}/profile")
+    public Response getProfilePageForUser(@PathParam("id") Long id) {
+        return Response.ok(profileService.findByUserId(id)).build();
     }
 
     // Här skapas Set-Cookie

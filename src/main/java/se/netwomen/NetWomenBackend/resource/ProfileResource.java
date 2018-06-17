@@ -4,6 +4,7 @@ package se.netwomen.NetWomenBackend.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Profile;
+import se.netwomen.NetWomenBackend.model.data.ProfileTest;
 import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.service.ProfileService;
 
@@ -20,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 @Component
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public final class ProfileResource {
+public class ProfileResource {
 
     private final ProfileService service;
     @Context
@@ -30,9 +31,15 @@ public final class ProfileResource {
     public ProfileResource(ProfileService profileService) {
         this.service = profileService;
     }
-    @POST
+    /*@POST
     public Response createNewProfile(Profile profile) {
         service.createProfile(profile);
+        return Response.ok()
+                .build();
+    }*/
+    @POST
+    public Response createNewProfile(ProfileTest profileTest) {
+        service.createP(profileTest);
         return Response.ok()
                 .build();
     }

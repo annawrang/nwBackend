@@ -1,11 +1,10 @@
 package se.netwomen.NetWomenBackend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.netwomen.NetWomenBackend.model.data.Profile;
+import se.netwomen.NetWomenBackend.model.data.ProfileTest;
 import se.netwomen.NetWomenBackend.repository.DTO.ProfileRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.UserRepository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -16,11 +15,17 @@ public class ProfileService {
         this.profileRepository = profileRepository;
 
     }
-    public Profile createProfile (Profile profile){
-        return profileRepository.save(profile);
+    public ProfileTest createP(ProfileTest profileTest){
+        return profileRepository.save(profileTest);
     }
-
-    /*public Optional<Profile> findByUserFirstName(String firstName){
-        return profileRepository.findProfileByUser_FirstName(firstName);
+    /*public Profile createProfile (Profile profile){
+        ProfileDTO profileDTO = ProfileParser.toProfileDTO(profile);
+        profileDTO = profileRepository.save(profileDTO);
+        return profile;
     }*/
+    /*Funkar ej än!!*/
+    public ProfileTest findByUserId(Long id){
+        Optional<ProfileTest> profileOptional = profileRepository.findProfileTestByUserId(id);
+        return profileOptional.get();
+    }
 }

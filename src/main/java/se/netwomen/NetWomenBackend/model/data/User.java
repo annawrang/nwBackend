@@ -18,7 +18,7 @@ public final class User {
         this.email = email;
         this.password = password;
     }
-    //Konstruktor som kommer att användas i Profil sidan
+    //Konstruktor som kommer att användas i Profile sidan
     public User(String firstName, String surName, String email){
         this.firstName = firstName;
         this.surName = surName;

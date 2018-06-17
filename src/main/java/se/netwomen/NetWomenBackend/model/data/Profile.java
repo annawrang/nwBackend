@@ -1,17 +1,9 @@
 package se.netwomen.NetWomenBackend.model.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+public final class Profile {
 
-@Entity
-public class Profile {
-    @Id
-    @GeneratedValue
     private Long id;
     private String description;
-    @OneToOne
     private User user;
 
     protected Profile(){}
