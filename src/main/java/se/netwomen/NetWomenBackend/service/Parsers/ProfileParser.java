@@ -6,18 +6,10 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
 public final class ProfileParser {
 
     public static ProfileDTO toProfileDTO(Profile profile) {
-        return new ProfileDTO(profile.getDescription(), UserParser.toUserDTO(profile.getUser()));
+        return new ProfileDTO(UserParser.toUseMinimumDTO(profile.getUser()), profile.getDescription());
     }
 
     public static Profile toProfile(ProfileDTO profileDTO) {
-        return new Profile(profileDTO.getDescription(), UserParser.toUser(profileDTO.getUser()));
+        return new Profile(UserParser.UserDTOToUserMinimum(profileDTO.getUser()), profileDTO.getDescription());
     }
-    /* CLAUDIA KOLLA PÅ DETTA
-     public static Post postDTOToPost(PostDTO postDTO) {
-        return new Post(UserParser.toUser(postDTO.getUser()), postDTO.getText(), postDTO.getPictureUrl(), postDTO.getCreationTimestamp());
-    }
-    public static Post profileDTOToProfile(PostDTO postDTO) {
-        return new Post(UserParser.toUser(postDTO.getUser()), postDTO.getText(), postDTO.getPictureUrl(), postDTO.getCreationTimestamp());
-    }
-    */
 }

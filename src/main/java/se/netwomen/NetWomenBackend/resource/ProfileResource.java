@@ -31,16 +31,17 @@ public class ProfileResource {
     public ProfileResource(ProfileService profileService) {
         this.service = profileService;
     }
-    /*@POST
+    @POST
     public Response createNewProfile(Profile profile) {
         service.createProfile(profile);
         return Response.ok()
                 .build();
-    }*/
+    }
+    /*
     @POST
     public Response createNewProfile(ProfileTest profileTest) {
         service.createP(profileTest);
         return Response.ok()
                 .build();
-    }
+    }*/
 }

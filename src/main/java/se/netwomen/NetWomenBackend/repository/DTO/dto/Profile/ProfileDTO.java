@@ -10,14 +10,14 @@ public class ProfileDTO {
     @Id
     @GeneratedValue
     private Long id;
-    private String description;
     @OneToOne
     @JoinColumn(unique = true)
     private UserDTO user;
+    private String description;
 
     protected ProfileDTO(){}
 
-    public ProfileDTO(String description, UserDTO user) {
+    public ProfileDTO(UserDTO user, String description) {
         this.description = description;
         this.user = user;
     }

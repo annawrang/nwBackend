@@ -4,13 +4,13 @@ public final class Profile {
 
     private Long id;
     private String description;
-    private User user;
+    private UserMinimum userMinimum;
 
     protected Profile(){}
 
-    public Profile(String description, User user) {
+    public Profile(UserMinimum userMinimum, String description) {
+        this.userMinimum = userMinimum;
         this.description = description;
-        this.user = user;
     }
 
     public Long getId() {
@@ -21,7 +21,7 @@ public final class Profile {
         return description;
     }
 
-    public User getUser() {
-        return user;
+    public UserMinimum getUser() {
+        return userMinimum;
     }
 }

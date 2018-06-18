@@ -68,11 +68,11 @@ public class UserResource {
     }
 
     /*CLAUDIAS- Hämta profil baserat på förstanamn*/
-    @GET
+    /*@GET
     @Path("{id}/profile")
     public Response getProfilePageForUser(@PathParam("id") Long id) {
         return Response.ok(profileService.findByUserId(id)).build();
-    }
+    }*/
 
     // Här skapas Set-Cookie
     private NewCookie createSetCookie(String userName, String password) {
