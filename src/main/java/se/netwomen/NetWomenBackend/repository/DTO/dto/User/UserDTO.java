@@ -1,8 +1,10 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import se.netwomen.NetWomenBackend.model.data.Profile;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
+
+import javax.persistence.*;
 
 @Entity
 public class UserDTO {
@@ -27,9 +29,12 @@ public class UserDTO {
             this.password = password;
         }
 
-        public String getEmail() {
-            return email;
+        public UserDTO(String firstName, String surName, String email){
+        this.firstName = firstName;
+        this.surName = surName;
+        this.email = email;
         }
+
 
         public Long getId() {
             return id;
@@ -55,7 +60,7 @@ public class UserDTO {
             return cookie;
         }
 
-        public void setCookie(String cookie) {
+    public void setCookie(String cookie) {
             this.cookie = cookie;
         }
 

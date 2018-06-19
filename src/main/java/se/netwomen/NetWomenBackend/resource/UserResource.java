@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Comment;
 import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
+import se.netwomen.NetWomenBackend.service.ProfileService;
 import se.netwomen.NetWomenBackend.service.UserService;
 
 import javax.ws.rs.*;
@@ -20,10 +21,12 @@ import java.util.UUID;
 public class UserResource {
 
     private final UserService service;
+    private final ProfileService profileService;/*CLAUDIA*/
 
     @Autowired
-    public UserResource(UserService userService) {
+    public UserResource(UserService userService, ProfileService profileService) {
         this.service = userService;
+        this.profileService = profileService; /*CLAUDIA*/
     }
 
 
@@ -51,13 +54,18 @@ public class UserResource {
                 .build();
     }
 
+    /*CLAUDIAS- Hämta profil baserat på förstanamn*/
+    @GET
+    @Path("{id}/profile")
+    public Response getProfilePageForUser(@PathParam("id") Long id) {
+        return Response.ok(profileService.findByUserId(id)).build();
+    }
 
-    // Creates a Set-Cookie (not in use yet)
-    private NewCookie createSetCookie(String email, String password) {
-        String cookie = email + UUID.randomUUID();
-        NewCookie newCookie = new NewCookie("name", cookie, "/", "", "no comment", 10000, false, false);
-        System.out.println("\nCookien: " + newCookie.toString());
-        service.setCookie(email, password, newCookie.toString());
+    // Här skapas Set-Cookie
+    private NewCookie createSetCookie(String userName, String password) {
+        String cookie = userName + UUID.randomUUID();
+        service.setCookie(userName, password, cookie);
+        NewCookie newCookie = new NewCookie("name", cookie);
         return newCookie;
     }
 }
