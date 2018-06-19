@@ -24,6 +24,8 @@ public class JerseyConfig extends ResourceConfig{
         config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.addExposedHeader("hej");
+        config.addExposedHeader("Set-Cookie");
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(0);

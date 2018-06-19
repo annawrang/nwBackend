@@ -12,23 +12,23 @@ public class UserDTO {
         private Long id;
         private String firstName;
         private String surName;
-        private String userName;
         private String email;
+        private String userNumber;
         private String password;
         private String cookie;
 
         protected UserDTO(){}
 
-        public UserDTO(String firstName, String surName, String userName, String email, String password) {
+        public UserDTO(String firstName, String surName, String email, String userNumber, String password) {
             this.firstName = firstName;
             this.surName = surName;
-            this.userName = userName;
             this.email = email;
+            this.userNumber = userNumber;
             this.password = password;
         }
 
-        public String getUserName() {
-            return userName;
+        public String getEmail() {
+            return email;
         }
 
         public Long getId() {
@@ -43,8 +43,8 @@ public class UserDTO {
             return surName;
         }
 
-        public String getEmail() {
-            return email;
+        public String getUserNumber() {
+            return userNumber;
         }
 
         public String getPassword() {

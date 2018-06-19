@@ -2,7 +2,9 @@ package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.netwomen.NetWomenBackend.model.data.Comment;
 import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
 import se.netwomen.NetWomenBackend.service.UserService;
 
 import javax.ws.rs.*;
@@ -25,50 +27,37 @@ public class UserResource {
     }
 
 
-    // Ska ej användas pga säkerhet, använd POST istället för att få användare när lösen och känslig data skickas
-    @GET
+    // Authenticates user when they login, and sends a cookie (cookie is work in progress)
+    @POST
     @Path("authenticate")
-    public Response getUserByUsernameAndPassword(@QueryParam("userName") String userName,
-                                                 @QueryParam("password") String password) {
-
-        User user = service.findByUserNameAndPassword(userName, password);
+    public Response getUserByEmailAndPassword(@QueryParam("email") String email,
+                                                       @QueryParam("password") String password){
+        User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
-            NewCookie setCookie = createSetCookie(userName, password);
-            return Response.ok(user)
-                    .cookie(setCookie).build();
+            NewCookie cookie = createSetCookie(email, password);
+            return Response.ok()
+                    .cookie(new NewCookie("namn", "annaCookie"))
+                    .build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
-
-    // Ska ersätta GET ovan, pga säkerhet används POST när man skickar känslig data
-//    @POST
-//    @Path("authenticate")
-//    public Response getUserByUserNameAndPasswordSafely(@QueryParam("userName") String userName,
-//                                                       @QueryParam("password") String password){
-//        Optional<User> user = service.findByUserNameAndPassword(userName, password);
-//        if (user.isPresent()) {
-//            return Response.ok(user.get())
-//                    .build();
-//        } else {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }
-//    }
-
-    // skapar en ny användare
+    // Creates a new user
     @POST
     public Response createNewUser(User user) {
         service.save(user);
-        return Response.ok()
+        return Response.status(Response.Status.CREATED)
                 .build();
     }
 
-    // Här skapas Set-Cookie
-    private NewCookie createSetCookie(String userName, String password) {
-        String cookie = userName + UUID.randomUUID();
-        service.setCookie(userName, password, cookie);
-        NewCookie newCookie = new NewCookie("name", cookie);
+
+    // Creates a Set-Cookie (not in use yet)
+    private NewCookie createSetCookie(String email, String password) {
+        String cookie = email + UUID.randomUUID();
+        NewCookie newCookie = new NewCookie("name", cookie, "/", "", "no comment", 10000, false, false);
+        System.out.println("\nCookien: " + newCookie.toString());
+        service.setCookie(email, password, newCookie.toString());
         return newCookie;
     }
 }

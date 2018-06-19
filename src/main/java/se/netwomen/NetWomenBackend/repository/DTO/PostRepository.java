@@ -12,4 +12,7 @@ public interface PostRepository extends CrudRepository<PostDTO, Long>{
 
     @Query("select p from PostDTO p order by p.creationTimestamp desc")
     List<PostDTO> findAllOrderedByTimeStamp();
+
+    PostDTO findByPostNumber(String postNumber);
+
 }
