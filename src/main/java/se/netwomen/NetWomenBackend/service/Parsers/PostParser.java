@@ -1,9 +1,11 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.Post;
+import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostDTO;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,6 @@ public final class PostParser {
     }
 
     public static PostDTO postToPostDTO(Post post) {
-//        return new PostDTO(UserParser.toUserDTO(post.getUser()), post.getPictureUrl(), post.getText(), post.getCreationTimestamp(), post.getPostNumber());
-    return null;
+        return new PostDTO(new UserDTO("","",""), post.getPictureUrl(), post.getText(), post.getCreationTimestamp(), post.getPostNumber());
     }
 }

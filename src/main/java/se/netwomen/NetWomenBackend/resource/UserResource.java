@@ -2,9 +2,7 @@ package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.netwomen.NetWomenBackend.model.data.Comment;
 import se.netwomen.NetWomenBackend.model.data.User;
-import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
 import se.netwomen.NetWomenBackend.service.ProfileService;
 import se.netwomen.NetWomenBackend.service.UserService;
 
@@ -34,7 +32,7 @@ public class UserResource {
     @POST
     @Path("authenticate")
     public Response getUserByEmailAndPassword(@QueryParam("email") String email,
-                                                       @QueryParam("password") String password){
+                                              @QueryParam("password") String password) {
         User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
             NewCookie cookie = createSetCookie(email, password);

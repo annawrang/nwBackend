@@ -15,6 +15,8 @@ public final class UserMinimum {
         this.userNumber = userNumber;
     }
 
+    protected UserMinimum(){}
+
     public String getFirstName() {
         return firstName;
     }

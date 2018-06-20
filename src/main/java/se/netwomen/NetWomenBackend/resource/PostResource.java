@@ -10,7 +10,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @Component
 @Path("posts")
@@ -24,57 +25,46 @@ public class PostResource {
     private HttpHeaders requestHeaders;
     private final PostService postService;
 
-    public PostResource(PostService service){
+    public PostResource(PostService service) {
         this.postService = service;
     }
 
     @DELETE
     @Path("{postNumber}")
-    public Response deletePost(Post post){
+    public Response deletePost(@QueryParam("userNumber") String userNumber, Post post) {
+
         return null;
     }
 
     @POST
-    public Response createNewPost(Post post){
-        // kolla att cookie-användare och inskickad användare är samma
-        //        ---
-        post = postService.saveNewPost(post);
+    public Response createNewPost(@QueryParam("userNumber") String userNumber, Post post) {
+        postService.saveNewPost(userNumber, post);
         return Response.status(CREATED).build();
     }
 
-//    // Paging, vilken sida + antal per sida (default 10 per sida)
-//    @GET
-//    public Response getPosts(@BeanParam PostParam param,
-//                             @CookieParam("name") Cookie cookie){
-//        if(cookie == null){
-//            return Response.status(UNAUTHORIZED).build();
-//        } else{
-//            postService.validateCookie(cookie);
-//            List<PostComplete> posts = postService.getPostsAndLikesComments(param);
-//            return Response.ok(posts).build();
-//        }
-//    }
-
-    // TEMPORARY UNTIL COOKIE WORKS
-    // Paging, vilken sida + antal per sida (default 10 per sida)
-    @GET
-    public Response getPostsTEMP(@BeanParam PostParam param){
-//        if(userNumber == null){
-//            return Response.status(UNAUTHORIZED).build();
-//        } else{
-//            if(postService.validateCookie(userNumber)){
-                List<PostComplete> posts = postService.getPostsAndLikesComments(param);
-                return Response.ok(posts).build();
-//            }
-//            return Response.status(UNAUTHORIZED).build();
-//        }
+    @PUT
+    public Response editPost(@QueryParam("userNumber") String userNumber, Post post) {
+        postService.editPost(userNumber, post);
+        return Response.status(CREATED).build();
     }
 
+    // Paging, vilken sida + antal per sida (default 10 per sida)
+    @GET
+    public Response getPostsTEMP(@BeanParam PostParam param) {
+        List<PostComplete> posts = postService.getPostsAndLikesComments(param);
+        return Response.ok(posts).build();
+    }
+
+    // Checks userNumber (goes is as QueryParam) instead of cookie for now
     @POST
     @Path("{postNumber}/likes")
-    public Response likePost(@PathParam("postNumber") String postNumber){
-        postService.saveNewLike(postNumber);
-        return null;
+    public Response likePost(@PathParam("postNumber") String postNumber,
+                             @QueryParam("userNumber") String userNumber) {
+        if (userNumber != null) {
+            postService.saveNewPostLike(postNumber, userNumber);
+            return Response.ok().build();
+        }
+        return Response.status(UNAUTHORIZED).build();
     }
 
 }

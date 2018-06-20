@@ -58,4 +58,9 @@ public class PostDTO {
     public void setPostNumber(String postNumber) {
         this.postNumber = postNumber;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }
