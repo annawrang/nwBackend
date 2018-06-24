@@ -10,7 +10,7 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
 import java.util.Collection;
 import java.util.Optional;
 
-@Repository
+@Repository("profileDTO")
 public interface ProfileRepository extends CrudRepository<ProfileDTO, Long> {
 
     /*Test att hitta användare med UserId, funkar ej än
