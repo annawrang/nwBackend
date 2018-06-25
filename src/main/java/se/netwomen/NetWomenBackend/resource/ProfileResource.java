@@ -31,8 +31,8 @@ public class ProfileResource {
     }
 
     @POST
-    public Response createNewProfile(Profile profile) {
-        profile = service.createProfile(profile);
+    public Response createNewProfile(@QueryParam("userNumber") String userNumber, Profile profile) {
+        profile = service.saveUser(userNumber, profile);
         return Response.status(CREATED).build();
     }
 
@@ -41,10 +41,10 @@ public class ProfileResource {
         return Response.ok(service.getAllProfiles()).build();
     }
     /*
-    @POST
-    public Response createNewProfile(ProfileTest profileTest) {
-        service.createP(profileTest);
-        return Response.ok()
-                .build();
+   @POST
+    public Response createNewPost(@QueryParam("userNumber") String userNumber, Post post) {
+        postService.saveNewPost(userNumber, post);
+        return Response.status(CREATED).build();
+    }
     }*/
 }

@@ -1,5 +1,7 @@
 package se.netwomen.NetWomenBackend.model.data;
 
+import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
+
 public final class Profile {
 
     private Long id;
@@ -11,6 +13,9 @@ public final class Profile {
 
     public Profile(UserMinimum userMinimum, String description) {
         this.userMinimum = userMinimum;
+        this.description = description;
+    }
+    public Profile(String description){
         this.description = description;
     }
     public Profile(UserMinimum userMinimum, String description, String profileNumber ) {

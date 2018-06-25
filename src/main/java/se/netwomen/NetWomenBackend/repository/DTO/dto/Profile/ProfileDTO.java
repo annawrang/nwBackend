@@ -43,4 +43,8 @@ public class ProfileDTO {
     public UserDTO getUser() {
         return user;
     }
+
+    public void setUserDTO(UserDTO userDTO) {
+        this.user = userDTO;
+    }
 }

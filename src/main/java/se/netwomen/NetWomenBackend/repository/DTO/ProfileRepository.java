@@ -1,13 +1,9 @@
 package se.netwomen.NetWomenBackend.repository.DTO;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import se.netwomen.NetWomenBackend.model.data.ProfileTest;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Repository("profileDTO")
