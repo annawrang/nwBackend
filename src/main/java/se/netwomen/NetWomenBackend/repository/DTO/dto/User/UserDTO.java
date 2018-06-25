@@ -1,8 +1,9 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import se.netwomen.NetWomenBackend.model.data.Role;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class UserDTO {
@@ -16,6 +17,9 @@ public class UserDTO {
     private String userNumber;
     private String password;
     private String cookie;
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    private List<Role> roles;
 
     protected UserDTO() {
     }
@@ -67,5 +71,7 @@ public class UserDTO {
         this.cookie = cookie;
     }
 
-
+    public List<Role> getRoles() {
+        return roles;
+    }
 }

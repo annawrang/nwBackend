@@ -31,12 +31,14 @@ public class UserResource {
     // Authenticates user when they login, and sends a cookie (cookie is work in progress)
     @POST
     @Path("authenticate")
-    public Response getUserByEmailAndPassword(@QueryParam("email") String email,
-                                              @QueryParam("password") String password) {
+    public Response signIn(@QueryParam("email") String email,
+                           @QueryParam("password") String password) {
+        String jwtToken = this.service.signIn(email, password);
+        System.out.println("TOken: " + jwtToken);
         User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
             NewCookie cookie = createSetCookie(email, password);
-            return Response.ok()
+            return Response.ok(jwtToken)
                     .cookie(new NewCookie("namn", "annaCookie"))
                     .build();
         } else {
@@ -46,6 +48,7 @@ public class UserResource {
 
     // Creates a new user
     @POST
+    @Path("signup")
     public Response createNewUser(User user) {
         service.save(user);
         return Response.status(Response.Status.CREATED)
