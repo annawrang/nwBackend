@@ -13,11 +13,10 @@ import java.util.Optional;
 @Repository("profileDTO")
 public interface ProfileRepository extends CrudRepository<ProfileDTO, Long> {
 
+    Optional<ProfileDTO> findByProfileNumber(String profileNumber);
+
     /*Test att hitta användare med UserId, funkar ej än
      @Query("SELECT p FROM #{#entityName} p INNER JOIN p.user u WHERE u.id = :id")
      Optional<ProfileTest> findProfileTestByUserId(@Param("id") Long id);*/
 
-    // Find profile by firstName?
-    //Profile findByFirstName(String firstName);
-    //Optional<Profile> findProfileByUser_FirstName(String firstName);
 }

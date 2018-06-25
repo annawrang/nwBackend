@@ -30,10 +30,17 @@ public class ProfileService {
     public Iterable<ProfileDTO> getAllProfiles() {
         return profileRepository.findAll();
     }
-
-    /*Funkar ej än!!
-    public ProfileTest findByUserId(Long id){
-        Optional<ProfileTest> profileOptional = profileRepository.findProfileTestByUserId(id);
-        return profileOptional.get();
+/*public void saveNewPost(String userNumber, Post post) {
+        Optional<UserDTO> userDTO = userRepository.findByUserNumber(userNumber);
+        if(userDTO.isPresent()){
+            post = setCreationTime(post);
+            post.setPostNumber(UUID.randomUUID().toString());
+            PostDTO postDTO = PostParser.postToPostDTO(post);
+            postDTO.setUserDTO(userDTO.get());
+            postDTO = postRepository.save(postDTO);
+        }
+        else{
+            throw new BadRequestException();
+        }
     }*/
 }

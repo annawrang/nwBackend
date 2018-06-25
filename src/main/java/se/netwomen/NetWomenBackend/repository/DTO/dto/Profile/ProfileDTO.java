@@ -14,12 +14,22 @@ public class ProfileDTO {
     @JoinColumn(unique = true)
     private UserDTO user;
     private String description;
+    private String profileNumber;
 
     protected ProfileDTO(){}
 
-    public ProfileDTO(UserDTO user, String description) {
+    public ProfileDTO(UserDTO user, String description, String profileNumber) {
         this.description = description;
         this.user = user;
+        this.profileNumber=profileNumber;
+    }
+
+    public String getProfileNumber() {
+        return profileNumber;
+    }
+
+    public void setProfileNumber(String profileNumber) {
+        this.profileNumber = profileNumber;
     }
 
     public Long getId() {
