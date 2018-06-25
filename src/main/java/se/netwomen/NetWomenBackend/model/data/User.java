@@ -4,17 +4,17 @@ public final class User {
 
     private String firstName;
     private String surName;
-    private String userName;
+    private String userNumber;
     private String email;
     private String password;
     private String cookie;
 
     protected User(){}
 
-    public User(String firstName, String surName, String userName, String email, String password) {
+    public User(String firstName, String surName, String email, String password) {
         this.firstName = firstName;
         this.surName = surName;
-        this.userName = userName;
+        this.userNumber = userNumber;
         this.email = email;
         this.password = password;
     }
@@ -25,8 +25,16 @@ public final class User {
         this.email = email;
     }
 
-    public String getUserName() {
-        return userName;
+    public User(String firstName, String surName, String userNumber, String email, String password) {
+        this.firstName = firstName;
+        this.surName = surName;
+        this.userNumber = userNumber;
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getUserNumber() {
+        return userNumber;
     }
 
     public String getFirstName() {
@@ -51,5 +59,9 @@ public final class User {
 
     public void setCookie(String cookie) {
         this.cookie = cookie;
+    }
+
+    public void setUserNumber(String userNumber) {
+        this.userNumber = userNumber;
     }
 }

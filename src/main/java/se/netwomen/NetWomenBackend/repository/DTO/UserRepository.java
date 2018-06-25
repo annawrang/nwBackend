@@ -9,10 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<UserDTO, Long>{
-    Optional<UserDTO> findByUserNameAndPassword(String userName, String password);
 
-    Optional<UserDTO> findByUserName(String userName);
+    Optional<UserDTO> findByEmailAndPassword(String email, String password);
 
     @Query("select u from UserDTO u where u.cookie = ?1")
-    Optional<UserDTO> findUsersCookie(String cookie);
+    Optional<UserDTO> findByCookie(String cookie);
+
+    Optional<UserDTO> findByUserNumber(String userNumber);
+
 }

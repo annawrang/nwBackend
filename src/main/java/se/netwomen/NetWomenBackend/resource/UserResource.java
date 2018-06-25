@@ -28,42 +28,27 @@ public class UserResource {
     }
 
 
-    // Ska ej användas pga säkerhet, använd POST istället för att få användare när lösen och känslig data skickas
-    @GET
+    // Authenticates user when they login, and sends a cookie (cookie is work in progress)
+    @POST
     @Path("authenticate")
-    public Response getUserByUsernameAndPassword(@QueryParam("userName") String userName,
-                                                 @QueryParam("password") String password) {
-
-        User user = service.findByUserNameAndPassword(userName, password);
+    public Response getUserByEmailAndPassword(@QueryParam("email") String email,
+                                              @QueryParam("password") String password) {
+        User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
-            NewCookie setCookie = createSetCookie(userName, password);
-            return Response.ok(user)
-                    .cookie(setCookie).build();
+            NewCookie cookie = createSetCookie(email, password);
+            return Response.ok()
+                    .cookie(new NewCookie("namn", "annaCookie"))
+                    .build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
-
-    // Ska ersätta GET ovan, pga säkerhet används POST när man skickar känslig data
-//    @POST
-//    @Path("authenticate")
-//    public Response getUserByUserNameAndPasswordSafely(@QueryParam("userName") String userName,
-//                                                       @QueryParam("password") String password){
-//        Optional<User> user = service.findByUserNameAndPassword(userName, password);
-//        if (user.isPresent()) {
-//            return Response.ok(user.get())
-//                    .build();
-//        } else {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }
-//    }
-
-    // skapar en ny användare
+    // Creates a new user
     @POST
     public Response createNewUser(User user) {
         service.save(user);
-        return Response.ok()
+        return Response.status(Response.Status.CREATED)
                 .build();
     }
 

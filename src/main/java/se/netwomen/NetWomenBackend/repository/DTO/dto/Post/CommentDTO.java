@@ -1,7 +1,5 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.Post;
 
-import se.netwomen.NetWomenBackend.model.data.User;
-import se.netwomen.NetWomenBackend.model.data.UserMinimum;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import javax.persistence.*;

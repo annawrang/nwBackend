@@ -1,6 +1,7 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.Comment;
+import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentMinimum;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
 
 import java.util.ArrayList;
@@ -21,5 +22,15 @@ public final class CommentParser {
         List<Comment> commentList = new ArrayList<>();
         commentDTOS.forEach(c -> commentList.add(CommentParser.commentDTOTOComment(c)));
         return commentList;
+    }
+
+    public static List<CommentMinimum> commentDTOListToCommentMinimumList(List<CommentDTO> commentDTOS) {
+        List<CommentMinimum> commentMinimums = new ArrayList<>();
+        commentDTOS.forEach(c -> commentMinimums.add(CommentParser.commentDTOToCommentMinimum(c)));
+        return commentMinimums;
+    }
+
+    public static CommentMinimum commentDTOToCommentMinimum(CommentDTO c) {
+        return new CommentMinimum(UserParser.toUserMinimum(c.getUser()), c.getText());
     }
 }

@@ -1,6 +1,4 @@
-package se.netwomen.NetWomenBackend.model.data;
-
-import java.util.UUID;
+package se.netwomen.NetWomenBackend.model.data.PostComplete;
 
 /*  This class is what is sent back when we need a user that's connected
 * to a post, comment, like etc. Where we don't want all the information */
@@ -9,13 +7,15 @@ public final class UserMinimum {
 
     private String firstName;
     private String surName;
-    private String email;
+    private String userNumber;
 
-    public UserMinimum(String firstName, String surName, String email) {
+    public UserMinimum(String firstName, String surName, String userNumber) {
         this.firstName = firstName;
         this.surName = surName;
-        this.email = email;
+        this.userNumber = userNumber;
     }
+
+    protected UserMinimum(){}
 
     public String getFirstName() {
         return firstName;
@@ -25,7 +25,7 @@ public final class UserMinimum {
         return surName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserNumber() {
+        return userNumber;
     }
 }
