@@ -22,7 +22,6 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
-
     @Autowired
     public ProfileService(ProfileRepository profileRepository, UserRepository userRepository) {
         this.profileRepository = profileRepository;
@@ -33,6 +32,10 @@ public class ProfileService {
         profileDTO.setProfileNumber(UUID.randomUUID().toString());
         return profileRepository.save(profileDTO);
     }
+    /*
+     * TODO- FIXA TILL MED DTO I METODERNA!!
+     */
+
     /*Funkar ej än*/
     /*
     public Profile createProfile2(Profile profile) {

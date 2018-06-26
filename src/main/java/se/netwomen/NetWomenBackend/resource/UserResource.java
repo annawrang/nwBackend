@@ -52,7 +52,7 @@ public class UserResource {
                 .build();
     }
 
-    /*Hämta en users profil med userNumber, OBS används för att checka av*/
+    /*Hämta en users profil med userNumber, OBS används för att checka av, bör senare vara under email och lösen?!*/
     @GET
     @Path("{userNumber}/profile")
     public Response getUsersProfile(@PathParam("userNumber") String userNumber) {

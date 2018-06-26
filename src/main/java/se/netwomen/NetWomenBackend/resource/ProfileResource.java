@@ -62,4 +62,7 @@ public class ProfileResource {
     public Response getAll() {
         return Response.ok(service.getAllProfiles()).build();
     }
+    /*
+    * TODO- PUT, DELETE METODER!!
+    */
 }
