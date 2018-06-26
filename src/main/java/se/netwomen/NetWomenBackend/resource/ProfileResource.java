@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Profile;
 import se.netwomen.NetWomenBackend.model.data.ProfileTest;
 import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.service.ProfileService;
 
 import javax.ws.rs.*;
@@ -30,21 +32,34 @@ public class ProfileResource {
         this.service = profileService;
     }
 
-    @POST
-    public Response createNewProfile(@QueryParam("userNumber") String userNumber, Profile profile) {
-        profile = service.saveUser(userNumber, profile);
+   @POST
+    public Response createProfile(ProfileDTO profileDTO) {
+        profileDTO = service.createProfile(profileDTO);
         return Response.status(CREATED).build();
+    }
+/*Funkar ej än*/
+/*
+    @POST
+    public Response createProfile2(Profile profile) {
+        profile = service.createProfile2(profile);
+        return Response.status(CREATED).build();
+    }*/
+
+    /*@POST
+    @Path("{userNumber}")
+    public Response createNewProfile(@QueryParam("userNumber") String userNumber, Profile profile) {
+        profile = service.save(userNumber, profile);
+        return Response.status(CREATED).build();
+    }*/
+
+    @GET
+    @Path("{profileNumber}")
+    public Response getProfileByProfileNumber(@PathParam("profileNumber") String profileNumber){
+        return Response.ok(service.getProfileByProfileNumber(profileNumber)).build();
     }
 
     @GET
     public Response getAll() {
         return Response.ok(service.getAllProfiles()).build();
     }
-    /*
-   @POST
-    public Response createNewPost(@QueryParam("userNumber") String userNumber, Post post) {
-        postService.saveNewPost(userNumber, post);
-        return Response.status(CREATED).build();
-    }
-    }*/
 }

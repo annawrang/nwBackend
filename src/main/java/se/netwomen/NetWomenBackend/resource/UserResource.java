@@ -52,12 +52,12 @@ public class UserResource {
                 .build();
     }
 
-    /*CLAUDIAS- Hämta profil baserat på förstanamn*/
-    /*@GET
-    @Path("{id}/profile")
-    public Response getProfilePageForUser(@PathParam("id") Long id) {
-        return Response.ok(profileService.findByUserId(id)).build();
-    }*/
+    /*Hämta en users profil med userNumber, OBS används för att checka av*/
+    @GET
+    @Path("{userNumber}/profile")
+    public Response getUsersProfile(@PathParam("userNumber") String userNumber) {
+        return Response.ok(profileService.getProfileForUser(userNumber)).build();
+    }
 
     // Här skapas Set-Cookie
     private NewCookie createSetCookie(String userName, String password) {

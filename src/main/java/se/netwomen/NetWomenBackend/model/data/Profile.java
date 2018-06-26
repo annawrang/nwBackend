@@ -15,10 +15,11 @@ public final class Profile {
         this.userMinimum = userMinimum;
         this.description = description;
     }
-    public Profile(String description){
+    public Profile(String description, String profileNumber){
         this.description = description;
+        this.profileNumber=profileNumber;
     }
-    public Profile(UserMinimum userMinimum, String description, String profileNumber ) {
+    public Profile(UserMinimum userMinimum, String description, String profileNumber) {
         this.userMinimum = userMinimum;
         this.description = description;
         this.profileNumber=profileNumber;

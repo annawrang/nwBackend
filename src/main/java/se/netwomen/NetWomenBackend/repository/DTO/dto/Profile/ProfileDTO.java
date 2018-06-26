@@ -19,9 +19,10 @@ public class ProfileDTO {
     protected ProfileDTO(){}
 
     public ProfileDTO(UserDTO user, String description, String profileNumber) {
-        this.description = description;
-        this.user = user;
-        this.profileNumber=profileNumber;
+
+    }
+
+    public ProfileDTO(UserDTO user, ProfileDTO profile) {
     }
 
     public String getProfileNumber() {
