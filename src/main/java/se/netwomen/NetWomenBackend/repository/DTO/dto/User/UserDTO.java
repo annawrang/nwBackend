@@ -17,7 +17,7 @@ public class UserDTO {
     private String userNumber;
     private String password;
     private String cookie;
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 

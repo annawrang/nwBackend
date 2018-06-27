@@ -13,14 +13,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Role;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.service.exceptions.CustomException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,7 +43,11 @@ public class JwtTokenProvider {
 
     public String createToken(String email, List<Role> roles) {
 
-        Claims claims = Jwts.claims().setSubject(email);
+        // ANNA - testat att göra token med userNumber istället!!!
+        Optional<UserDTO> user = myUserDetails.getUserByEmail(email);
+
+        // ANNA - sätter claim som UserNumber istället för username/email
+        Claims claims = Jwts.claims().setSubject(user.get().getUserNumber());
         claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
 
         Date now = new Date();
@@ -65,7 +67,8 @@ public class JwtTokenProvider {
     }
 
     public String getEmail(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        String email =  Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return email;
     }
 
     public String resolveToken(HttpServletRequest req) {

@@ -53,19 +53,10 @@ public class UserService {
         return null;
     }
 
-    public void setCookie(String userName, String password, String cookie) {
-        Optional<UserDTO> optionalUser = repository.findByEmailAndPassword(userName, password);
-        if (optionalUser.isPresent()) {
-            optionalUser.get().setCookie(cookie);
-            repository.save(optionalUser.get());
-        }
-    }
 
     public String signIn(String email, String password) {
         try {
-            System.out.println("rad 66");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            System.out.println("rad 68");
             return jwtTokenProvider.createToken(email, repository.findByEmailAndPassword(email, password).get().getRoles());
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);

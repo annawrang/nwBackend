@@ -1,13 +1,21 @@
 package se.netwomen.NetWomenBackend.resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
+import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.resource.param.PostParam;
+import se.netwomen.NetWomenBackend.resource.security.JwtTokenProvider;
 import se.netwomen.NetWomenBackend.service.PostService;
+import se.netwomen.NetWomenBackend.service.exceptions.EmailNotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.security.Principal;
 import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.CREATED;
@@ -25,46 +33,65 @@ public class PostResource {
     private HttpHeaders requestHeaders;
     private final PostService postService;
 
-    public PostResource(PostService service) {
+    @Autowired
+    public PostResource(PostService service, JwtTokenProvider jwtTokenProvider) {
         this.postService = service;
     }
 
     @DELETE
     @Path("{postNumber}")
-    public Response deletePost(@QueryParam("userNumber") String userNumber, Post post) {
-
+    public Response deletePost(Post post) {
+        String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal().toString());
         return null;
     }
 
     @POST
-    public Response createNewPost(@QueryParam("userNumber") String userNumber, Post post) {
+    public Response createNewPost(Post post) {
+        String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal().toString());
         postService.saveNewPost(userNumber, post);
         return Response.status(CREATED).build();
     }
 
     @PUT
-    public Response editPost(@QueryParam("userNumber") String userNumber, Post post) {
+    public Response editPost(Post post) {
+        String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal().toString());
         postService.editPost(userNumber, post);
         return Response.status(CREATED).build();
     }
 
     // Paging, vilken sida + antal per sida (default 10 per sida)
     @GET
-    public Response getPostsTEMP(@BeanParam PostParam param) {
+    public Response getPostsPaged(@BeanParam PostParam param) {
         List<PostComplete> posts = postService.getPostsAndLikesComments(param);
         return Response.ok(posts).build();
     }
 
-    // Checks userNumber (goes is as QueryParam) instead of cookie for now
+
     @POST
     @Path("{postNumber}/likes")
-    public Response likePost(@PathParam("postNumber") String postNumber,
-                             @QueryParam("userNumber") String userNumber) {
+    public Response createNewPostLike(@PathParam("postNumber") String postNumber) {
+        String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal().toString());
         if (userNumber != null) {
             postService.saveNewPostLike(postNumber, userNumber);
             return Response.ok().build();
         }
         return Response.status(UNAUTHORIZED).build();
+    }
+
+    // This is the method use to get the usernumber from the token, to always know which user is
+    // sending the request
+    private String getUserNumberFromAuth(String auth){
+        if(auth == null){
+            throw new EmailNotFoundException("Usernumber not found.");
+        }
+        String userNumber = auth.split(";")[0];
+        userNumber = userNumber.substring(userNumber.lastIndexOf(":") + 2).trim();
+        System.out.println("userNumber==" + userNumber);
+        return userNumber;
     }
 
 }

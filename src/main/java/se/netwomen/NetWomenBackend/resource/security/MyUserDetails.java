@@ -17,10 +17,13 @@ public class MyUserDetails implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    public Optional<UserDTO> getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<UserDTO> user = userRepository.findByEmail(email);
+        Optional<UserDTO> user = userRepository.findByUserNumber(email);
 
         if (!user.isPresent()) {
             throw new EmailNotFoundException("User '" + email + "' not found");
@@ -28,7 +31,7 @@ public class MyUserDetails implements UserDetailsService {
 
         System.out.println("MyUserDetails: User är present");
         return org.springframework.security.core.userdetails.User//
-                .withUsername(email)//
+                .withUsername(user.get().getUserNumber())//
                 .password(user.get().getPassword())//
                 .authorities(user.get().getRoles())//
                 .accountExpired(false)//

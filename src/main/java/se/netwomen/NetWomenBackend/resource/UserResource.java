@@ -8,9 +8,7 @@ import se.netwomen.NetWomenBackend.service.UserService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
 
 @Component
 @Path("users")
@@ -28,18 +26,16 @@ public class UserResource {
     }
 
 
-    // Authenticates user when they login, and sends a cookie (cookie is work in progress)
+    // Authenticates user when they login, and sends a JwtToken
     @POST
     @Path("authenticate")
     public Response signIn(@QueryParam("email") String email,
                            @QueryParam("password") String password) {
         String jwtToken = this.service.signIn(email, password);
-        System.out.println("TOken: " + jwtToken);
         User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
-            NewCookie cookie = createSetCookie(email, password);
-            return Response.ok(jwtToken)
-                    .cookie(new NewCookie("namn", "annaCookie"))
+            return Response.ok()
+                    .header("Auth-Token", jwtToken)
                     .build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -62,11 +58,4 @@ public class UserResource {
         return Response.ok(profileService.findByUserId(id)).build();
     }
 
-    // Här skapas Set-Cookie
-    private NewCookie createSetCookie(String userName, String password) {
-        String cookie = userName + UUID.randomUUID();
-        service.setCookie(userName, password, cookie);
-        NewCookie newCookie = new NewCookie("name", cookie);
-        return newCookie;
-    }
 }
