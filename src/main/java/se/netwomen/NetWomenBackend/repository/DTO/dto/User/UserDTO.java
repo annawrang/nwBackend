@@ -1,8 +1,9 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
+
+import javax.persistence.*;
 
 @Entity
 public class UserDTO {
@@ -16,6 +17,10 @@ public class UserDTO {
     private String userNumber;
     private String password;
     private String cookie;
+    /*@OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private ProfileDTO profileDTO;*/
+
 
     protected UserDTO() {
     }

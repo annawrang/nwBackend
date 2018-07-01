@@ -38,13 +38,13 @@ public class ProfileResource {
         return Response.status(CREATED).build();
     }
 /*Funkar ej än*/
-/*
-    @POST
-    public Response createProfile2(Profile profile) {
-        profile = service.createProfile2(profile);
-        return Response.status(CREATED).build();
-    }*/
 
+  /*  @POST
+    public Response createProfile2(Profile profile) {
+        service.createProfile2(profile);
+        return Response.status(Response.Status.CREATED).build();
+    }
+*/
     /*@POST
     @Path("{userNumber}")
     public Response createNewProfile(@QueryParam("userNumber") String userNumber, Profile profile) {

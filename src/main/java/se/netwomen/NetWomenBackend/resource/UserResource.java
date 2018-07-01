@@ -52,11 +52,11 @@ public class UserResource {
                 .build();
     }
 
-    /*Hämta en users profil med userNumber, OBS används för att checka av, bör senare vara under email och lösen?!*/
+    /*Claudia- ska senare läggas till relevant fullnamn för att logga in på profil?*/
     @GET
-    @Path("{userNumber}/profile")
-    public Response getUsersProfile(@PathParam("userNumber") String userNumber) {
-        return Response.ok(profileService.getProfileForUser(userNumber)).build();
+    @Path("{firstName}/profile")
+    public Response getUsersProfileByName(@PathParam("firstName") String firstName) {
+        return Response.ok(profileService.findProfileByUserName(firstName)).build();
     }
 
     // Här skapas Set-Cookie
