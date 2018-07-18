@@ -14,7 +14,7 @@ public class PostLikeDTO {
     private UserDTO user;
     @ManyToOne
     private PostDTO post;
-    private Timestamp timestamp; // Måste läggas till & sättas i konstruktor
+    private Timestamp timestamp;
 
     public PostLikeDTO(UserDTO user, PostDTO post, Timestamp creationTimestamp) {
         this.user = user;

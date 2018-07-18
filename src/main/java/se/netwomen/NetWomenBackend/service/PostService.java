@@ -128,19 +128,46 @@ public class PostService {
         return new PostLikeDTO(user, post, now);
     }
 
-    public void editPost(String userNumber, Post post) {
-        Optional<UserDTO> userDTO = userRepository.findByUserNumber(userNumber);
-        if(userDTO.isPresent()){
-            post = setCreationTime(post);
-            post.setPostNumber(UUID.randomUUID().toString());
-            Optional<PostDTO> oldPostDTO = postRepository.findByPostNumber(post.getPostNumber());
-            if(oldPostDTO.isPresent()){
-                PostDTO newPostDTO = PostParser.postToPostDTO(post);
-                newPostDTO.setId(oldPostDTO.get().getId());
-                newPostDTO = postRepository.save(newPostDTO);
+    public boolean editPost(String postNumber, String userNumber, String newText) {
+        if(validatePostAndAuthor(postNumber, userNumber)) {
+            Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
+            if(post.isPresent()){
+                post.get().setText(newText);
+                postRepository.save(post.get());
+                return true;
             }
-            throw new BadRequestException();
         }
-        throw new BadRequestException();
+        return false;
+    }
+
+    // Returns true if the post is deleted
+    public boolean deletePost(String postNumber, String userNumber) {
+            if(validatePostAndAuthor(postNumber, userNumber)) {
+                Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
+                if(post.isPresent()){
+                    deleteCommentsAndPostLike(post.get());
+                    postRepository.delete(post.get());
+                    return true;
+                }
+            }
+            return false;
+    }
+
+    private boolean validatePostAndAuthor(String postNumber, String userNumber){
+        Optional<UserDTO> user = userRepository.findByUserNumber(userNumber);
+        Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
+        if(user.isPresent() && post.isPresent()){
+            if(user.get().getUserNumber().equals(post.get().getUser().getUserNumber())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void deleteCommentsAndPostLike(PostDTO post){
+        List<PostLikeDTO> postLikes = postLikeRepository.findAllByPostId(post.getId());
+        postLikes.forEach(postLikeDTO -> postLikeRepository.delete(postLikeDTO));
+        List<CommentDTO> comments = commentRepository.getCommentsByPostId(post.getId());
+        comments.forEach(commentDTO -> commentRepository.delete(commentDTO));
     }
 }

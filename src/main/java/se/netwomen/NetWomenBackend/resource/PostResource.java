@@ -18,8 +18,7 @@ import javax.ws.rs.core.*;
 import java.security.Principal;
 import java.util.List;
 
-import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import static javax.ws.rs.core.Response.Status.*;
 
 @Component
 @Path("posts")
@@ -40,10 +39,13 @@ public class PostResource {
 
     @DELETE
     @Path("{postNumber}")
-    public Response deletePost(Post post) {
+    public Response deletePost(@PathParam("postNumber")String postNumber) {
         String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal().toString());
-        return null;
+        if (postService.deletePost(postNumber, userNumber)){
+            return Response.status(OK).build();
+        }
+        return Response.status(NOT_FOUND).build();
     }
 
     @POST
@@ -55,11 +57,14 @@ public class PostResource {
     }
 
     @PUT
-    public Response editPost(Post post) {
+    @Path("{postNumber}")
+    public Response editPost(@PathParam("postNumber")String postNumber, String newText) {
         String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal().toString());
-        postService.editPost(userNumber, post);
-        return Response.status(CREATED).build();
+        if(postService.editPost(postNumber, userNumber, newText)){
+            return Response.status(CREATED).build();
+        }
+        return Response.status(BAD_REQUEST).build();
     }
 
     // Paging, vilken sida + antal per sida (default 10 per sida)

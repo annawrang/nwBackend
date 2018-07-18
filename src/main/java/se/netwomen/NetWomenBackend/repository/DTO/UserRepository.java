@@ -12,9 +12,6 @@ public interface UserRepository extends CrudRepository<UserDTO, Long>{
 
     Optional<UserDTO> findByEmailAndPassword(String email, String password);
 
-    @Query("select u from UserDTO u where u.cookie = ?1")
-    Optional<UserDTO> findByCookie(String cookie);
-
     Optional<UserDTO> findByUserNumber(String userNumber);
 
     Optional<UserDTO> findByEmail(String email);

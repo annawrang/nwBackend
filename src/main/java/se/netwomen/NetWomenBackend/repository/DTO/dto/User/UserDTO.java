@@ -16,7 +16,7 @@ public class UserDTO {
     private String email;
     private String userNumber;
     private String password;
-    private String cookie;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -59,16 +59,8 @@ public class UserDTO {
         return password;
     }
 
-    public String getCookie() {
-        return cookie;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
     }
 
     public List<Role> getRoles() {

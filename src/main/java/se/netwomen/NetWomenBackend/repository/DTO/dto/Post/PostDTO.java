@@ -2,7 +2,10 @@ package se.netwomen.NetWomenBackend.repository.DTO.dto.Post;
 
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
 @Entity
@@ -14,10 +17,11 @@ public class PostDTO {
     private UserDTO user;
     private String pictureUrl;
     private String text;
-    private Timestamp creationTimestamp; // Måste läggas till i konstruktor etc
+    private Timestamp creationTimestamp;
     private String postNumber;
 
-    protected PostDTO(){}
+    protected PostDTO() {
+    }
 
     public PostDTO(UserDTO user, String pictureUrl, String text, Timestamp creationTimestamp, String postNumber) {
         this.user = user;
@@ -55,12 +59,11 @@ public class PostDTO {
         return postNumber;
     }
 
-    public void setPostNumber(String postNumber) {
-        this.postNumber = postNumber;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
 }

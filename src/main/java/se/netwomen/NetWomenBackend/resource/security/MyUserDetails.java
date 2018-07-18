@@ -22,11 +22,11 @@ public class MyUserDetails implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<UserDTO> user = userRepository.findByUserNumber(email);
+    public UserDetails loadUserByUsername(String userNumber) throws UsernameNotFoundException {
+        Optional<UserDTO> user = userRepository.findByUserNumber(userNumber);
 
         if (!user.isPresent()) {
-            throw new EmailNotFoundException("User '" + email + "' not found");
+            throw new EmailNotFoundException("User with usernumber '" + userNumber + "' not found");
         }
 
         System.out.println("MyUserDetails: User är present");

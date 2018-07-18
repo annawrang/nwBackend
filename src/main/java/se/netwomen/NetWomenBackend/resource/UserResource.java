@@ -34,8 +34,10 @@ public class UserResource {
         String jwtToken = this.service.signIn(email, password);
         User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
+            System.out.println("\nAnvändaren finns");
             return Response.ok()
                     .header("Auth-Token", jwtToken)
+                    .header("Usernumber", user.getUserNumber())
                     .build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
