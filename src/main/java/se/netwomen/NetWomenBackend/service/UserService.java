@@ -8,19 +8,21 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.repository.DTO.ProfileRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.UserRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.resource.security.JwtTokenProvider;
 import se.netwomen.NetWomenBackend.service.Parsers.UserParser;
 import se.netwomen.NetWomenBackend.service.exceptions.CustomException;
 
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -32,21 +34,33 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository repository) {
-        this.repository = repository;
+    public UserService(UserRepository repository, ProfileRepository profileRepository) {
+        this.userRepository = repository;
+        this.profileRepository = profileRepository;
     }
 
-    public User save(User user) {
+    public boolean saveNewUser(User user) {
         if (user.getUserNumber() == null) {
             user.setUserNumber(UUID.randomUUID().toString());
         }
         UserDTO userDTO = UserParser.toUserDTO(user);
-        userDTO = repository.save(userDTO);
-        return user;
+        userDTO = userRepository.save(userDTO);
+        if (createNewProfileForUser(userDTO)){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean createNewProfileForUser(UserDTO userDTO) {
+        ProfileDTO profile = new ProfileDTO(userDTO);
+        profile = profileRepository.save(profile);
+        if(profile.getId() != null){
+            return true;
+        } return false;
     }
 
     public User findByEmailAndPassword(String email, String password) {
-        Optional<UserDTO> userDTO = repository.findByEmailAndPassword(email, password);
+        Optional<UserDTO> userDTO = userRepository.findByEmailAndPassword(email, password);
         if (userDTO.isPresent()) {
             return UserParser.toUser(userDTO.get());
         }
@@ -57,7 +71,7 @@ public class UserService {
     public String signIn(String email, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-            return jwtTokenProvider.createToken(email, repository.findByEmailAndPassword(email, password).get().getRoles());
+            return jwtTokenProvider.createToken(email, userRepository.findByEmailAndPassword(email, password).get().getRoles());
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
