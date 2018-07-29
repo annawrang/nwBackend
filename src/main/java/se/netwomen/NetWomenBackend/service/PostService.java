@@ -3,9 +3,8 @@ package se.netwomen.NetWomenBackend.service;
 import org.glassfish.jersey.internal.guava.Lists;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.Post;
+import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentMinimum;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
-import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
-import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.repository.DTO.CommentRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.PostLikeRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.PostRepository;
@@ -15,6 +14,7 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostLikeDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.resource.param.PostParam;
+import se.netwomen.NetWomenBackend.service.Parsers.CommentParser;
 import se.netwomen.NetWomenBackend.service.Parsers.PostParser;
 import se.netwomen.NetWomenBackend.service.exceptions.InvalidCookieException;
 
@@ -60,6 +60,7 @@ public class PostService {
                 if (i <= (tempPostList.size() - 1)) {
                     int likesCount = postLikeRepository.countPostLikesByPostId(tempPostList.get(i).getId());
                     List<CommentDTO> commentDTOS = commentRepository.getCommentsByPostId(tempPostList.get(i).getId());
+//                    int commentsCount = commentDTOS.size() + 1;
                     pagedPosts.add(PostParser.postToPostComplete(tempPostList.get(i), likesCount, commentDTOS));
                 }
             }
@@ -67,35 +68,18 @@ public class PostService {
         return pagedPosts;
     }
 
-    // Checks that the cookie exists in the database
-    public boolean validateCookie(String userNumber) {
-        if (userNumber != null) {
-            Optional<UserDTO> user = userRepository.findByUserNumber(userNumber);
-            if (user.isPresent())
-                return true;
-        }
-        throw new InvalidCookieException();
-//        if (cookie.getValue() != null) {
-//            System.out.println(cookie.getValue());
-//            Optional<UserDTO> user = userRepository.findByCookie(cookie.getValue());
-//            if (user.isPresent())
-//                return true;
-//        }
-//        throw new InvalidCookieException();
-    }
 
 
     // FUNKAR EJ ATT SPARA POST MED EN USER!
     public void saveNewPost(String userNumber, Post post) {
         Optional<UserDTO> userDTO = userRepository.findByUserNumber(userNumber);
-        if(userDTO.isPresent()){
+        if (userDTO.isPresent()) {
             post = setCreationTime(post);
             post.setPostNumber(UUID.randomUUID().toString());
             PostDTO postDTO = PostParser.postToPostDTO(post);
             postDTO.setUserDTO(userDTO.get());
             postDTO = postRepository.save(postDTO);
-        }
-        else{
+        } else {
             throw new BadRequestException();
         }
     }
@@ -123,15 +107,22 @@ public class PostService {
 
     }
 
-    private PostLikeDTO createNewPostLike(UserDTO user, PostDTO post){
+    private PostLikeDTO createNewPostLike(UserDTO user, PostDTO post) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         return new PostLikeDTO(user, post, now);
     }
 
+    private CommentDTO createNewComment(String userNumber, String postNumber, String newComment){
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        UserDTO user = userRepository.findByUserNumber(userNumber).get();
+        PostDTO post = postRepository.findByPostNumber(postNumber).get();
+        return new CommentDTO(user, post, newComment, now);
+    }
+
     public boolean editPost(String postNumber, String userNumber, String newText) {
-        if(validatePostAndAuthor(postNumber, userNumber)) {
+        if (validatePostAndAuthor(postNumber, userNumber)) {
             Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
-            if(post.isPresent()){
+            if (post.isPresent()) {
                 post.get().setText(newText);
                 postRepository.save(post.get());
                 return true;
@@ -140,34 +131,73 @@ public class PostService {
         return false;
     }
 
-    // Returns true if the post is deleted
-    public boolean deletePost(String postNumber, String userNumber) {
-            if(validatePostAndAuthor(postNumber, userNumber)) {
-                Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
-                if(post.isPresent()){
-                    deleteCommentsAndPostLike(post.get());
-                    postRepository.delete(post.get());
-                    return true;
-                }
-            }
-            return false;
-    }
-
-    private boolean validatePostAndAuthor(String postNumber, String userNumber){
-        Optional<UserDTO> user = userRepository.findByUserNumber(userNumber);
-        Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
-        if(user.isPresent() && post.isPresent()){
-            if(user.get().getUserNumber().equals(post.get().getUser().getUserNumber())){
+    public boolean createPostComment(String postNumber, String userNumber, String newComment) {
+        if (validatePostExists(postNumber) && validateUserExists(userNumber)) {
+            CommentDTO commentDTO = createNewComment(userNumber, postNumber, newComment);
+            commentDTO = commentRepository.save(commentDTO);
+            if(commentDTO.getId() != null){
                 return true;
             }
         }
         return false;
     }
 
-    private void deleteCommentsAndPostLike(PostDTO post){
+    private boolean validateUserExists(String userNumber) {
+        Optional<UserDTO> user = userRepository.findByUserNumber(userNumber);
+        if (user.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validatePostExists(String postNumber) {
+        Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
+        if (post.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Returns true if the post is deleted
+    public boolean deletePost(String postNumber, String userNumber) {
+        if (validatePostAndAuthor(postNumber, userNumber)) {
+            Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
+            if (post.isPresent()) {
+                deleteCommentsAndPostLike(post.get());
+                postRepository.delete(post.get());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean validatePostAndAuthor(String postNumber, String userNumber) {
+        Optional<UserDTO> user = userRepository.findByUserNumber(userNumber);
+        Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
+        if (user.isPresent() && post.isPresent()) {
+            if (user.get().getUserNumber().equals(post.get().getUser().getUserNumber())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void deleteCommentsAndPostLike(PostDTO post) {
         List<PostLikeDTO> postLikes = postLikeRepository.findAllByPostId(post.getId());
         postLikes.forEach(postLikeDTO -> postLikeRepository.delete(postLikeDTO));
         List<CommentDTO> comments = commentRepository.getCommentsByPostId(post.getId());
         comments.forEach(commentDTO -> commentRepository.delete(commentDTO));
+    }
+
+    public PostComplete getPost(String postNumber) {
+        if(validatePostExists(postNumber)){
+            PostDTO postDto = postRepository.findByPostNumber(postNumber).get();
+            Post post = PostParser.postDTOToPost(postDto);
+            List<CommentDTO> commentDTOS = commentRepository.getCommentsByPostId(postDto.getId());
+            List<CommentMinimum> commentMinimums = CommentParser.commentDTOListToCommentMinimumList(commentDTOS);
+            int  likesCount = postLikeRepository.countPostLikesByPostId(postDto.getId());
+            return new PostComplete(post, likesCount, commentMinimums);
+        }
+        return null;
     }
 }

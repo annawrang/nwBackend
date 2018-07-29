@@ -17,4 +17,5 @@ public final class UserParser {
     public static UserMinimum toUserMinimum(UserDTO user) {
         return new UserMinimum(user.getFirstName(), user.getSurName(), user.getUserNumber());
     }
+
 }

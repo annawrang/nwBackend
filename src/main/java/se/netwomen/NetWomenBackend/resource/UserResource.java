@@ -48,16 +48,12 @@ public class UserResource {
     @POST
     @Path("signup")
     public Response createNewUser(User user) {
-        service.save(user);
-        return Response.status(Response.Status.CREATED)
-                .build();
+        if(service.saveNewUser(user)){
+            return Response.status(Response.Status.CREATED)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    /*CLAUDIAS- Hämta profil baserat på förstanamn*/
-    @GET
-    @Path("{id}/profile")
-    public Response getProfilePageForUser(@PathParam("id") Long id) {
-        return Response.ok(profileService.findByUserId(id)).build();
-    }
 
 }

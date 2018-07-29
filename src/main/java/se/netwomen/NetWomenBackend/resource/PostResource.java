@@ -67,11 +67,28 @@ public class PostResource {
         return Response.status(BAD_REQUEST).build();
     }
 
+    @POST
+    @Path("{postNumber}/comments")
+    public Response createNewPostComment(@PathParam("postNumber") String postNumber, String newComment){
+        String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal().toString());
+        if(postService.createPostComment(postNumber, userNumber, newComment)){
+            return Response.status(CREATED).build();
+        }
+        return Response.status(BAD_REQUEST).build();
+    }
+
     // Paging, vilken sida + antal per sida (default 10 per sida)
     @GET
     public Response getPostsPaged(@BeanParam PostParam param) {
         List<PostComplete> posts = postService.getPostsAndLikesComments(param);
         return Response.ok(posts).build();
+    }
+
+    @GET
+    @Path("{postNumber}")
+    public Response getPost(@PathParam("postNumber") String postNumber){
+        return Response.ok(postService.getPost(postNumber)).build();
     }
 
 
