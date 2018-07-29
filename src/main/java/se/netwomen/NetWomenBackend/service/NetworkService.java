@@ -32,7 +32,7 @@ public class NetworkService {
     }
 
     public List<Network> getNetworks(NetworkParam param) {
-        return networkRepository.findAll(getPageRequest(param))
+       return networkRepository.findAll(getPageRequest(param))
                 .getContent()
                 .stream()
                 .map(NetworkParser::networkDTOtoNetwork)

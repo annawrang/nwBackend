@@ -17,7 +17,7 @@ public class NetworkDTO {
     private String country;
     private String networkNumber;
     // private List<String> tags = new ArrayList<>();
-
+    protected NetworkDTO (){}
 
     public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, String city, String country, String networkNumber) {
         this.id = id;
