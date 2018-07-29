@@ -1,37 +1,20 @@
-package se.netwomen.NetWomenBackend.repository.DTO.dto.Network;
+package se.netwomen.NetWomenBackend.model.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
-public class NetworkDTO {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class NetworkUpdate {
     private String name;
     private String description;
     private String link;
     private String pictureUrl;
     private String city;
     private String country;
-    private String networkNumber;
-    // private List<String> tags = new ArrayList<>();
 
-
-    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, String city, String country, String networkNumber) {
-        this.id = id;
+    public NetworkUpdate(String name, String description, String link, String pictureUrl, String city, String country) {
         this.name = name;
         this.description = description;
         this.link = link;
         this.pictureUrl = pictureUrl;
         this.city = city;
         this.country = country;
-        this.networkNumber = networkNumber;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
@@ -56,9 +39,5 @@ public class NetworkDTO {
 
     public String getCountry() {
         return country;
-    }
-
-    public String getNetworkNumber() {
-        return networkNumber;
     }
 }
