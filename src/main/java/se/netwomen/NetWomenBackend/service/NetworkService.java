@@ -49,6 +49,4 @@ public class NetworkService {
     protected PageRequest getPageRequest(NetworkParam pageParam){
         return PageRequest.of(pageParam.getPage(), pageParam.getSize());
     }
-
-    //Validation vilkor
 }
