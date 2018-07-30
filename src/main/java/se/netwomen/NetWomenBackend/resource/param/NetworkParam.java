@@ -6,10 +6,10 @@ import javax.ws.rs.QueryParam;
 public final class NetworkParam {
 
     @QueryParam("page")
-    @DefaultValue("0")
+    @DefaultValue("3")
     private int page;
     @QueryParam("size")
-    @DefaultValue("10")
+    @DefaultValue("1")
     private int size;
 
     public int getPage() {
