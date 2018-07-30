@@ -39,7 +39,7 @@ public class ProfileResource {
         if (userNumber == null || profileMine == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         } else {
-            if (userNumber.equals(profileMine.getUser().getUserNumber())) {
+            if(isSameUser(userNumber, profileMine.getUser().getUserNumber())){
                 profileService.editProfile(profileMine);
                 return Response.ok().build();
             }

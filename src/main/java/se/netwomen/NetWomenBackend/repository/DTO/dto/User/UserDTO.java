@@ -16,6 +16,7 @@ public class UserDTO {
     private String email;
     private String userNumber;
     private String password;
+    private String workTitle;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -65,5 +66,9 @@ public class UserDTO {
 
     public List<Role> getRoles() {
         return roles;
+    }
+
+    public String getWorkTitle() {
+        return workTitle;
     }
 }

@@ -6,6 +6,7 @@ public class ProfileMine {
 
     private String description;
     private UserMinimum user;
+    private String workTitle;
 
     // difference between Others and Mine
     private String email;
@@ -24,5 +25,13 @@ public class ProfileMine {
 
     public UserMinimum getUser() {
         return user;
+    }
+
+    public String getWorkTitle() {
+        return workTitle;
+    }
+
+    public void setWorkTitle(String workTitle) {
+        this.workTitle = workTitle;
     }
 }

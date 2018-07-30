@@ -17,12 +17,12 @@ import javax.ws.rs.core.Response;
 public class UserResource {
 
     private final UserService service;
-    private final ProfileService profileService;/*CLAUDIA*/
+    private final ProfileService profileService;
 
     @Autowired
     public UserResource(UserService userService, ProfileService profileService) {
         this.service = userService;
-        this.profileService = profileService; /*CLAUDIA*/
+        this.profileService = profileService;
     }
 
 
@@ -34,7 +34,6 @@ public class UserResource {
         String jwtToken = this.service.signIn(email, password);
         User user = service.findByEmailAndPassword(email, password);
         if (user != null) {
-            System.out.println("\nAnvändaren finns");
             return Response.ok()
                     .header("Auth-Token", jwtToken)
                     .header("Usernumber", user.getUserNumber())
@@ -48,7 +47,7 @@ public class UserResource {
     @POST
     @Path("signup")
     public Response createNewUser(User user) {
-        if(service.saveNewUser(user)){
+        if (service.saveNewUser(user)) {
             return Response.status(Response.Status.CREATED)
                     .build();
         }
