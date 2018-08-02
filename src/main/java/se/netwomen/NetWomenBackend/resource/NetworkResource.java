@@ -47,9 +47,7 @@ public class NetworkResource {
 
     @GET
     public Response getNetworks(@BeanParam NetworkParam param){
-        List<Network> networks = networkService.getNetworks(param);
-        System.out.println("NÄTVÄRK STORLEK " + networks.size());
-        return Response.ok(networks).build();
+        return Response.ok(networkService.getNetworks(param)).build();
     }
 
     @PUT
@@ -60,16 +58,12 @@ public class NetworkResource {
 
     }
 
-    private String getUserNumberFromAuth(String auth){
-        if(auth == null){
-            throw new EmailNotFoundException("Usernumber not found.");
-        }
-        String userNumber = auth.split(";")[0];
-        userNumber = userNumber.substring(userNumber.lastIndexOf(":") + 2).trim();
-        System.out.println("userNumber==" + userNumber);
-        return userNumber;
+    @DELETE
+    @Path(("{networkNumber}"))
+    public Response deleteNetwork(@PathParam("networkNumber") String networkNumber){
+        networkService.deleteNetwork(networkNumber);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
-
 
 
 }

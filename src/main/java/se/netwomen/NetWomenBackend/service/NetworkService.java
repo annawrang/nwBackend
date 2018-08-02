@@ -12,6 +12,7 @@ import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 
 import javax.ws.rs.BadRequestException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +47,14 @@ public class NetworkService {
                 .orElseThrow(BadRequestException::new);
     }
 
-    protected PageRequest getPageRequest(NetworkParam pageParam){
+    private PageRequest getPageRequest(NetworkParam pageParam){
         return PageRequest.of(pageParam.getPage(), pageParam.getSize());
+    }
+
+    public void deleteNetwork(String networkNumber) {
+        Optional<NetworkDTO> networkDTO = networkRepository.findByNetworkNumber(networkNumber);
+        networkDTO.ifPresent(network -> networkRepository.delete(network));
+        networkDTO.orElseThrow(BadRequestException::new);
+
     }
 }
