@@ -1,8 +1,7 @@
 package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.stereotype.Component;
-import se.netwomen.NetWomenBackend.model.data.network.NetworkTest;
-import se.netwomen.NetWomenBackend.model.data.network.NetworkUpdate;
+import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.NetworkService;
 
@@ -31,10 +30,8 @@ public class NetworkResource {
     }
 */
     @POST
-    public Response createNetwork(NetworkTest network) {
-        System.out.println(network.getName() + "   " + network.getDescription() + "    " + network.getLink() + "  " + network.getPictureUrl());
-        network.getCountryTags().forEach(tag -> System.out.println(tag.getName()));
-        network.getCityTags().forEach(tag -> System.out.println(tag.getName()));
+    public Response createNetwork(Network network) {
+        networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
     /*
@@ -43,13 +40,14 @@ public class NetworkResource {
     public Response getNetwork(@PathParam("networkNumber") String networkNumber) {
         return Response.ok(networkService.getNetwork(networkNumber)).build();
     }
+*/
 
     @GET
     public Response getNetworks(@BeanParam NetworkParam param){
         return Response.ok(networkService.getNetworks(param)).build();
     }
 
-
+/*
     @PUT
     @Path(("{networkNumber}"))
     public Response updateNetwork(@PathParam("networkNumber") String networkNumber, NetworkUpdate networkUpdate){
@@ -58,12 +56,6 @@ public class NetworkResource {
 
     }
 */
-    @DELETE
-    @Path(("{networkNumber}"))
-    public Response deleteNetwork(@PathParam("networkNumber") String networkNumber){
-        networkService.deleteNetwork(networkNumber);
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
 
 
 }

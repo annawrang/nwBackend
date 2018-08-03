@@ -1,8 +1,6 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.network.Network;
-import se.netwomen.NetWomenBackend.model.data.network.NetworkTest;
-import se.netwomen.NetWomenBackend.model.data.network.NetworkUpdate;
 import se.netwomen.NetWomenBackend.model.data.network.tag.CityTag;
 import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
 import se.netwomen.NetWomenBackend.model.data.network.tag.ForTag;
@@ -11,29 +9,47 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CityTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
 
+import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 public final class NetworkParser {
-/*
-    public static Network networkDTOtoNetwork(NetworkDTO networkDTO) {
-        return new Network(networkDTO.getName(), networkDTO.getDescription(), networkDTO.getLink(), networkDTO.getPictureUrl(), networkDTO.getCity(), networkDTO.getCountry(), networkDTO.getNetworkNumber());
+    public static NetworkDTO networkToNewEntity(Network network, Set<CountryTagDTO> countryTags, Set<CityTagDTO> cityTags, Set<ForTagDTO> forTags){
+        return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(),countryTags, cityTags, forTags, null, null, null, UUID.randomUUID().toString());
     }
+
+    public static Network entityToNetwork(NetworkDTO networkDTO, Set<CountryTag> countryTags, Set<CityTag> cityTags, Set<ForTag> forTags) {
+        return new Network(networkDTO.getName(), networkDTO.getDescription(), networkDTO.getLink(), networkDTO.getPictureUrl(), countryTags, cityTags, forTags, null, null, null, networkDTO.getNetworkNumber());
+    }
+    /*
     public static NetworkDTO networkToNetworkDTO(NetworkTest network) {
         return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(), network.getCountryTags(), network.getCityTags(), network.getForTags(), network.getOfferTags(), network.getTypeTags(), network.getOtherTags(), UUID.randomUUID().toString());
     }
   */
 
 
-    public static CountryTagDTO countryTagDTOToNewCountryTag(CountryTag countryTag){ // ny tag
-        return new CountryTagDTO(null, countryTag.getName());
+    public static CountryTagDTO countryTagToNewEntity(CountryTag countryTag){ // ny tag
+        return new CountryTagDTO(null, countryTag.getName().trim());
+    }
+    
+    public static CountryTag entityToExistingCountryTag(CountryTagDTO countryTagDTO){
+        return new CountryTag(countryTagDTO.getName());
     }
 
-    public static CityTagDTO cityTagDTOtoNewCityTag(CityTag cityTag) {
-        return new CityTagDTO(null, cityTag.getName());
+    public static CityTagDTO cityTagtoNewEntity(CityTag cityTag) {
+        return new CityTagDTO(null, cityTag.getName().trim());
     }
 
-    public static ForTagDTO forTagDTOtoNewForTag(ForTag forTag) {
-        return new ForTagDTO(null, forTag.getName());
+    public static CityTag entityToExistingCityTag(CityTagDTO cityTagDTO){
+        return new CityTag(cityTagDTO.getName());
+    }
+
+    public static ForTagDTO forTagtoNewEntity(ForTag forTag) {
+        return new ForTagDTO(null, forTag.getName().trim());
+    }
+
+    public static ForTag entityToExsistingForTag(ForTagDTO forTagDTO){
+        return new ForTag(forTagDTO.getName());
     }
 /*
     public static NetworkDTO networkUpdateToNetworkDto(NetworkDTO network, NetworkUpdate networkUpdate){

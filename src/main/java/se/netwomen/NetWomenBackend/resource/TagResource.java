@@ -6,15 +6,12 @@ import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
 import se.netwomen.NetWomenBackend.model.data.network.tag.ForTag;
 import se.netwomen.NetWomenBackend.service.NetworkService;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Component
-@Path("networks")
+@Path("tags")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TagResource {
@@ -26,19 +23,23 @@ public class TagResource {
     @POST
     @Path("/country")
     public Response createCountryTag(CountryTag countryTag){
-        networkService.createCountryTag(countryTag);
+        networkService.saveCountry(countryTag);
         return Response.status(Response.Status.OK).build();
     }
     @POST
     @Path("/city")
     public Response createCityTag(CityTag cityTag){
-        networkService.createCityTag(cityTag);
+        networkService.saveCity(cityTag);
         return Response.status(Response.Status.OK).build();
     }
     @POST
     @Path("/for")
     public Response createForTag(ForTag forTag){
-        networkService.createForTag(forTag);
+        networkService.saveFor(forTag);
         return Response.status(Response.Status.OK).build();
+    }
+    @GET
+    public Response getTags(){
+        return Response.ok(networkService.getTags()).build();
     }
 }

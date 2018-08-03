@@ -15,27 +15,23 @@ public class NetworkDTO {
     private String description;
     private String link;
     private String pictureUrl;
-    @ManyToMany
-
-    private Collection<CountryTagDTO> countryTags;
-    @ManyToMany
-
-    private Collection<CityTagDTO> cityTags;
-    @ManyToMany
-
-    private Collection<ForTagDTO> forTags;
-    @ManyToMany
-
-    private Collection<OfferTagDTO> offerTags;
-    @ManyToMany
-    private Collection<TypeTagDTO> typeTags;
-    @ManyToMany
-    private Collection<OtherTagDTO> otherTags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<CountryTagDTO> countryTags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<CityTagDTO> cityTags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<ForTagDTO> forTags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<OfferTagDTO> offerTags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<TypeTagDTO> typeTags;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<OtherTagDTO> otherTags;
     private String networkNumber;
     // private List<String> tags = new ArrayList<>();
     protected NetworkDTO (){}
 
-    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, Collection<CountryTagDTO> countryTags, Collection<CityTagDTO> cityTags, Collection<ForTagDTO> forTags, Collection<OfferTagDTO> offerTags, Collection<TypeTagDTO> typeTags, Collection<OtherTagDTO> otherTags, String networkNumber) {
+    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, Set<CountryTagDTO> countryTags, Set<CityTagDTO> cityTags, Set<ForTagDTO> forTags, Set<OfferTagDTO> offerTags, Set<TypeTagDTO> typeTags, Set<OtherTagDTO> otherTags, String networkNumber) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -70,27 +66,27 @@ public class NetworkDTO {
         return pictureUrl;
     }
 
-    public Collection<CountryTagDTO> getCountryTags() {
+    public Set<CountryTagDTO> getCountryTags() {
         return countryTags;
     }
 
-    public Collection<CityTagDTO> getCityTags() {
+    public Set<CityTagDTO> getCityTags() {
         return cityTags;
     }
 
-    public Collection<ForTagDTO> getForTags() {
+    public Set<ForTagDTO> getForTags() {
         return forTags;
     }
 
-    public Collection<OfferTagDTO> getOfferTags() {
+    public Set<OfferTagDTO> getOfferTags() {
         return offerTags;
     }
 
-    public Collection<TypeTagDTO> getTypeTags() {
+    public Set<TypeTagDTO> getTypeTags() {
         return typeTags;
     }
 
-    public Collection<OtherTagDTO> getOtherTags() {
+    public Set<OtherTagDTO> getOtherTags() {
         return otherTags;
     }
 

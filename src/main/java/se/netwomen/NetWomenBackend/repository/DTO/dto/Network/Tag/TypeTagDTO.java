@@ -16,6 +16,8 @@ public class TypeTagDTO {
     private String name;
     @ManyToMany(mappedBy = "typeTags")
     private Collection<NetworkDTO> networkDTO;
+    protected TypeTagDTO() {
+    }
     public TypeTagDTO(Long id, String name) {
         this.id = id;
         this.name = name;

@@ -1,25 +1,36 @@
 package se.netwomen.NetWomenBackend.model.data.network;
 
+import se.netwomen.NetWomenBackend.model.data.network.tag.*;
+
+import java.util.Set;
+
 public final class Network {
 
     private String name;
     private String description;
     private String link;
     private String pictureUrl;
-    private String city;
-    private String country;
+    private Set<CountryTag> countryTags;
+    private Set<CityTag> cityTags;
+    private Set<ForTag> forTags;
+    private Set<OfferTag> offerTags;
+    private Set<TypeTag> typeTags;
+    private Set<OtherTag> otherTags;
     private String networkNumber;
 
-    protected Network (){
-    }
+    protected  Network(){}
 
-    public Network(String name, String description, String link, String pictureUrl, String city, String country, String networkNumber) {
+    public Network(String name, String description, String link, String pictureUrl, Set<CountryTag> countryTags, Set<CityTag> cityTags, Set<ForTag> forTags, Set<OfferTag> offerTags, Set<TypeTag> typeTags, Set<OtherTag> otherTags, String networkNumber) {
         this.name = name;
         this.description = description;
         this.link = link;
         this.pictureUrl = pictureUrl;
-        this.city = city;
-        this.country = country;
+        this.countryTags = countryTags;
+        this.cityTags = cityTags;
+        this.forTags = forTags;
+        this.offerTags = offerTags;
+        this.typeTags = typeTags;
+        this.otherTags = otherTags;
         this.networkNumber = networkNumber;
     }
 
@@ -39,16 +50,31 @@ public final class Network {
         return pictureUrl;
     }
 
-    public String getCity() {
-        return city;
+    public Set<CountryTag> getCountryTags() {
+        return countryTags;
     }
 
-    public String getCountry() {
-        return country;
+    public Set<CityTag> getCityTags() {
+        return cityTags;
+    }
+
+    public Set<ForTag> getForTags() {
+        return forTags;
+    }
+
+    public Set<OfferTag> getOfferTags() {
+        return offerTags;
+    }
+
+    public Set<TypeTag> getTypeTags() {
+        return typeTags;
+    }
+
+    public Set<OtherTag> getOtherTags() {
+        return otherTags;
     }
 
     public String getNetworkNumber() {
         return networkNumber;
     }
-
 }

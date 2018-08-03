@@ -17,8 +17,23 @@ public class CountryTagDTO {
     private String name;
     @ManyToMany(mappedBy = "countryTags")
     private Collection<NetworkDTO> networkDTO;
+
+    protected CountryTagDTO() {
+    }
     public CountryTagDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Collection<NetworkDTO> getNetworkDTO() {
+        return networkDTO;
     }
 }

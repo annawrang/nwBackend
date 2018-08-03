@@ -16,6 +16,8 @@ public class OfferTagDTO {
     private String name;
     @ManyToMany(mappedBy = "offerTags")
     private Collection<NetworkDTO> networkDTO;
+    protected OfferTagDTO() {
+    }
     public OfferTagDTO(Long id, String name) {
         this.id = id;
         this.name = name;
