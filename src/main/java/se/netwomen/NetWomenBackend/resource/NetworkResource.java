@@ -1,24 +1,14 @@
 package se.netwomen.NetWomenBackend.resource;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import se.netwomen.NetWomenBackend.model.data.Network;
-import se.netwomen.NetWomenBackend.model.data.NetworkUpdate;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkTest;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkUpdate;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
-import se.netwomen.NetWomenBackend.resource.param.PostParam;
 import se.netwomen.NetWomenBackend.service.NetworkService;
-import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
-import se.netwomen.NetWomenBackend.service.exceptions.EmailNotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.List;
 
 @Component
 @Path("networks")
@@ -33,12 +23,21 @@ public class NetworkResource {
         this.networkService = networkService;
     }
 
+    /*
     @POST
     public Response createNetwork(Network network) {
         networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
-
+*/
+    @POST
+    public Response createNetwork(NetworkTest network) {
+        System.out.println(network.getName() + "   " + network.getDescription() + "    " + network.getLink() + "  " + network.getPictureUrl());
+        network.getCountryTags().forEach(tag -> System.out.println(tag.getName()));
+        network.getCityTags().forEach(tag -> System.out.println(tag.getName()));
+        return Response.status(Response.Status.CREATED).build();
+    }
+    /*
     @GET
     @Path("{networkNumber}")
     public Response getNetwork(@PathParam("networkNumber") String networkNumber) {
@@ -50,6 +49,7 @@ public class NetworkResource {
         return Response.ok(networkService.getNetworks(param)).build();
     }
 
+
     @PUT
     @Path(("{networkNumber}"))
     public Response updateNetwork(@PathParam("networkNumber") String networkNumber, NetworkUpdate networkUpdate){
@@ -57,7 +57,7 @@ public class NetworkResource {
         return Response.status(Response.Status.NO_CONTENT).build();
 
     }
-
+*/
     @DELETE
     @Path(("{networkNumber}"))
     public Response deleteNetwork(@PathParam("networkNumber") String networkNumber){

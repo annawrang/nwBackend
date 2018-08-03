@@ -1,20 +1,26 @@
-package se.netwomen.NetWomenBackend.model.data;
+package se.netwomen.NetWomenBackend.model.data.network;
 
-public class NetworkUpdate {
+public final class Network {
+
     private String name;
     private String description;
     private String link;
     private String pictureUrl;
     private String city;
     private String country;
+    private String networkNumber;
 
-    public NetworkUpdate(String name, String description, String link, String pictureUrl, String city, String country) {
+    protected Network (){
+    }
+
+    public Network(String name, String description, String link, String pictureUrl, String city, String country, String networkNumber) {
         this.name = name;
         this.description = description;
         this.link = link;
         this.pictureUrl = pictureUrl;
         this.city = city;
         this.country = country;
+        this.networkNumber = networkNumber;
     }
 
     public String getName() {
@@ -40,4 +46,9 @@ public class NetworkUpdate {
     public String getCountry() {
         return country;
     }
+
+    public String getNetworkNumber() {
+        return networkNumber;
+    }
+
 }

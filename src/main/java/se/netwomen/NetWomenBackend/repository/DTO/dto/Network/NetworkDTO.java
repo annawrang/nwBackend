@@ -1,8 +1,10 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.Network;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class NetworkDTO {
@@ -13,20 +15,38 @@ public class NetworkDTO {
     private String description;
     private String link;
     private String pictureUrl;
-    private String city;
-    private String country;
+    @ManyToMany
+
+    private Collection<CountryTagDTO> countryTags;
+    @ManyToMany
+
+    private Collection<CityTagDTO> cityTags;
+    @ManyToMany
+
+    private Collection<ForTagDTO> forTags;
+    @ManyToMany
+
+    private Collection<OfferTagDTO> offerTags;
+    @ManyToMany
+    private Collection<TypeTagDTO> typeTags;
+    @ManyToMany
+    private Collection<OtherTagDTO> otherTags;
     private String networkNumber;
     // private List<String> tags = new ArrayList<>();
     protected NetworkDTO (){}
 
-    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, String city, String country, String networkNumber) {
+    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, Collection<CountryTagDTO> countryTags, Collection<CityTagDTO> cityTags, Collection<ForTagDTO> forTags, Collection<OfferTagDTO> offerTags, Collection<TypeTagDTO> typeTags, Collection<OtherTagDTO> otherTags, String networkNumber) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.link = link;
         this.pictureUrl = pictureUrl;
-        this.city = city;
-        this.country = country;
+        this.countryTags = countryTags;
+        this.cityTags = cityTags;
+        this.forTags = forTags;
+        this.offerTags = offerTags;
+        this.typeTags = typeTags;
+        this.otherTags = otherTags;
         this.networkNumber = networkNumber;
     }
 
@@ -50,12 +70,28 @@ public class NetworkDTO {
         return pictureUrl;
     }
 
-    public String getCity() {
-        return city;
+    public Collection<CountryTagDTO> getCountryTags() {
+        return countryTags;
     }
 
-    public String getCountry() {
-        return country;
+    public Collection<CityTagDTO> getCityTags() {
+        return cityTags;
+    }
+
+    public Collection<ForTagDTO> getForTags() {
+        return forTags;
+    }
+
+    public Collection<OfferTagDTO> getOfferTags() {
+        return offerTags;
+    }
+
+    public Collection<TypeTagDTO> getTypeTags() {
+        return typeTags;
+    }
+
+    public Collection<OtherTagDTO> getOtherTags() {
+        return otherTags;
     }
 
     public String getNetworkNumber() {
