@@ -22,32 +22,32 @@ public class NetworkResource {
         this.networkService = networkService;
     }
 
-    /*
+
     @POST
     public Response createNetwork(Network network) {
         networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
-*/
+/*
     @POST
     public Response createNetwork(Network network) {
         networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
-    /*
+
     @GET
     @Path("{networkNumber}")
     public Response getNetwork(@PathParam("networkNumber") String networkNumber) {
         return Response.ok(networkService.getNetwork(networkNumber)).build();
     }
-*/
+
 
     @GET
     public Response getNetworks(@BeanParam NetworkParam param){
         return Response.ok(networkService.getNetworks(param)).build();
     }
 
-/*
+
     @PUT
     @Path(("{networkNumber}"))
     public Response updateNetwork(@PathParam("networkNumber") String networkNumber, NetworkUpdate networkUpdate){

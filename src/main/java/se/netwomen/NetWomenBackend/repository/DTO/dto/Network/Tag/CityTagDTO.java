@@ -2,11 +2,9 @@ package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag;
 
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class CityTagDTO {
@@ -14,8 +12,8 @@ public class CityTagDTO {
     @GeneratedValue
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "cityTags")
-    private Collection<NetworkDTO> networkDTO;
+    @ManyToMany(mappedBy = "cityTagDTOs")
+    private Set<CountryTagDTO> countryTagDTOs;
 
     protected CityTagDTO() {
     }
@@ -33,7 +31,8 @@ public class CityTagDTO {
         return name;
     }
 
-    public Collection<NetworkDTO> getNetworkDTO() {
-        return networkDTO;
+
+    public Set<CountryTagDTO> getCountryTagDTOs() {
+        return countryTagDTOs;
     }
 }

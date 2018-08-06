@@ -11,7 +11,6 @@ public final class Network {
     private String link;
     private String pictureUrl;
     private Set<CountryTag> countryTags;
-    private Set<CityTag> cityTags;
     private Set<ForTag> forTags;
     private Set<OfferTag> offerTags;
     private Set<TypeTag> typeTags;
@@ -20,13 +19,12 @@ public final class Network {
 
     protected  Network(){}
 
-    public Network(String name, String description, String link, String pictureUrl, Set<CountryTag> countryTags, Set<CityTag> cityTags, Set<ForTag> forTags, Set<OfferTag> offerTags, Set<TypeTag> typeTags, Set<OtherTag> otherTags, String networkNumber) {
+    public Network(String name, String description, String link, String pictureUrl, Set<CountryTag> countryTags, Set<ForTag> forTags, Set<OfferTag> offerTags, Set<TypeTag> typeTags, Set<OtherTag> otherTags, String networkNumber) {
         this.name = name;
         this.description = description;
         this.link = link;
         this.pictureUrl = pictureUrl;
         this.countryTags = countryTags;
-        this.cityTags = cityTags;
         this.forTags = forTags;
         this.offerTags = offerTags;
         this.typeTags = typeTags;
@@ -52,10 +50,6 @@ public final class Network {
 
     public Set<CountryTag> getCountryTags() {
         return countryTags;
-    }
-
-    public Set<CityTag> getCityTags() {
-        return cityTags;
     }
 
     public Set<ForTag> getForTags() {

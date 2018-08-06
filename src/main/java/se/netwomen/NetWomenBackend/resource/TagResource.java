@@ -1,14 +1,15 @@
 package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.stereotype.Component;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CityTag;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
-import se.netwomen.NetWomenBackend.model.data.network.tag.ForTag;
+import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.service.NetworkService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @Path("tags")
@@ -22,24 +23,39 @@ public class TagResource {
     }
     @POST
     @Path("/country")
-    public Response createCountryTag(CountryTag countryTag){
+    public Response createCountryTag(Set<CountryTag> countryTag){
         networkService.saveCountry(countryTag);
         return Response.status(Response.Status.OK).build();
     }
     @POST
     @Path("/city")
+    public Response createCityTagToCountryTag(CountryTagUpdate countryTagUpdate){
+        System.out.println(countryTagUpdate.getCountryTag() + "    " + countryTagUpdate.getCityTag());
+        networkService.updateCountry(countryTagUpdate);
+        return Response.status(Response.Status.OK).build();
+    }
+    /*
+    @POST
+    @Path("/city")
     public Response createCityTag(CityTag cityTag){
         networkService.saveCity(cityTag);
         return Response.status(Response.Status.OK).build();
-    }
+    }*/
     @POST
     @Path("/for")
     public Response createForTag(ForTag forTag){
         networkService.saveFor(forTag);
         return Response.status(Response.Status.OK).build();
     }
+
     @GET
     public Response getTags(){
+        TagView tagView = networkService.getTags();
+        tagView.getCountryTags().forEach(country -> country.getCityTags().forEach( cityTag -> System.out.println(cityTag.getName())));
         return Response.ok(networkService.getTags()).build();
+    }
+    @Path("{countryName}")
+    @GET public Response getCitiesForCountry(@PathParam("countryName") String country){
+        return Response.ok(networkService.getCitiesForCountry(country)).build();
     }
 }

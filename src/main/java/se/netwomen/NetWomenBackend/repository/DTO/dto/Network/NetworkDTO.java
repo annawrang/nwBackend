@@ -18,8 +18,6 @@ public class NetworkDTO {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<CountryTagDTO> countryTags;
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<CityTagDTO> cityTags;
-    @ManyToMany(fetch = FetchType.EAGER)
     private Set<ForTagDTO> forTags;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<OfferTagDTO> offerTags;
@@ -31,14 +29,13 @@ public class NetworkDTO {
     // private List<String> tags = new ArrayList<>();
     protected NetworkDTO (){}
 
-    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, Set<CountryTagDTO> countryTags, Set<CityTagDTO> cityTags, Set<ForTagDTO> forTags, Set<OfferTagDTO> offerTags, Set<TypeTagDTO> typeTags, Set<OtherTagDTO> otherTags, String networkNumber) {
+    public NetworkDTO(Long id, String name, String description, String link, String pictureUrl, Set<CountryTagDTO> countryTags, Set<ForTagDTO> forTags, Set<OfferTagDTO> offerTags, Set<TypeTagDTO> typeTags, Set<OtherTagDTO> otherTags, String networkNumber) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.link = link;
         this.pictureUrl = pictureUrl;
         this.countryTags = countryTags;
-        this.cityTags = cityTags;
         this.forTags = forTags;
         this.offerTags = offerTags;
         this.typeTags = typeTags;
@@ -68,10 +65,6 @@ public class NetworkDTO {
 
     public Set<CountryTagDTO> getCountryTags() {
         return countryTags;
-    }
-
-    public Set<CityTagDTO> getCityTags() {
-        return cityTags;
     }
 
     public Set<ForTagDTO> getForTags() {

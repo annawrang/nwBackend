@@ -1,27 +1,22 @@
 package se.netwomen.NetWomenBackend.model.data.network.tag;
 
 import java.util.Collection;
+import java.util.List;
 
 public class TagView {
-    private Collection<CountryTag> countryTags;
-    private Collection<CityTag> cityTags;
-    private Collection<ForTag> forTags;
+    private List<CountryTag> countryTags;
+    private List<ForTag> forTags;
 
-    public TagView(Collection<CountryTag> countryTags, Collection<CityTag> cityTags, Collection<ForTag> forTags) {
+    public TagView(List<CountryTag> countryTags, List<ForTag> forTags) {
         this.countryTags = countryTags;
-        this.cityTags = cityTags;
         this.forTags = forTags;
     }
 
-    public Collection<CountryTag> getCountryTags() {
+    public List<CountryTag> getCountryTags() {
         return countryTags;
     }
 
-    public Collection<CityTag> getCityTags() {
-        return cityTags;
-    }
-
-    public Collection<ForTag> getForTags() {
+    public List<ForTag> getForTags() {
         return forTags;
     }
 }
