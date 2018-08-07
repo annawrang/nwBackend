@@ -1,25 +1,24 @@
 package se.netwomen.NetWomenBackend.model.data.network.tag;
 
 import java.util.List;
-import java.util.Set;
 
 public class CountryTag {
 
     private String name;
-    private List<CityTag> cityTags;
+    private List<AreaTag> areaTags;
 
-    protected CountryTag(){}
+    protected  CountryTag() {}
 
-    public CountryTag(String name, List<CityTag> cityTags) {
+    public CountryTag(String name, List<AreaTag> areaTags) {
         this.name = name;
-        this.cityTags =cityTags;
+        this.areaTags = areaTags;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<CityTag> getCityTags() {
-        return cityTags;
+    public List<AreaTag> getAreaTags() {
+        return areaTags;
     }
 }

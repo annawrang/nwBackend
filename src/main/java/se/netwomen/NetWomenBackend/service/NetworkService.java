@@ -1,18 +1,18 @@
 package se.netwomen.NetWomenBackend.service;
 
-import javassist.tools.web.BadHttpRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CityTagDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.AreaTagAlternativeDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagAlternativeDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CityTagRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.AreaTagAlternativeRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagAlternativeRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
@@ -24,22 +24,20 @@ import java.util.stream.Collectors;
 @Service
 public class NetworkService {
     private final NetworkRepository networkRepository;
-    private final CountryTagRepository countryTagRepository;
-    private final CityTagRepository cityTagRepository;
+    private final CountryTagAlternativeRepository countryTagAlternativeRepository;
+    private final AreaTagAlternativeRepository areaTagAlternativeRepository;
     private final ForTagRepository forTagRepository;
 
-    public NetworkService(NetworkRepository networkRepository, CountryTagRepository countryTagRepository, CityTagRepository cityTagRepository, ForTagRepository forTagRepository) {
+    public NetworkService(NetworkRepository networkRepository, CountryTagAlternativeRepository countryTagAlternativeRepository, AreaTagAlternativeRepository areaTagAlternativeRepository, ForTagRepository forTagRepository) {
         this.networkRepository = networkRepository;
-        this.countryTagRepository = countryTagRepository;
-        this.cityTagRepository = cityTagRepository;
+        this.countryTagAlternativeRepository = countryTagAlternativeRepository;
+        this.areaTagAlternativeRepository = areaTagAlternativeRepository;
         this.forTagRepository = forTagRepository;
     }
 
-    public void saveCountry(Set<CountryTag> countryTag) {
-       /* countryTagRepository.findByName(countryTag.getName())
-                .ifPresent(s -> {throw new BadRequestException();});
-        return countryTagRepository.save(NetworkParser.countryTagToNewEntity(countryTag));*/
-       countryTag.forEach(country -> countryTagRepository.save(NetworkParser.countryTagToNewEntity(country)));
+
+    public void saveCountries(Set<CountryTagAlternative> countryTag) {
+       countryTag.forEach(country -> countryTagAlternativeRepository.save(NetworkParser.countryTagAlternativeToNewEntity(country)));
     }
 /*
     public CityTagDTO saveCity(CityTag cityTag) {
@@ -53,7 +51,7 @@ public class NetworkService {
                 .ifPresent(s -> {throw new BadRequestException();});
         return forTagRepository.save(NetworkParser.forTagtoNewEntity(forTag));
     }
-
+/*
     public NetworkDTO saveNetwork(Network network) {
         return networkRepository.save(NetworkParser.networkToNewEntity(
                 network,
@@ -61,7 +59,7 @@ public class NetworkService {
                 getExistingForTagEntities(network)));
     }
 
-    public Set<CountryTagDTO> getExistingCountryTagEntities(Network network){
+    public Set<CountryTagAlternativeDTO> getExistingCountryTagEntities(Network network){
         Set<CountryTagDTO> set = new HashSet();
         network.getCountryTags()
                 .forEach(tag ->
@@ -89,7 +87,7 @@ public class NetworkService {
         return set;
     }
 
-
+/*
     public List<Network> getNetworks(NetworkParam param) {
         return networkRepository.findAll(getPageRequest(param))
                 .getContent()
@@ -109,7 +107,7 @@ public class NetworkService {
                 }).collect(Collectors.toList());
 
     }
-
+*/
 
     private PageRequest getPageRequest(NetworkParam pageParam){
         return PageRequest.of(pageParam.getPage(), pageParam.getSize());
@@ -135,19 +133,19 @@ public class NetworkService {
         return new TagView(getCountryTagsWithCityTags(), getForTags());
     }
 
-    private List<CountryTag> getCountryTagsWithCityTags(){
-        return countryTagRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
+    private List<CountryTagAlternative> getCountryTagsWithCityTags(){
+        return countryTagAlternativeRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
                 .stream()
                 .map(country ->
-                     NetworkParser.entityToExistingCountryTag(country, getCityTags(country)))
+                     NetworkParser.entityToExistingCountryTagAlternative(country, getCityTags(country)))
                 .collect(Collectors.toList());
     }
 
-    private List<CityTag> getCityTags(CountryTagDTO country){
-        return country.getCityTagDTOs()
+    private List<AreaTagAlternative> getCityTags(CountryTagAlternativeDTO country){
+        return country.getAreaTagAlternativeDTOs()
                 .stream()
                 .map(city ->
-                        NetworkParser.entityToExistingCityTag(city)).collect(Collectors.toList());
+                        NetworkParser.entityToExistingAreaTagAlternative(city)).collect(Collectors.toList());
     }
 
     private List<ForTag> getForTags(){
@@ -157,26 +155,26 @@ public class NetworkService {
                 .collect(Collectors.toList());
     }
 
-    public void updateCityForCountry(CountryTagUpdate countryTagUpdate) {
+    public void updateCityForCountry(AlternativeTagUpdate countryTagUpdate) {
       /* Set<CityTagDTO> cityTagDTOs = countryTagRepository.findByName(countryTagUpdate.getCountryTag())
                 .map(country -> cityTagRepository.findByCountryTagDTO(country))
                    // countryTagRepository.save(NetworkParser.countryTagtoNewEntity(countryTagUpdate.getCityTag(), country)))
                 .orElseThrow(BadRequestException::new);
        cityTagDTOs.add( new CityTagDTO(null, countryTagUpdate.getCityTag()));
        countryTagRepository.*/
-        countryTagRepository.findByName(countryTagUpdate.getCountryTag())
+        countryTagAlternativeRepository.findByName(countryTagUpdate.getCountryTag())
                 .map(country -> {
-                    country.getCityTagDTOs().add(new CityTagDTO(null, countryTagUpdate.getCityTag()));
-                    return countryTagRepository.save(country);})
+                    country.getAreaTagAlternativeDTOs().add(new AreaTagAlternativeDTO(null, countryTagUpdate.getAreaTag()));
+                    return countryTagAlternativeRepository.save(country);})
                 .orElseThrow(BadRequestException::new);
     }
 
-    public Set<CityTag> getCitiesForCountry(String country) {
-        return countryTagRepository.findByName(country)
-                .map(tag -> tag.getCityTagDTOs()
+    public Set<AreaTagAlternative> getCitiesForCountry(String country) {
+        return countryTagAlternativeRepository.findByName(country)
+                .map(tag -> tag.getAreaTagAlternativeDTOs()
                         .stream()
                         .map(city ->
-                        NetworkParser.entityToExistingCityTag(city)).collect(Collectors.toSet()))
+                        NetworkParser.entityToExistingAreaTagAlternative(city)).collect(Collectors.toSet()))
                 .orElseThrow(BadRequestException::new);
     }
 }

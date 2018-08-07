@@ -22,7 +22,7 @@ public class NetworkResource {
         this.networkService = networkService;
     }
 
-
+/*
     @POST
     public Response createNetwork(Network network) {
         networkService.saveNetwork(network);

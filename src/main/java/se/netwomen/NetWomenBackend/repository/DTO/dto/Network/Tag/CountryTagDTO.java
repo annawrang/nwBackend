@@ -1,29 +1,24 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag;
 
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
-
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Set;
-
 @Entity
-
 public class CountryTagDTO {
     @Id
     @GeneratedValue
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "countryTags")
-    private Set<NetworkDTO> networkDTO;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<CityTagDTO> cityTagDTOs;
+    private Set<AreaTagDTO> areaTagDTOs;
+    ;
 
     protected CountryTagDTO() {
     }
-    public CountryTagDTO(Long id, String name,  Set<CityTagDTO> cityTagDTOs) {
+
+    public CountryTagDTO(Long id, String name, Set<AreaTagDTO> areaTagDTOs) {
         this.id = id;
         this.name = name;
-        this.cityTagDTOs= cityTagDTOs;
+        this.areaTagDTOs = areaTagDTOs;
     }
 
     public Long getId() {
@@ -34,12 +29,7 @@ public class CountryTagDTO {
         return name;
     }
 
-    public Set<NetworkDTO> getNetworkDTO() {
-        return networkDTO;
+    public Set<AreaTagDTO> getAreaTagDTOs() {
+        return areaTagDTOs;
     }
-
-    public Set<CityTagDTO> getCityTagDTOs() {
-        return cityTagDTOs;
-    }
-
 }

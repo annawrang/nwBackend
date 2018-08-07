@@ -4,16 +4,16 @@ import java.util.Collection;
 import java.util.List;
 
 public class TagView {
-    private List<CountryTag> countryTags;
+    private List<CountryTagAlternative> countryTagAlternatives;
     private List<ForTag> forTags;
 
-    public TagView(List<CountryTag> countryTags, List<ForTag> forTags) {
-        this.countryTags = countryTags;
+    public TagView(List<CountryTagAlternative> countryTagAlternatives, List<ForTag> forTags) {
+        this.countryTagAlternatives = countryTagAlternatives;
         this.forTags = forTags;
     }
 
-    public List<CountryTag> getCountryTags() {
-        return countryTags;
+    public List<CountryTagAlternative> getCountryTags() {
+        return countryTagAlternatives;
     }
 
     public List<ForTag> getForTags() {

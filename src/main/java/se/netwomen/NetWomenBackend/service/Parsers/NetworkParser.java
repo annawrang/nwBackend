@@ -1,12 +1,13 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.network.Network;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CityTag;
+import se.netwomen.NetWomenBackend.model.data.network.tag.AreaTagAlternative;
 import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTagUpdate;
+import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTagAlternative;
 import se.netwomen.NetWomenBackend.model.data.network.tag.ForTag;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CityTagDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.AreaTagAlternativeDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagAlternativeDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class NetworkParser {
-
+/*
     public static NetworkDTO networkToNewEntity(Network network, Set<CountryTagDTO> countryTags, Set<ForTagDTO> forTags){
         return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(),countryTags, forTags, null, null, null, UUID.randomUUID().toString());
     }
@@ -30,20 +31,21 @@ public final class NetworkParser {
   */
 
 
-    public static CountryTagDTO countryTagToNewEntity(CountryTag countryTag){ // ny tag
-        return new CountryTagDTO(null, countryTag.getName().trim(), null);
+    public static CountryTagAlternativeDTO countryTagAlternativeToNewEntity(CountryTagAlternative countryTag){ // ny tag
+        return new CountryTagAlternativeDTO(null, countryTag.getName().trim(), null);
     }
 
-    public static CountryTag entityToExistingCountryTag(CountryTagDTO countryTagDTO, List<CityTag> cityTags){
-        return new CountryTag(countryTagDTO.getName(), cityTags);
+    public static CountryTagAlternative entityToExistingCountryTagAlternative(CountryTagAlternativeDTO countryTagDTO, List<AreaTagAlternative> areaTagAlternatives){
+        return new CountryTagAlternative(countryTagDTO.getName(), areaTagAlternatives);
     }
-
+/*
     public static CityTagDTO cityTagtoNewEntity(String cityTag) {
         return new CityTagDTO(null, cityTag.trim() );
     }
+    */
 
-    public static CityTag entityToExistingCityTag(CityTagDTO cityTagDTO){
-        return new CityTag(cityTagDTO.getName());
+    public static AreaTagAlternative entityToExistingAreaTagAlternative(AreaTagAlternativeDTO areaTagAlternativeDTO){
+        return new AreaTagAlternative (areaTagAlternativeDTO.getName());
     }
 
     public static ForTagDTO forTagtoNewEntity(ForTag forTag) {

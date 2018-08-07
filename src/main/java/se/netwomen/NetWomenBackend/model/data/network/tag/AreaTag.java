@@ -1,18 +1,15 @@
 package se.netwomen.NetWomenBackend.model.data.network.tag;
 
-public class CityTag {
+public class AreaTag {
     private String name;
 
-    protected CityTag() {
-    }
+    protected AreaTag(){}
 
-    public CityTag(String name) {
+    public AreaTag(String name) {
         this.name = name;
     }
 
     public String getName() {
         return name;
     }
-
-
 }

@@ -23,14 +23,14 @@ public class TagResource {
     }
     @POST
     @Path("/country")
-    public Response createCountryTag(Set<CountryTag> countryTag){
-        networkService.saveCountry(countryTag);
+    public Response createCountryTag(Set<CountryTagAlternative> countryTag){
+        networkService.saveCountries(countryTag);
         return Response.status(Response.Status.OK).build();
     }
     @POST
     @Path("/area")
-    public Response createCityTagToCountryTag(CountryTagUpdate countryTagUpdate){
-        System.out.println(countryTagUpdate.getCountryTag() + "    " + countryTagUpdate.getCityTag());
+    public Response createCityTagToCountryTag(AlternativeTagUpdate countryTagUpdate){
+        System.out.println(countryTagUpdate.getCountryTag() + "    " + countryTagUpdate.getAreaTag());
         networkService.updateCityForCountry(countryTagUpdate);
         return Response.status(Response.Status.OK).build();
     }
