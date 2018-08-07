@@ -65,7 +65,8 @@ public class NetworkService {
         Set<CountryTagDTO> set = new HashSet();
         network.getCountryTags()
                 .forEach(tag ->
-                        countryTagRepository.findByName(tag.getName())
+                        countryTagRepository.findByName(tag.getName()) //Mapp för nullpointrt
+                                
                                 .ifPresent(country -> set.add(country)));
         return set;
     }
@@ -133,6 +134,7 @@ public class NetworkService {
     public TagView getTags(){
         return new TagView(getCountryTagsWithCityTags(), getForTags());
     }
+
     private List<CountryTag> getCountryTagsWithCityTags(){
         return countryTagRepository.findAll(new Sort(Sort.Direction.ASC, "name"))
                 .stream()
@@ -155,7 +157,7 @@ public class NetworkService {
                 .collect(Collectors.toList());
     }
 
-    public void updateCountry(CountryTagUpdate countryTagUpdate) {
+    public void updateCityForCountry(CountryTagUpdate countryTagUpdate) {
       /* Set<CityTagDTO> cityTagDTOs = countryTagRepository.findByName(countryTagUpdate.getCountryTag())
                 .map(country -> cityTagRepository.findByCountryTagDTO(country))
                    // countryTagRepository.save(NetworkParser.countryTagtoNewEntity(countryTagUpdate.getCityTag(), country)))

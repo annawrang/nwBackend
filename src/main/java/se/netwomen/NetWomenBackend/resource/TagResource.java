@@ -28,19 +28,13 @@ public class TagResource {
         return Response.status(Response.Status.OK).build();
     }
     @POST
-    @Path("/city")
+    @Path("/area")
     public Response createCityTagToCountryTag(CountryTagUpdate countryTagUpdate){
         System.out.println(countryTagUpdate.getCountryTag() + "    " + countryTagUpdate.getCityTag());
-        networkService.updateCountry(countryTagUpdate);
+        networkService.updateCityForCountry(countryTagUpdate);
         return Response.status(Response.Status.OK).build();
     }
-    /*
-    @POST
-    @Path("/city")
-    public Response createCityTag(CityTag cityTag){
-        networkService.saveCity(cityTag);
-        return Response.status(Response.Status.OK).build();
-    }*/
+
     @POST
     @Path("/for")
     public Response createForTag(ForTag forTag){
