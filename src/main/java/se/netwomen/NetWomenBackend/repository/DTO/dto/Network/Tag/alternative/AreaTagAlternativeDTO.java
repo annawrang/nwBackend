@@ -1,4 +1,4 @@
-package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag;
+package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.alternative;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

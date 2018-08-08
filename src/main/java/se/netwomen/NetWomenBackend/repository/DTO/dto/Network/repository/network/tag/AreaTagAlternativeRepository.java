@@ -2,7 +2,7 @@ package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.networ
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.AreaTagAlternativeDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.alternative.AreaTagAlternativeDTO;
 
 import java.util.Optional;
 

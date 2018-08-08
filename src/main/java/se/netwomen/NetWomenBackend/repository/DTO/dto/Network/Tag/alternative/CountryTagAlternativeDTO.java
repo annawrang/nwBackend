@@ -1,9 +1,6 @@
-package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag;
-
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
+package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.alternative;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -14,10 +11,8 @@ public class CountryTagAlternativeDTO {
     private String name;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<AreaTagAlternativeDTO> areaTagAlternativeDTOs;
-            ;
 
-    protected CountryTagAlternativeDTO() {
-    }
+    protected CountryTagAlternativeDTO() { }
 
     public CountryTagAlternativeDTO(Long id, String name, Set<AreaTagAlternativeDTO> areaTagAlternativeDTOs) {
         this.id = id;

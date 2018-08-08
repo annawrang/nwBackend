@@ -46,7 +46,7 @@ public class TagResource {
     @GET
     @Path("/alternatives")
     public Response getAlternativeTags(){
-        return Response.ok(networkService.getTagAlternatives()).build();
+        return Response.ok(networkService.getAlternativeTags()).build();
     }
 
     @GET
@@ -56,7 +56,7 @@ public class TagResource {
     }
 
     @Path("{countryName}")
-    @GET public Response getAreasForCountry(@PathParam("countryName") String country){
-        return Response.ok(networkService.getAreaTagAlternativesForCountryTagAlternative(country)).build();
+    @GET public Response findAreaTagAlternativesFromCountryName(@PathParam("countryName") String country){
+        return Response.ok(networkService.findAreaTagAlternativesFromCountryName(country)).build();
     }
 }
