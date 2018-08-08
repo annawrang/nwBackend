@@ -10,7 +10,7 @@ public class CountryTagDTO {
     private String name;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<AreaTagDTO> areaTagDTOs;
-    ;
+
 
     protected CountryTagDTO() {
     }

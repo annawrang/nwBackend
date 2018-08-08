@@ -1,7 +1,6 @@
-package se.netwomen.NetWomenBackend.model.data.network.tag;
+package se.netwomen.NetWomenBackend.model.data.network.tag.alternative;
 
 import java.util.List;
-import java.util.Set;
 
 public class CountryTagAlternative {
 

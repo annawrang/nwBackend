@@ -1,4 +1,4 @@
-package se.netwomen.NetWomenBackend.model.data.network.tag;
+package se.netwomen.NetWomenBackend.model.data.network.tag.alternative;
 
 public class AreaTagAlternative {
     private String name;

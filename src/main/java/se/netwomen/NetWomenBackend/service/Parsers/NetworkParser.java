@@ -1,24 +1,20 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.network.Network;
-import se.netwomen.NetWomenBackend.model.data.network.tag.AreaTagAlternative;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTagAlternative;
-import se.netwomen.NetWomenBackend.model.data.network.tag.ForTag;
+import se.netwomen.NetWomenBackend.model.data.network.tag.*;
+import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.AreaTagAlternative;
+import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.CountryTagAlternative;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.AreaTagAlternativeDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagAlternativeDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public final class NetworkParser {
-/*
-    public static NetworkDTO networkToNewEntity(Network network, Set<CountryTagDTO> countryTags, Set<ForTagDTO> forTags){
-        return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(),countryTags, forTags, null, null, null, UUID.randomUUID().toString());
+
+    public static NetworkDTO networkToNewEntity(Network network,Set<CountryTagDTO> countryTagDTOs, Set<ForTagDTO> forTags){
+        return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(), countryTagDTOs, forTags, null, null, null, UUID.randomUUID().toString());
     }
 
     public static Network entityToNetwork(NetworkDTO networkDTO, Set<CountryTag> countryTags, Set<ForTag> forTags) {
@@ -38,6 +34,10 @@ public final class NetworkParser {
     public static CountryTagAlternative entityToExistingCountryTagAlternative(CountryTagAlternativeDTO countryTagDTO, List<AreaTagAlternative> areaTagAlternatives){
         return new CountryTagAlternative(countryTagDTO.getName(), areaTagAlternatives);
     }
+
+    public static AreaTag entityToExsistingAreaTag(AreaTagDTO areaTagDTO){
+        return new AreaTag(areaTagDTO.getName());
+    }
 /*
     public static CityTagDTO cityTagtoNewEntity(String cityTag) {
         return new CityTagDTO(null, cityTag.trim() );
@@ -54,6 +54,16 @@ public final class NetworkParser {
 
     public static ForTag entityToExsistingForTag(ForTagDTO forTagDTO){
         return new ForTag(forTagDTO.getName());
+    }
+    public static CountryTagDTO countryTagToNewEntity(CountryTag countryTag, Set<AreaTagDTO> areaTagDTOs){
+        return new CountryTagDTO(null, countryTag.getName(), areaTagDTOs);
+    }
+    public static AreaTagDTO areaTagToNewEntity(AreaTag areaTag){
+        return new AreaTagDTO(null, areaTag.getName());
+    }
+
+    public static CountryTag entityToExistingCountryTag(CountryTagDTO country, List<AreaTag> areaTags) {
+        return new CountryTag(country.getName(), areaTags);
     }
 
 

@@ -1,12 +1,12 @@
-package se.netwomen.NetWomenBackend.model.data.network.tag;
+package se.netwomen.NetWomenBackend.model.data.network.tag.alternative;
 
-public class AlternativeTagUpdate {
+public class TagUpdateAlternative {
     private String countryTag;
     private String areaTag;
 
-    protected AlternativeTagUpdate(){}
+    protected TagUpdateAlternative(){}
 
-    public AlternativeTagUpdate(String countryTag, String areaTag) {
+    public TagUpdateAlternative(String countryTag, String areaTag) {
         this.countryTag = countryTag;
         this.areaTag = areaTag;
     }

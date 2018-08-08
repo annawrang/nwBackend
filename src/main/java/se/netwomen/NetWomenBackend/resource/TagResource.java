@@ -2,13 +2,13 @@ package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
+import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.TagUpdateAlternative;
+import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.CountryTagAlternative;
 import se.netwomen.NetWomenBackend.service.NetworkService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -21,35 +21,42 @@ public class TagResource {
     public TagResource(NetworkService networkService) {
         this.networkService = networkService;
     }
+
     @POST
     @Path("/country")
     public Response createCountryTag(Set<CountryTagAlternative> countryTag){
         networkService.saveCountries(countryTag);
         return Response.status(Response.Status.OK).build();
     }
+
     @POST
     @Path("/area")
-    public Response createCityTagToCountryTag(AlternativeTagUpdate countryTagUpdate){
-        System.out.println(countryTagUpdate.getCountryTag() + "    " + countryTagUpdate.getAreaTag());
-        networkService.updateCityForCountry(countryTagUpdate);
+    public Response connectAreaTagAlternativeToCountryTagAlternative(TagUpdateAlternative countryTagUpdate){
+        networkService.connectAreaTagAlternativeToCountryTagAlternative(countryTagUpdate);
         return Response.status(Response.Status.OK).build();
     }
 
     @POST
     @Path("/for")
     public Response createForTag(ForTag forTag){
-        networkService.saveFor(forTag);
+        networkService.saveForTag(forTag);
         return Response.status(Response.Status.OK).build();
     }
 
     @GET
-    public Response getTags(){
-        TagView tagView = networkService.getTags();
-        tagView.getCountryTags().forEach(country -> country.getCityTags().forEach( cityTag -> System.out.println(cityTag.getName())));
-        return Response.ok(networkService.getTags()).build();
+    @Path("/alternatives")
+    public Response getAlternativeTags(){
+        return Response.ok(networkService.getTagAlternatives()).build();
     }
+
+    @GET
+    @Path("/used")
+    public Response getUsedTags() {
+        return Response.ok(networkService.getUsedTags()).build();
+    }
+
     @Path("{countryName}")
-    @GET public Response getCitiesForCountry(@PathParam("countryName") String country){
-        return Response.ok(networkService.getCitiesForCountry(country)).build();
+    @GET public Response getAreasForCountry(@PathParam("countryName") String country){
+        return Response.ok(networkService.getAreaTagAlternativesForCountryTagAlternative(country)).build();
     }
 }

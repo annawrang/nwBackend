@@ -15,7 +15,7 @@ public class NetworkDTO {
     private String description;
     private String link;
     private String pictureUrl;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<CountryTagDTO> countryTags;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<ForTagDTO> forTags;
