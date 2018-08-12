@@ -35,6 +35,8 @@ public class NetworkResource {
 
     @GET
     public Response getNetworks(@BeanParam NetworkParam param){
+        System.out.println("STORLEK " + param.getForTags().size());
+        param.getForTags().forEach(fortag -> System.out.println(" HWJJJJJ" + fortag));
         return Response.ok(networkService.getNetworks(param)).build();
     }
 

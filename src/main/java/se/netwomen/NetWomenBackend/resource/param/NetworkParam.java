@@ -2,6 +2,7 @@ package se.netwomen.NetWomenBackend.resource.param;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
+import java.util.List;
 
 public final class NetworkParam {
 
@@ -11,6 +12,14 @@ public final class NetworkParam {
     @QueryParam("size")
     @DefaultValue("10")
     private int size;
+    @QueryParam("country")
+    @DefaultValue("null")
+    private String country;
+    @QueryParam("area")
+    @DefaultValue("null")
+    private String area;
+    @QueryParam("fortag")
+    private List<String> forTags;
 
     public int getPage() {
         return page;
@@ -18,5 +27,17 @@ public final class NetworkParam {
 
     public int getSize() {
         return size;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public List<String> getForTags() {
+        return forTags;
     }
 }

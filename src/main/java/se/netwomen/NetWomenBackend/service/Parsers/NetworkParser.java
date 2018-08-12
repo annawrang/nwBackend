@@ -81,4 +81,13 @@ public final class NetworkParser {
                         entityToExsistingForTag(forTag))
                 .collect(Collectors.toList());
     }
+
+    public static List<Network> parseNetworkEntities(List<NetworkDTO> networkDTOs){
+        return networkDTOs.stream()
+                .map(network ->
+                        NetworkParser.entityToNetwork( network,
+                                NetworkParser.parseCountryTagEntities(network.getCountryTags()),
+                                NetworkParser.parseForTagEntities(network.getForTags())))
+                .collect(Collectors.toList());
+    }
 }
