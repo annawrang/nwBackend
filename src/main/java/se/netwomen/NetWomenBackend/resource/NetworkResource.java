@@ -28,16 +28,24 @@ public class NetworkResource {
 
     @POST
     public Response createNetwork(Network network) {
-        System.out.println(network.getPictureUrl());
         networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @GET
+    @Path("{networkNumber}")
+    public Response getNetwork(@PathParam("networkNumber") String networkNumber){
+        return Response.ok(networkService.getNetwork(networkNumber)).build();
+    }
+    @GET
     public Response getNetworks(@BeanParam NetworkParam param){
-        System.out.println("STORLEK " + param.getForTags().size());
-        param.getForTags().forEach(fortag -> System.out.println(" HWJJJJJ" + fortag));
         return Response.ok(networkService.getNetworks(param)).build();
+    }
+
+    @GET
+    @Path("/filter")
+    public Response getNetworksFilterResults(@BeanParam NetworkParam param){
+        return Response.ok(networkService.getNetworksFilterResults(param)).build();
     }
 
 }

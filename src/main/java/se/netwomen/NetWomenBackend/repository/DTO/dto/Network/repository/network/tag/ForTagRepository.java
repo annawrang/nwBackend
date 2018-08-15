@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ForTagRepository extends JpaRepository<ForTagDTO, Long> {
     Optional<ForTagDTO> findByName(String name);
+    Optional<ForTagDTO> findByNameStartingWithIgnoreCase(String name);
 
 }

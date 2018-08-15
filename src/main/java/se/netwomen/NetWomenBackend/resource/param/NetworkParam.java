@@ -19,7 +19,8 @@ public final class NetworkParam {
     @DefaultValue("null")
     private String area;
     @QueryParam("fortag")
-    private List<String> forTags;
+    @DefaultValue("null")
+    private String forTags;
     @QueryParam("search")
     private String searchText;
 
@@ -39,7 +40,7 @@ public final class NetworkParam {
         return area;
     }
 
-    public List<String> getForTags() {
+    public String getForTag() {
         return forTags;
     }
 

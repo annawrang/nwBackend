@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.TagUpdateAlternative;
 import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.AreaTagAlternative;
@@ -29,20 +30,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class NetworkService {
     private final NetworkRepository networkRepository;
     private final CountryTagAlternativeRepository countryTagAlternativeRepository;
-    private final AreaTagAlternativeRepository areaTagAlternativeRepository;
     private final ForTagRepository forTagRepository;
     private final CountryTagRepository countryTagRepository;
     private final static Sort sortByName = new Sort(Sort.Direction.ASC, "name");
 
-    public NetworkService(NetworkRepository networkRepository, CountryTagAlternativeRepository countryTagAlternativeRepository, AreaTagAlternativeRepository areaTagAlternativeRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository) {
+    public NetworkService(NetworkRepository networkRepository, CountryTagAlternativeRepository countryTagAlternativeRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository) {
         this.networkRepository = networkRepository;
         this.countryTagAlternativeRepository = countryTagAlternativeRepository;
-        this.areaTagAlternativeRepository = areaTagAlternativeRepository;
         this.forTagRepository = forTagRepository;
         this.countryTagRepository = countryTagRepository;
     }
@@ -63,15 +63,52 @@ public class NetworkService {
         return forTagRepository.save(NetworkParser.forTagtoNewEntity(forTag));
     }
 
+    public List<NetworkFilter> getNetworksFilterResults(NetworkParam param){
+        if(!"null".equalsIgnoreCase(param.getSearchText())){
+            String searchText = param.getSearchText().toLowerCase();
+            List<NetworkDTO> networkDTOS = networkRepository.findAll();
+            List<NetworkFilter> networkFilters = Stream.concat(filterByNames(networkDTOS, searchText).stream(),
+                            filterByDescriptions(networkDTOS, searchText).stream())
+                    .collect(Collectors.toList());
+            filterByForTagName(searchText)
+                    .ifPresent(tag ->
+                            networkFilters.add(tag));
+            return networkFilters;
+        }
+        return null;
+    }
+
+
+    private Optional<NetworkFilter> filterByForTagName(String searchText){
+        return forTagRepository.findByNameStartingWithIgnoreCase(searchText)
+                .map(forTag ->
+                        NetworkParser.entityToNetworkFilter(null, forTag.getName(),
+                                "Tag"));
+    }
+
+    private List<NetworkFilter> filterByNames(List<NetworkDTO> networkDTOS, String searchText){
+        return networkDTOS
+                .stream()
+                .filter(network ->
+                        network.getName().toLowerCase().contains(searchText))
+                .map(net -> NetworkParser.entityToNetworkFilter(net, net.getName(), "Name"))
+                .collect(Collectors.toList());
+    }
+
+    private List<NetworkFilter> filterByDescriptions(List<NetworkDTO> networkDTOS, String searchText){
+         return networkDTOS
+                .stream()
+                .filter(network ->
+                        network.getDescription().toLowerCase().contains(searchText))
+                .map(net ->
+                        NetworkParser.entityToNetworkFilter(net, net.getDescription(), "Description"))
+                .collect(Collectors.toList());
+    }
 
     public List<Network> getNetworks(NetworkParam param) {
         List<Network> networks;
 
-        if(param.getSearchText() != null){
-            return findNetworkBySearchName(param);
-        }
-
-        if( !"null".equalsIgnoreCase (param.getCountry()) && !param.getForTags().isEmpty()) {
+        if( !"null".equalsIgnoreCase (param.getCountry()) && !"null".equalsIgnoreCase(param.getForTag())) {
             networks = findNetworksByForTagNamesAndCountryName(param);
             if (!"null".equalsIgnoreCase(param.getArea())) {
                 networks = findNetworksByAreaTagName(networks, param);
@@ -85,23 +122,20 @@ public class NetworkService {
             }
             return networks;
         }
-        if(!param.getForTags().isEmpty()){
+        if(!"null".equalsIgnoreCase(param.getForTag())){
             return findNetworksByForTagNames(param);
         }
         return findAllNetworks(param);
     }
 
-    private List<Network> findNetworkBySearchName(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findByNameContainingIgnoreCase(param.getSearchText(), getPageRequest(param));
-        return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
-    }
+
     private List<Network> findNetworksByForTagNames(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsNameIn(param.getForTags(), getPageRequest(param));
+        Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsName(param.getForTag(), getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
     private List<Network> findNetworksByForTagNamesAndCountryName(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(param.getForTags(), param.getCountry(), getPageRequest(param));
+        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(param.getForTag(), param.getCountry(), getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
@@ -201,5 +235,18 @@ public class NetworkService {
 
     private PageRequest getPageRequest(NetworkParam pageParam){
         return PageRequest.of(pageParam.getPage(), pageParam.getSize());
+    }
+
+
+    public List<Network> getNetwork(String networkNumber) {
+        Network network = networkRepository.findByNetworkNumber(networkNumber)
+                .map(networkDTO ->
+                        NetworkParser.entityToNetwork(networkDTO,
+                                                        NetworkParser.parseCountryTagEntities(networkDTO.getCountryTags()),
+                                                        NetworkParser.parseForTagEntities(networkDTO.getForTags())))
+                .orElseThrow(BadRequestException::new);
+        List<Network> toList = Arrays.asList(network);
+        return toList;
+
     }
 }

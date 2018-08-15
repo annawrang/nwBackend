@@ -1,6 +1,7 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.network.Network;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class NetworkParser {
 
@@ -17,9 +19,16 @@ public final class NetworkParser {
     }
 
     public static Network entityToNetwork(NetworkDTO networkDTO, Set<CountryTag> countryTags, Set<ForTag> forTags) {
-        return new Network(networkDTO.getName(), networkDTO.getDescription(), networkDTO.getLink(), networkDTO.getPictureUrl(), countryTags, forTags, null, null, null, networkDTO.getNetworkNumber());
+        return new Network(networkDTO.getName(), networkDTO.getDescription(), networkDTO.getLink(), networkDTO.getPictureUrl(), countryTags, forTags, networkDTO.getNetworkNumber());
     }
 
+    public static NetworkFilter entityToNetworkFilter(NetworkDTO networkDTO, String placeholder, String filterType) {
+        if(networkDTO != null) {
+            return new NetworkFilter(placeholder, networkDTO.getPictureUrl(), networkDTO.getNetworkNumber(), filterType);
+        } else {
+            return new NetworkFilter(placeholder, null, null, filterType);
+        }
+    }
     public static ForTagDTO forTagtoNewEntity(ForTag forTag) {
         return new ForTagDTO(null, forTag.getName().trim());
     }
@@ -90,4 +99,5 @@ public final class NetworkParser {
                                 NetworkParser.parseForTagEntities(network.getForTags())))
                 .collect(Collectors.toList());
     }
+
 }

@@ -1,7 +1,9 @@
 package se.netwomen.NetWomenBackend.model.data.network;
 
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 
+import java.util.List;
 import java.util.Set;
 
 public final class Network {
@@ -17,9 +19,10 @@ public final class Network {
     private Set<OtherTag> otherTags;
     private String networkNumber;
 
+
     protected  Network(){}
 
-    public Network(String name, String description, String link, String pictureUrl, Set<CountryTag> countryTags, Set<ForTag> forTags, Set<OfferTag> offerTags, Set<TypeTag> typeTags, Set<OtherTag> otherTags, String networkNumber) {
+    public Network(String name, String description, String link, String pictureUrl, Set<CountryTag> countryTags, Set<ForTag> forTags, String networkNumber) {
         this.name = name;
         this.description = description;
         this.link = link;
@@ -30,6 +33,7 @@ public final class Network {
         this.typeTags = typeTags;
         this.otherTags = otherTags;
         this.networkNumber = networkNumber;
+
     }
 
     public String getName() {
@@ -56,19 +60,11 @@ public final class Network {
         return forTags;
     }
 
-    public Set<OfferTag> getOfferTags() {
-        return offerTags;
-    }
-
-    public Set<TypeTag> getTypeTags() {
-        return typeTags;
-    }
-
-    public Set<OtherTag> getOtherTags() {
-        return otherTags;
-    }
 
     public String getNetworkNumber() {
         return networkNumber;
     }
+
+
+
 }
