@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import se.netwomen.NetWomenBackend.repository.DTO.UserRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.service.exceptions.EmailNotFoundException;
 

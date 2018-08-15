@@ -9,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import se.netwomen.NetWomenBackend.repository.DTO.UserRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import java.util.ArrayList;
