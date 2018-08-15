@@ -67,6 +67,10 @@ public class NetworkService {
     public List<Network> getNetworks(NetworkParam param) {
         List<Network> networks;
 
+        if(param.getSearchText() != null){
+            return findNetworkBySearchName(param);
+        }
+
         if( !"null".equalsIgnoreCase (param.getCountry()) && !param.getForTags().isEmpty()) {
             networks = findNetworksByForTagNamesAndCountryName(param);
             if (!"null".equalsIgnoreCase(param.getArea())) {
@@ -87,6 +91,10 @@ public class NetworkService {
         return findAllNetworks(param);
     }
 
+    private List<Network> findNetworkBySearchName(NetworkParam param){
+        Page<NetworkDTO> networkDTOPage = networkRepository.findByNameContainingIgnoreCase(param.getSearchText(), getPageRequest(param));
+        return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
+    }
     private List<Network> findNetworksByForTagNames(NetworkParam param){
         Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsNameIn(param.getForTags(), getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());

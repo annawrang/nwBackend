@@ -20,6 +20,8 @@ public final class NetworkParam {
     private String area;
     @QueryParam("fortag")
     private List<String> forTags;
+    @QueryParam("search")
+    private String searchText;
 
     public int getPage() {
         return page;
@@ -39,5 +41,9 @@ public final class NetworkParam {
 
     public List<String> getForTags() {
         return forTags;
+    }
+
+    public String getSearchText() {
+        return searchText;
     }
 }
