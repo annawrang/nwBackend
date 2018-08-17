@@ -78,7 +78,6 @@ public class NetworkService {
         return null;
     }
 
-
     private Optional<NetworkFilter> filterByForTagName(String searchText){
         return forTagRepository.findByNameStartingWithIgnoreCase(searchText)
                 .map(forTag ->
@@ -128,7 +127,6 @@ public class NetworkService {
         return findAllNetworks(param);
     }
 
-
     private List<Network> findNetworksByForTagNames(NetworkParam param){
         Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsName(param.getForTag(), getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
@@ -157,7 +155,6 @@ public class NetworkService {
         Page<NetworkDTO> networkDTOPage = networkRepository.findByCountryTagsName(param.getCountry(), getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
-
 
     public void connectAreaTagAlternativeToCountryTagAlternative(TagUpdateAlternative countryTagUpdate) {
         countryTagAlternativeRepository.findByName(countryTagUpdate.getCountryTag())
@@ -236,7 +233,6 @@ public class NetworkService {
     private PageRequest getPageRequest(NetworkParam pageParam){
         return PageRequest.of(pageParam.getPage(), pageParam.getSize());
     }
-
 
     public List<Network> getNetwork(String networkNumber) {
         Network network = networkRepository.findByNetworkNumber(networkNumber)
