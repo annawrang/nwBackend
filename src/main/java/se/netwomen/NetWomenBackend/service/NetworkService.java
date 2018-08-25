@@ -38,9 +38,17 @@ public class NetworkService {
     }
 
     public NetworkDTO saveNetwork(NetworkForm network) {
-        return networkRepository.save(NetworkParser.networkToNewEntity( network,
-                                                                        parseCountryTagsIfNotNull(network),
-                                                                        parseForTagsIfNotNull(network)));
+        NetworkForm networkForm = addLocationIfNetworkIsGlobal(network);
+        return networkRepository.save(NetworkParser.networkToNewEntity( networkForm,
+                                                                        parseCountryTagsIfNotNull(networkForm),
+                                                                        parseForTagsIfNotNull(networkForm)));
+    }
+
+    private NetworkForm addLocationIfNetworkIsGlobal(NetworkForm network) {
+        if(network.isGlobal()){
+            network.getLocations().add(new Location("Global", null));
+        }
+        return network;
     }
 
     public ForTagDTO saveForTag(ForTag forTag) {
