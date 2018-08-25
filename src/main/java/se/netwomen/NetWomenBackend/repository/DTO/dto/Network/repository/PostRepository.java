@@ -1,4 +1,4 @@
-package se.netwomen.NetWomenBackend.repository.DTO;
+package se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
