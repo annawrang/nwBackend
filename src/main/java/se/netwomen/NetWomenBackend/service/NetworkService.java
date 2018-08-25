@@ -6,22 +6,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
-import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.TagUpdateAlternative;
-import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.AreaTagAlternative;
-import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.CountryTagAlternative;
-import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.TagViewAlternative;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.alternative.AreaTagAlternativeDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.alternative.CountryTagAlternativeDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.AreaTagAlternativeRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagAlternativeRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
-import se.netwomen.NetWomenBackend.service.Parsers.AlternativeParser;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 
 import javax.ws.rs.BadRequestException;
@@ -35,27 +27,20 @@ import java.util.stream.Stream;
 @Service
 public class NetworkService {
     private final NetworkRepository networkRepository;
-    private final CountryTagAlternativeRepository countryTagAlternativeRepository;
     private final ForTagRepository forTagRepository;
     private final CountryTagRepository countryTagRepository;
     private final static Sort sortByName = new Sort(Sort.Direction.ASC, "name");
 
-    public NetworkService(NetworkRepository networkRepository, CountryTagAlternativeRepository countryTagAlternativeRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository) {
+    public NetworkService(NetworkRepository networkRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository) {
         this.networkRepository = networkRepository;
-        this.countryTagAlternativeRepository = countryTagAlternativeRepository;
         this.forTagRepository = forTagRepository;
         this.countryTagRepository = countryTagRepository;
     }
 
-    public NetworkDTO saveNetwork(Network network) {
+    public NetworkDTO saveNetwork(NetworkForm network) {
         return networkRepository.save(NetworkParser.networkToNewEntity( network,
                                                                         parseCountryTagsIfNotNull(network),
-                                                                        getExistingForTagEntities(network)));
-    }
-
-    public void saveCountries(Set<CountryTagAlternative> countryTag) {
-       countryTag.forEach(country ->
-               countryTagAlternativeRepository.save(AlternativeParser.countryTagAlternativeToNewEntity(country)));
+                                                                        parseForTagsIfNotNull(network)));
     }
 
     public ForTagDTO saveForTag(ForTag forTag) {
@@ -156,28 +141,33 @@ public class NetworkService {
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
-    public void connectAreaTagAlternativeToCountryTagAlternative(TagUpdateAlternative countryTagUpdate) {
-        countryTagAlternativeRepository.findByName(countryTagUpdate.getCountryTag())
-                .map(country -> {
-                    country.getAreaTagAlternativeDTOs().add(new AreaTagAlternativeDTO(null, countryTagUpdate.getAreaTag()));
-                    return countryTagAlternativeRepository.save(country);})
+
+    public Set<AreaTag> findAreaTagsFromCountryName(String country) {
+      /* return countryTagRepository.findByName(country)
+                .map(countryDTO ->
+                        countryDTO.getAreaTagDTOs()
+                        .stream()
+                        .map(area ->
+                                NetworkParser.entityToExsistingAreaTag(area))
+                        .collect(Collectors.toSet()))
                 .orElseThrow(BadRequestException::new);
+                */
+        List<CountryTagDTO> countryTagDTOs = countryTagRepository.findAllByName(country);
+        Set<AreaTag> areaTags = new HashSet<>();
+        for (CountryTagDTO countryTagDTO : countryTagDTOs) {
+            countryTagDTO.getAreaTagDTOs()
+                    .forEach(area -> areaTags.add(NetworkParser.entityToExsistingAreaTag(area)));
+        }
+        return areaTags.stream().filter(distinctByName(p -> p.getName())).collect(Collectors.toSet());
     }
 
-    public Set<AreaTagAlternative> findAreaTagAlternativesFromCountryName(String country) {
-        return countryTagAlternativeRepository.findByName(country)
-                .map(tag ->
-                        tag.getAreaTagAlternativeDTOs()
-                                .stream()
-                                .map(area ->
-                                        AlternativeParser.entityToExistingAreaTagAlternative(area)).collect(Collectors.toSet()))
-                .orElseThrow(BadRequestException::new);
-    }
 
-    public TagViewAlternative getAlternativeTags(){
-        List<ForTagDTO> forTagDTOs = forTagRepository.findAll(sortByName);
-        List<CountryTagAlternativeDTO> countryTagAlternativeDTOs = countryTagAlternativeRepository.findAll(sortByName);
-        return new TagViewAlternative(AlternativeParser.parseCountryTagAlternativeDTOs(countryTagAlternativeDTOs), NetworkParser.parseForTagEntities(forTagDTOs));
+    public List<ForTag> getForTags(){
+        List<ForTagDTO> forTags = forTagRepository.findAll(sortByName);
+        return forTags.stream()
+                .map(forTagDTO ->
+                        NetworkParser.entityToExsistingForTag(forTagDTO))
+                .collect(Collectors.toList());
     }
 
     public TagView getUsedTags() {
@@ -189,27 +179,19 @@ public class NetworkService {
         return new TagView(NetworkParser.parseCountryTagEntities(countryTagDTOs), NetworkParser.parseForTagEntities(forTagDTOs));
     }
 
-    private Set<CountryTagDTO> parseCountryTagsIfNotNull(Network network){
-        return network.getCountryTags()
-                .stream()
-                .map(countryTag ->
-                        NetworkParser.countryTagToNewEntity(countryTag, parseAreaTagsIfNotNull(countryTag)))
-                .collect(Collectors.toSet());
-    }
-
-    private Set<AreaTagDTO> parseAreaTagsIfNotNull(CountryTag countryTag) {
-        Set<AreaTagDTO> areaTagDTOs = new HashSet<>();
-        if (countryTag.getAreaTags() != null) {
-            areaTagDTOs = countryTag.getAreaTags()
+    private Set<CountryTagDTO> parseCountryTagsIfNotNull(NetworkForm network){
+        Set<CountryTagDTO> countryTagDTOs = new HashSet<>();
+        if(network.getLocations() != null) {
+            countryTagDTOs= network.getLocations()
                     .stream()
-                    .map(areaTag ->
-                            NetworkParser.areaTagToNewEntity(areaTag))
+                    .map(countryTag ->
+                            NetworkParser.locationToEntity(countryTag))
                     .collect(Collectors.toSet());
         }
-        return areaTagDTOs;
+        return countryTagDTOs;
     }
 
-    private Set<ForTagDTO> getExistingForTagEntities(Network network){
+    private Set<ForTagDTO> parseForTagsIfNotNull(NetworkForm network){
         Set<ForTagDTO> set = new HashSet<>();
         if(network.getForTags() != null) {
             network.getForTags()

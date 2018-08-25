@@ -2,6 +2,7 @@ package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 
 public final class NetworkParser {
 
-    public static NetworkDTO networkToNewEntity(Network network,Set<CountryTagDTO> countryTagDTOs, Set<ForTagDTO> forTags){
+    public static NetworkDTO networkToNewEntity(NetworkForm network, Set<CountryTagDTO> countryTagDTOs, Set<ForTagDTO> forTags){
         return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(), countryTagDTOs, forTags, null, null, null, UUID.randomUUID().toString());
     }
 
@@ -37,8 +38,8 @@ public final class NetworkParser {
         return new ForTag(forTagDTO.getName());
     }
 
-    public static CountryTagDTO countryTagToNewEntity(CountryTag countryTag, Set<AreaTagDTO> areaTagDTOs){
-        return new CountryTagDTO(null, countryTag.getName(), areaTagDTOs);
+    public static CountryTagDTO locationToEntity(Location location){
+        return new CountryTagDTO(null, location.getCountryName(), areaTagsToEntity(location.getAreaNames()));
     }
 
     public static CountryTag entityToExistingCountryTag(CountryTagDTO country, List<AreaTag> areaTags) {
@@ -100,4 +101,15 @@ public final class NetworkParser {
                 .collect(Collectors.toList());
     }
 
+    public static AreaTagDTO areaTagStringsToNewEntity(String name){
+        return new AreaTagDTO(null, name);
+    }
+
+    public static Set<AreaTagDTO> areaTagsToEntity(Set<String> areaTags) {
+        return areaTags
+                .stream()
+                .map(tags ->
+                        areaTagStringsToNewEntity(tags))
+                .collect(Collectors.toSet());
+    }
 }

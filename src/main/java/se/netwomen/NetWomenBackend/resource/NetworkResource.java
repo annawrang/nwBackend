@@ -2,6 +2,7 @@ package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.model.data.network.tag.AreaTag;
 import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
@@ -27,10 +28,11 @@ public class NetworkResource {
     }
 
     @POST
-    public Response createNetwork(Network network) {
+    public Response createNetwork(NetworkForm network) {
         networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
+
 
     @GET
     @Path("{networkNumber}")

@@ -10,7 +10,7 @@ public final class NetworkParam {
     @DefaultValue("0")
     private int page;
     @QueryParam("size")
-    @DefaultValue("10")
+    @DefaultValue("18")
     private int size;
     @QueryParam("country")
     @DefaultValue("null")

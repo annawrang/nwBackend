@@ -23,20 +23,6 @@ public class TagResource {
     }
 
     @POST
-    @Path("/country")
-    public Response createCountryTag(Set<CountryTagAlternative> countryTag){
-        networkService.saveCountries(countryTag);
-        return Response.status(Response.Status.OK).build();
-    }
-
-    @POST
-    @Path("/area")
-    public Response connectAreaTagAlternativeToCountryTagAlternative(TagUpdateAlternative countryTagUpdate){
-        networkService.connectAreaTagAlternativeToCountryTagAlternative(countryTagUpdate);
-        return Response.status(Response.Status.OK).build();
-    }
-
-    @POST
     @Path("/for")
     public Response createForTag(ForTag forTag){
         networkService.saveForTag(forTag);
@@ -44,19 +30,18 @@ public class TagResource {
     }
 
     @GET
-    @Path("/alternatives")
-    public Response getAlternativeTags(){
-        return Response.ok(networkService.getAlternativeTags()).build();
+    @Path("/for")
+    public Response getForTags(){
+        return Response.ok(networkService.getForTags()).build();
     }
 
     @GET
-    @Path("/used")
     public Response getUsedTags() {
         return Response.ok(networkService.getUsedTags()).build();
     }
 
     @Path("{countryName}")
     @GET public Response findAreaTagAlternativesFromCountryName(@PathParam("countryName") String country){
-        return Response.ok(networkService.findAreaTagAlternativesFromCountryName(country)).build();
+        return Response.ok(networkService.findAreaTagsFromCountryName(country)).build();
     }
 }
