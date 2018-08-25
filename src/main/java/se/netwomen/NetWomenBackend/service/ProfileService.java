@@ -9,7 +9,7 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.service.Parsers.ProfileParser;
 
-import java.util.Optional;
+import javax.ws.rs.BadRequestException;
 
 @Service
 public class ProfileService {
@@ -23,23 +23,19 @@ public class ProfileService {
     }
 
     public ProfileMine getMyProfile(String userNumber, String profileNumber) {
-        if(userNumber.equals(profileNumber)){
-            Optional<ProfileDTO> profileDTO = profileRepository.findByUserNumber(userNumber);
-            if(profileDTO.isPresent()){
-                ProfileMine myProfile = ProfileParser.dtoToProfileMine(profileDTO.get());
-                return myProfile;
-            }
+        if (userNumber.equals(profileNumber)) {
+            return profileRepository.findByUserNumber(userNumber)
+                    .map(ProfileParser::dtoToProfileMine)
+                    .orElseThrow(BadRequestException::new);
         }
-        return null;
+        throw new BadRequestException();
     }
 
+
     public ProfileOthers getOthersProfile(String profileUserNumber) {
-        Optional<ProfileDTO> profileDTO = profileRepository.findByUserNumber(profileUserNumber);
-        if(profileDTO.isPresent()){
-            ProfileOthers othersProfile = ProfileParser.dtoToProfileOthers(profileDTO.get());
-            return othersProfile;
-        }
-        return null;
+        return profileRepository.findByUserNumber(profileUserNumber)
+                .map(ProfileParser::dtoToProfileOthers)
+                .orElseThrow(BadRequestException::new);
     }
 
     public boolean editProfile(ProfileMine profileMine) {
@@ -49,9 +45,6 @@ public class ProfileService {
         newProfileDTO.setId(oldDTO.getId());
 
         newProfileDTO = profileRepository.save(newProfileDTO);
-        if(newProfileDTO.getId() != null){
-            return true;
-        }
-        return false;
+        return newProfileDTO.getId() != null;
     }
 }

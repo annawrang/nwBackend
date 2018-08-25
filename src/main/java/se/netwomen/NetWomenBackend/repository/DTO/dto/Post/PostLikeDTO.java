@@ -4,6 +4,7 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class PostLikeDTO {
@@ -14,12 +15,18 @@ public class PostLikeDTO {
     private UserDTO user;
     @ManyToOne
     private PostDTO post;
-    private Timestamp timestamp;
+    private LocalDateTime date;
 
-    public PostLikeDTO(UserDTO user, PostDTO post, Timestamp creationTimestamp) {
+    public PostLikeDTO(UserDTO user, PostDTO post, LocalDateTime date) {
         this.user = user;
         this.post = post;
-        this.timestamp = creationTimestamp;
+        this.date = date;
+    }
+
+    public PostLikeDTO(UserDTO user, PostDTO post) {
+        this.user = user;
+        this.post = post;
+        this.date = LocalDateTime.now();
     }
 
     protected PostLikeDTO(){}
@@ -36,7 +43,7 @@ public class PostLikeDTO {
         return post;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public LocalDateTime getDate() {
+        return date;
     }
 }

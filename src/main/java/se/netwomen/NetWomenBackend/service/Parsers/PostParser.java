@@ -1,6 +1,7 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.Post;
+import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentMinimum;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostDTO;
@@ -12,35 +13,26 @@ import java.util.List;
 
 public final class PostParser {
 
-    public static List<PostComplete> postDTOToPostCompleteList(List<PostDTO> postList){
-        List<PostComplete> postCompletes = new ArrayList<>();
-        postList.forEach(p -> {
-            Post temp = PostParser.postDTOToPost(p);
-            postCompletes.add(new PostComplete(temp, 0, new ArrayList<>(), p.getCreationTimestamp()));
-        });
-        return postCompletes;
-    }
-
     public static List<PostComplete> postDTOToPostCompleteList(Iterable<PostDTO> postList){
         List<PostComplete> postCompletes = new ArrayList<>();
         postList.forEach(p -> {
             Post temp = PostParser.postDTOToPost(p);
-            postCompletes.add(new PostComplete(temp, 0, new ArrayList<>(), p.getCreationTimestamp()));
+            postCompletes.add(new PostComplete(temp, new ArrayList<>(), new ArrayList<>(), p.getDate()));
         });
         return postCompletes;
     }
 
     public static Post postDTOToPost(PostDTO postDTO) {
-        return new Post(UserParser.toUserMinimum(postDTO.getUser()), postDTO.getText(), postDTO.getPictureUrl(), postDTO.getCreationTimestamp(), postDTO.getPostNumber());
+        return new Post(UserParser.toUserMinimum(postDTO.getUser()), postDTO.getText(), postDTO.getPictureUrl(), postDTO.getDate(), postDTO.getPostNumber());
     }
 
 
-    public static PostComplete postToPostComplete(PostDTO post, int likes, List<CommentDTO> commentDTOS){
+    public static PostComplete postToPostComplete(PostDTO post, List<UserMinimum> likes, List<CommentMinimum> comments){
         Post temp = PostParser.postDTOToPost(post);
-        return new PostComplete(temp, likes, CommentParser.commentDTOListToCommentMinimumList(commentDTOS), post.getCreationTimestamp());
+        return new PostComplete(temp, likes, comments, post.getDate());
     }
 
     public static PostDTO postToPostDTO(Post post) {
-        return new PostDTO(new UserDTO("","",""), post.getPictureUrl(), post.getText(), post.getCreationTimestamp(), post.getPostNumber());
+        return new PostDTO(new UserDTO("","",""), post.getPictureUrl(), post.getText(), post.getDate(), post.getPostNumber());
     }
 }

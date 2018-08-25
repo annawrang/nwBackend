@@ -1,12 +1,27 @@
 package se.netwomen.NetWomenBackend.model.data.PostComplete;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class CommentMinimum {
     private UserMinimum user;
     private String text;
+    private LocalDateTime date;
+    private List<CommentReply> commentReplies;
+    private String commentNumber;
 
-    public CommentMinimum(UserMinimum user, String text) {
+    public CommentMinimum(UserMinimum user, String text, LocalDateTime date, List<CommentReply> commentReplies, String commentNumber) {
         this.user = user;
         this.text = text;
+        this.date = date;
+        this.commentReplies = commentReplies;
+        this.commentNumber = commentNumber;
+    }
+
+    public CommentMinimum(UserMinimum user, String text, LocalDateTime date) {
+        this.user = user;
+        this.text = text;
+        this.date = date;
     }
 
     public UserMinimum getUser() {
@@ -15,5 +30,21 @@ public class CommentMinimum {
 
     public String getText() {
         return text;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public List<CommentReply> getCommentReplies() {
+        return commentReplies;
+    }
+
+    public String getCommentNumber() {
+        return commentNumber;
+    }
+
+    public void setCommentNumber(String commentNumber) {
+        this.commentNumber = commentNumber;
     }
 }

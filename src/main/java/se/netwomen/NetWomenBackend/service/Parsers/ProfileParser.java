@@ -8,14 +8,6 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 public final class ProfileParser {
 
-    public static ProfileDTO toProfileDTO(Profile profile) {
-        return new ProfileDTO(profile.getDescription(), UserParser.toUserDTO(profile.getUser()));
-    }
-
-    public static Profile toProfile(ProfileDTO profileDTO) {
-        return new Profile(profileDTO.getDescription(), UserParser.toUser(profileDTO.getUser()));
-    }
-
     public static ProfileMine dtoToProfileMine(ProfileDTO profileDTO) {
         return new ProfileMine(profileDTO.getDescription(), UserParser.toUserMinimum(profileDTO.getUser()));
     }
@@ -23,6 +15,7 @@ public final class ProfileParser {
     public static ProfileOthers dtoToProfileOthers(ProfileDTO profileDTO) {
         return new ProfileOthers(profileDTO.getDescription(), UserParser.toUserMinimum(profileDTO.getUser()));
     }
+
 
 
 }
