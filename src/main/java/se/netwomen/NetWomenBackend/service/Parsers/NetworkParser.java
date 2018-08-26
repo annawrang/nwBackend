@@ -7,9 +7,7 @@ import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,7 +84,7 @@ public final class NetworkParser {
     }
 
     public static List<ForTag> parseForTagEntities(List<ForTagDTO> forTagDTOs){
-        return forTagDTOs.stream()
+        return  forTagDTOs.stream()
                 .map(forTag ->
                         entityToExsistingForTag(forTag))
                 .collect(Collectors.toList());
@@ -106,10 +104,12 @@ public final class NetworkParser {
     }
 
     public static Set<AreaTagDTO> areaTagsToEntity(Set<String> areaTags) {
-        return areaTags
-                .stream()
-                .map(tags ->
-                        areaTagStringsToNewEntity(tags))
-                .collect(Collectors.toSet());
-    }
+            return   Optional.ofNullable(areaTags)
+                    .orElseGet(Collections::emptySet)
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .map(tags ->
+                            areaTagStringsToNewEntity(tags))
+                    .collect(Collectors.toSet());
+        }
 }

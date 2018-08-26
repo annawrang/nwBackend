@@ -180,7 +180,8 @@ public class NetworkService {
 
     public TagView getUsedTags() {
         List<ForTagDTO> forTagDTOs = forTagRepository.findAll(sortByName);
-        List<CountryTagDTO> countryTagDTOs = countryTagRepository.findAll(sortByName)
+        List<CountryTagDTO> countryTagDTOs = countryTagRepository.findAll(sortByName);
+        countryTagDTOs = countryTagDTOs
                 .stream()
                 .filter(distinctByName(p -> p.getName()))
                 .collect(Collectors.toList());
@@ -188,26 +189,23 @@ public class NetworkService {
     }
 
     private Set<CountryTagDTO> parseCountryTagsIfNotNull(NetworkForm network){
-        Set<CountryTagDTO> countryTagDTOs = new HashSet<>();
-        if(network.getLocations() != null) {
-            countryTagDTOs= network.getLocations()
-                    .stream()
-                    .map(countryTag ->
-                            NetworkParser.locationToEntity(countryTag))
-                    .collect(Collectors.toSet());
-        }
-        return countryTagDTOs;
+        return Optional.ofNullable(network.getLocations())
+                .orElseGet(Collections::emptySet)
+                .stream()
+                .map(countryTag ->
+                        NetworkParser.locationToEntity(countryTag))
+                .collect(Collectors.toSet());
+
     }
 
     private Set<ForTagDTO> parseForTagsIfNotNull(NetworkForm network){
         Set<ForTagDTO> set = new HashSet<>();
-        if(network.getForTags() != null) {
-            network.getForTags()
+            Optional.ofNullable(network.getForTags())
+                    .orElseGet(Collections::emptySet)
                     .forEach(tag ->
                             forTagRepository.findByName(tag.getName())
                                     .ifPresent(country -> set.add(country)));
-        }
-        return set;
+       return set;
     }
 
     private void validateForTagDontExist(ForTag forTag) {
