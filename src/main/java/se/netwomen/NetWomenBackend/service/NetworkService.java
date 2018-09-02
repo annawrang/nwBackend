@@ -103,25 +103,36 @@ public class NetworkService {
 
     public List<Network> getNetworks(NetworkParam param) {
         List<Network> networks;
-
-        if( !"null".equalsIgnoreCase (param.getCountry()) && !"null".equalsIgnoreCase(param.getForTag())) {
+        if(countryParamHasValue(param) && forTagParamHasValue(param)) {
             networks = findNetworksByForTagNamesAndCountryName(param);
-            if (!"null".equalsIgnoreCase(param.getArea())) {
+            if (areaParamHasValue(param)) {
                 networks = findNetworksByAreaTagName(networks, param);
             }
             return networks;
         }
-        if( !"null".equalsIgnoreCase(param.getCountry())){
+        if(countryParamHasValue(param)){
             networks = findNetworksByCountryTagName(param);
-            if (!"null".equalsIgnoreCase(param.getArea())) {
+            if (areaParamHasValue(param)) {
                 networks = findNetworksByAreaTagName(networks, param);
             }
             return networks;
         }
-        if(!"null".equalsIgnoreCase(param.getForTag())){
+        if(forTagParamHasValue(param)){
             return findNetworksByForTagNames(param);
         }
         return findAllNetworks(param);
+    }
+    
+    private boolean countryParamHasValue(NetworkParam param){
+        return !(param.getCountry() == null || param.getCountry().equals("null"));
+    }
+
+    private boolean forTagParamHasValue(NetworkParam param){
+        return !(param.getForTag() == null || param.getForTag().equals("null") ||  param.getForTag().equals(""));
+    }
+
+    private boolean areaParamHasValue(NetworkParam param){
+        return !(param.getArea() == null|| param.getArea().equals("null"));
     }
 
     private List<Network> findNetworksByForTagNames(NetworkParam param){

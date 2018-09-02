@@ -41,6 +41,7 @@ public class NetworkResource {
     }
     @GET
     public Response getNetworks(@BeanParam NetworkParam param){
+        System.out.println("träff" + param.getCountry());
         return Response.ok(networkService.getNetworks(param)).build();
     }
 

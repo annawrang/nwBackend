@@ -13,13 +13,13 @@ public final class NetworkParam {
     @DefaultValue("18")
     private int size;
     @QueryParam("country")
-    @DefaultValue("null")
+    //@DefaultValue("null")
     private String country;
     @QueryParam("area")
-    @DefaultValue("null")
+    //@DefaultValue("null")
     private String area;
     @QueryParam("fortag")
-    @DefaultValue("null")
+    //@DefaultValue("null")
     private String forTags;
     @QueryParam("search")
     private String searchText;
