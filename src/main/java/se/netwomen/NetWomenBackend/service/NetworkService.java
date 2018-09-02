@@ -34,6 +34,7 @@ public class NetworkService {
     private final ForTagRepository forTagRepository;
     private final CountryTagRepository countryTagRepository;
     private final static Sort sortByName = new Sort(Sort.Direction.ASC, "name");
+    private static final String DEFAULT_IMG= "http://www.st-damien.com/uploads/8/0/4/0/80408348/person-1824147-1280_12_orig.png";
 
     public NetworkService(NetworkRepository networkRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository) {
         this.networkRepository = networkRepository;
@@ -43,9 +44,18 @@ public class NetworkService {
 
     public NetworkDTO saveNetwork(NetworkForm network) {
         NetworkForm networkForm = addLocationIfNetworkIsGlobal(network);
+        networkForm = checkIfImgExists(networkForm);
         return networkRepository.save(NetworkParser.networkToNewEntity( networkForm,
                                                                         parseCountryTagsIfNotNull(networkForm),
                                                                         parseForTagsIfNotNull(networkForm)));
+    }
+
+    private NetworkForm checkIfImgExists(NetworkForm network) {
+        if(network.getPictureUrl().equals("")){
+            network.setPictureUrl(DEFAULT_IMG);
+            return network;
+        }
+        return network;
     }
 
     private NetworkForm addLocationIfNetworkIsGlobal(NetworkForm network) {

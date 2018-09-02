@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public final class NetworkParser {
-
     public static NetworkDTO networkToNewEntity(NetworkForm network, Set<CountryTagDTO> countryTagDTOs, Set<ForTagDTO> forTags){
         return new NetworkDTO(null, network.getName(), network.getDescription(), network.getLink(), network.getPictureUrl(), countryTagDTOs, forTags, null, null, null, UUID.randomUUID().toString());
     }

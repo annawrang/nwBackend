@@ -49,6 +49,10 @@ public final class NetworkForm {
         return link;
     }
 
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
     public String getPictureUrl() {
         return pictureUrl;
     }
