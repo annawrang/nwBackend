@@ -1,9 +1,9 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.Network;
 
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -26,6 +26,8 @@ public class NetworkDTO {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<OtherTagDTO> otherTags;
     private String networkNumber;
+    @ManyToMany(mappedBy = "networkDTOs")
+    private Set<UserDTO> users;
     // private List<String> tags = new ArrayList<>();
     protected NetworkDTO (){}
 
@@ -42,6 +44,7 @@ public class NetworkDTO {
         this.otherTags = otherTags;
         this.networkNumber = networkNumber;
     }
+
 
     public Long getId() {
         return id;
@@ -85,5 +88,9 @@ public class NetworkDTO {
 
     public String getNetworkNumber() {
         return networkNumber;
+    }
+
+    public Set<UserDTO> getUsers() {
+        return users;
     }
 }

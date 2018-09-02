@@ -4,19 +4,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -229,8 +233,8 @@ public class NetworkService {
                                                         NetworkParser.parseCountryTagEntities(networkDTO.getCountryTags()),
                                                         NetworkParser.parseForTagEntities(networkDTO.getForTags())))
                 .orElseThrow(BadRequestException::new);
-        List<Network> toList = Arrays.asList(network);
-        return toList;
+        return Arrays.asList(network);
 
     }
+
 }

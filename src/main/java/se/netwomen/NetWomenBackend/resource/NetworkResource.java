@@ -1,6 +1,7 @@
 package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.stereotype.Component;
+import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.model.data.network.tag.AreaTag;
@@ -32,7 +33,6 @@ public class NetworkResource {
         networkService.saveNetwork(network);
         return Response.status(Response.Status.CREATED).build();
     }
-
 
     @GET
     @Path("{networkNumber}")

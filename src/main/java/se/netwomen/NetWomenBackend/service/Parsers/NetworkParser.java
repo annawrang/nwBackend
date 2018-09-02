@@ -9,7 +9,6 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class NetworkParser {
 

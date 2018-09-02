@@ -32,6 +32,9 @@ public final class User {
         this.email = email;
         this.password = password;
     }
+    public User(String userNumber) {
+        this.userNumber = userNumber;
+    }
 
     public String getUserNumber() {
         return userNumber;
@@ -64,4 +67,6 @@ public final class User {
     public void setUserNumber(String userNumber) {
         this.userNumber = userNumber;
     }
+
+
 }

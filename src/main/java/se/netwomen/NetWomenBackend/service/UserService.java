@@ -1,21 +1,33 @@
 package se.netwomen.NetWomenBackend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import se.netwomen.NetWomenBackend.model.data.Role;
 import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.model.data.network.Network;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.ProfileRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
+import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.resource.security.JwtTokenProvider;
+import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 import se.netwomen.NetWomenBackend.service.Parsers.UserParser;
 import se.netwomen.NetWomenBackend.service.exceptions.CustomException;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +35,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final NetworkRepository networkRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -34,9 +47,10 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository repository, ProfileRepository profileRepository) {
+    public UserService(UserRepository repository, ProfileRepository profileRepository, NetworkRepository networkRepository) {
         this.userRepository = repository;
         this.profileRepository = profileRepository;
+        this.networkRepository = networkRepository;
     }
 
     public boolean saveNewUser(User user) {
@@ -76,4 +90,28 @@ public class UserService {
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
+
+    public void addNetworkToUser(String userNumber, Network network) {
+        Optional<UserDTO> userDTO = userRepository.findOneWithNetworkDTOsByUserNumber(userNumber);
+        Optional<NetworkDTO> networkDTO = networkRepository.findByNetworkNumber(network.getNetworkNumber());
+        networkDTO.orElseThrow(NotFoundException::new);
+        userDTO.orElseThrow(NotFoundException::new);
+        UserDTO user = userDTO.get();
+        NetworkDTO networkAdd = networkDTO.get();
+        user.addNetworkDTO(networkAdd);
+        userRepository.save(user);
+        //TODO check if network allready added
+
+    }
+
+    public List<Network> findNetworksForUser(String userNumber, NetworkParam networkParam){
+        Page<NetworkDTO> networkDTOs = networkRepository.findByUsersUserNumber(userNumber, getPageRequest(networkParam));
+        return NetworkParser.parseNetworkEntities(networkDTOs.getContent());
+    }
+
+    private PageRequest getPageRequest(NetworkParam pageParam){
+        return PageRequest.of(pageParam.getPage(), pageParam.getSize());
+    }
+
+
 }

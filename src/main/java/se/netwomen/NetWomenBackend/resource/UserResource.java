@@ -3,6 +3,8 @@ package se.netwomen.NetWomenBackend.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.User;
+import se.netwomen.NetWomenBackend.model.data.network.Network;
+import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.ProfileService;
 import se.netwomen.NetWomenBackend.service.UserService;
 
@@ -53,6 +55,23 @@ public class UserResource {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+
+    //adds network to user
+    @POST
+    @Path("{userNumber}/networks")
+    public Response addNetworkToUser(@PathParam("userNumber") String userNumber, Network network){
+        System.out.println("HALLOO");
+        service.addNetworkToUser(userNumber, network);
+        return Response.noContent().build();
+    }
+
+    @GET
+    @Path("{userNumber}/networks")
+    public Response findNetworksForUser(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
+       return Response.ok(service.findNetworksForUser(userNumber, param)).build();
+    }
+
+
 
 
 }

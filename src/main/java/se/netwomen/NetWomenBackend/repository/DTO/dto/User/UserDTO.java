@@ -1,11 +1,14 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.User;
 
 import se.netwomen.NetWomenBackend.model.data.Role;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
+@NamedEntityGraph(name = "UserDTO.networkDTOs", attributeNodes = @NamedAttributeNode("networkDTOs"))
 public class UserDTO {
 
     @Id
@@ -17,6 +20,8 @@ public class UserDTO {
     private String userNumber;
     private String password;
     private String workTitle;
+    @ManyToMany
+    private Set <NetworkDTO> networkDTOs;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -38,7 +43,6 @@ public class UserDTO {
         this.surName = surName;
         this.email = email;
     }
-
 
     public Long getId() {
         return id;
@@ -70,5 +74,12 @@ public class UserDTO {
 
     public String getWorkTitle() {
         return workTitle;
+    }
+
+    public Set<NetworkDTO> getNetworkDTOs() {
+        return networkDTOs;
+    }
+    public void addNetworkDTO(NetworkDTO networkDTO){
+        networkDTOs.add(networkDTO);
     }
 }
