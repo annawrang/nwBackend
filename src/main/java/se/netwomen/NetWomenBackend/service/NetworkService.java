@@ -4,23 +4,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import se.netwomen.NetWomenBackend.model.data.User;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -111,26 +107,29 @@ public class NetworkService {
                 .collect(Collectors.toList());
     }
 
-    public List<Network> getNetworks(NetworkParam param) {
+    public Set<Network> getNetworks(NetworkParam param, String userNumber) {
         List<Network> networks;
         if(countryParamHasValue(param) && forTagParamHasValue(param)) {
             networks = findNetworksByForTagNamesAndCountryName(param);
             if (areaParamHasValue(param)) {
                 networks = findNetworksByAreaTagName(networks, param);
             }
-            return networks;
+            return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
         if(countryParamHasValue(param)){
             networks = findNetworksByCountryTagName(param);
             if (areaParamHasValue(param)) {
                 networks = findNetworksByAreaTagName(networks, param);
             }
-            return networks;
+            return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
         if(forTagParamHasValue(param)){
-            return findNetworksByForTagNames(param);
+            networks = findNetworksByForTagNames(param);
+            return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
-        return findAllNetworks(param);
+
+        networks = findAllNetworks(param, userNumber);
+        return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
     }
     
     private boolean countryParamHasValue(NetworkParam param){
@@ -150,6 +149,24 @@ public class NetworkService {
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
+    private Set<Network> changeNetworkToTrueIfUserHasItInMyNetworks(List<Network> networks, String userNumber) {
+        List<Network> allNetworks = Stream.concat(networks.stream(), findMyNetworksForUser(userNumber).stream()).collect(Collectors.toList());
+        Set<Network> unique = new HashSet<>();
+        for(Network network: allNetworks){
+            if(!unique.add(network)){
+                unique.remove(network);
+                network.setMyNetwork(true);
+                unique.add(network);
+            }
+        }
+        return unique;
+    }
+
+    private List<Network> findMyNetworksForUser(String usernumber) {
+        List<NetworkDTO> myNetworkDTOs = networkRepository.findByUsersUserNumber(usernumber);
+        return NetworkParser.parseNetworkEntities(myNetworkDTOs);
+    }
+
     private List<Network> findNetworksByForTagNamesAndCountryName(NetworkParam param){
         Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(param.getForTag(), param.getCountry(), getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
@@ -164,7 +181,7 @@ public class NetworkService {
             .collect(Collectors.toList());
     }
 
-    private List<Network> findAllNetworks(NetworkParam param) {
+    private List<Network> findAllNetworks(NetworkParam param, String userNumber) {
         Page<NetworkDTO> networkDTOPage = networkRepository.findAll(getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }

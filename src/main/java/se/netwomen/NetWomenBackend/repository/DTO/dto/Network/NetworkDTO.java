@@ -4,6 +4,7 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -44,7 +45,6 @@ public class NetworkDTO {
         this.otherTags = otherTags;
         this.networkNumber = networkNumber;
     }
-
 
     public Long getId() {
         return id;
@@ -93,4 +93,5 @@ public class NetworkDTO {
     public Set<UserDTO> getUsers() {
         return users;
     }
+
 }

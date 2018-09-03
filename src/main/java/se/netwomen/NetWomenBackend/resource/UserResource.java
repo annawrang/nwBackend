@@ -60,15 +60,14 @@ public class UserResource {
     @POST
     @Path("{userNumber}/networks")
     public Response addNetworkToUser(@PathParam("userNumber") String userNumber, Network network){
-        System.out.println("HALLOO");
         service.addNetworkToUser(userNumber, network);
         return Response.noContent().build();
     }
 
     @GET
     @Path("{userNumber}/networks")
-    public Response findNetworksForUser(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
-       return Response.ok(service.findNetworksForUser(userNumber, param)).build();
+    public Response findMyNetworksForUser(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
+       return Response.ok(service.findMyNetworksForUser(userNumber, param)).build();
     }
 
 

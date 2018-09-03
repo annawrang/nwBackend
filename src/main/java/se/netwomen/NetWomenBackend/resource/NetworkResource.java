@@ -40,9 +40,9 @@ public class NetworkResource {
         return Response.ok(networkService.getNetwork(networkNumber)).build();
     }
     @GET
-    public Response getNetworks(@BeanParam NetworkParam param){
-        System.out.println("träff" + param.getCountry());
-        return Response.ok(networkService.getNetworks(param)).build();
+    @Path("users/{userNumber}")
+    public Response getNetworks(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
+        return Response.ok(networkService.getNetworks(param, userNumber)).build();
     }
 
     @GET

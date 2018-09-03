@@ -16,7 +16,7 @@ public final class NetworkParser {
     }
 
     public static Network entityToNetwork(NetworkDTO networkDTO, Set<CountryTag> countryTags, Set<ForTag> forTags) {
-        return new Network(networkDTO.getName(), networkDTO.getDescription(), networkDTO.getLink(), networkDTO.getPictureUrl(), countryTags, forTags, networkDTO.getNetworkNumber());
+        return new Network(networkDTO.getName(), networkDTO.getDescription(), networkDTO.getLink(), networkDTO.getPictureUrl(), countryTags, forTags, networkDTO.getNetworkNumber(), false);
     }
 
     public static NetworkFilter entityToNetworkFilter(NetworkDTO networkDTO, String placeholder, String filterType) {

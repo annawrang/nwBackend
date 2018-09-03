@@ -96,15 +96,11 @@ public class UserService {
         Optional<NetworkDTO> networkDTO = networkRepository.findByNetworkNumber(network.getNetworkNumber());
         networkDTO.orElseThrow(NotFoundException::new);
         userDTO.orElseThrow(NotFoundException::new);
-        UserDTO user = userDTO.get();
-        NetworkDTO networkAdd = networkDTO.get();
-        user.addNetworkDTO(networkAdd);
-        userRepository.save(user);
-        //TODO check if network allready added
-
+        userDTO.get().addNetworkDTO(networkDTO.get());
+        userRepository.save(userDTO.get());
     }
 
-    public List<Network> findNetworksForUser(String userNumber, NetworkParam networkParam){
+    public List<Network> findMyNetworksForUser(String userNumber, NetworkParam networkParam){
         Page<NetworkDTO> networkDTOs = networkRepository.findByUsersUserNumber(userNumber, getPageRequest(networkParam));
         return NetworkParser.parseNetworkEntities(networkDTOs.getContent());
     }

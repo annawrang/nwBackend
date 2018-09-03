@@ -18,6 +18,5 @@ public interface NetworkRepository extends JpaRepository<NetworkDTO, Long> {
     Page<NetworkDTO> findDistinctByForTagsNameInAndCountryTagsName(String forTagName, String countryTagName, Pageable pageable);
     Page<NetworkDTO> findByNameContainingIgnoreCase(String name, Pageable pageable);
     Page<NetworkDTO> findByUsersUserNumber(String userNumber, Pageable pageable);
-
-
+    List<NetworkDTO> findByUsersUserNumber(String userNumber);
 }
