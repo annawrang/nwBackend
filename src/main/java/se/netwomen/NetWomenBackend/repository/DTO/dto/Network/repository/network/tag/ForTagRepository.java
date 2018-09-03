@@ -6,11 +6,12 @@ import org.springframework.stereotype.Repository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ForTagRepository extends JpaRepository<ForTagDTO, Long> {
     Optional<ForTagDTO> findByName(String name);
-    Optional<ForTagDTO> findByNameStartingWithIgnoreCase(String name);
+    List<ForTagDTO> findByNameStartingWithIgnoreCase(String name);
 
 }

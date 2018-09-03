@@ -69,8 +69,7 @@ public final class NetworkParser {
     public static List<AreaTag> parseAreaTagEntities(Set<AreaTagDTO> areaTagDTOs){
         return  areaTagDTOs
                 .stream()
-                .map(area ->
-                        entityToExsistingAreaTag(area))
+                .map(NetworkParser::entityToExsistingAreaTag)
                 .collect(Collectors.toList());
     }
 
@@ -91,9 +90,9 @@ public final class NetworkParser {
     public static List<Network> parseNetworkEntities(List<NetworkDTO> networkDTOs){
         return networkDTOs.stream()
                 .map(network ->
-                        NetworkParser.entityToNetwork( network,
-                                NetworkParser.parseCountryTagEntities(network.getCountryTags()),
-                                NetworkParser.parseForTagEntities(network.getForTags())))
+                        entityToNetwork( network,
+                                parseCountryTagEntities(network.getCountryTags()),
+                                parseForTagEntities(network.getForTags())))
                 .collect(Collectors.toList());
     }
 
@@ -110,4 +109,6 @@ public final class NetworkParser {
                             areaTagStringsToNewEntity(tags))
                     .collect(Collectors.toSet());
         }
+
+
 }

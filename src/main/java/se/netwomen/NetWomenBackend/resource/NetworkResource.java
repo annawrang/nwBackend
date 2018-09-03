@@ -48,7 +48,7 @@ public class NetworkResource {
     @GET
     @Path("/filter")
     public Response getNetworksFilterResults(@BeanParam NetworkParam param){
-        return Response.ok(networkService.getNetworksFilterResults(param)).build();
+        return Response.ok(networkService.getNetworksDropDownFilterResults(param)).build();
     }
 
 }

@@ -39,7 +39,7 @@ public class TagResource {
     }
 
     @Path("{countryName}")
-    @GET public Response findAreaTagAlternativesFromCountryName(@PathParam("countryName") String country){
+    @GET public Response findAreaTagsFromCountryName(@PathParam("countryName") String country){
         return Response.ok(networkService.findAreaTagsFromCountryName(country)).build();
     }
 }
