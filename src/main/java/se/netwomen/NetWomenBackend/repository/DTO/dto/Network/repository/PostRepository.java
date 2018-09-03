@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends CrudRepository<PostDTO, Long>{
 
-    @Query("select p from PostDTO p order by p.creationTimestamp desc")
-    List<PostDTO> findAllOrderedByTimeStamp();
+    @Query("select p from PostDTO p order by p.date desc")
+    List<PostDTO> findAllOrderedByDate();
 
     Optional<PostDTO> findByPostNumber(String postNumber);
 

@@ -1,13 +1,10 @@
 package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
-import se.netwomen.NetWomenBackend.model.data.User;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.resource.param.PostParam;
 import se.netwomen.NetWomenBackend.resource.security.JwtTokenProvider;
 import se.netwomen.NetWomenBackend.service.PostService;
@@ -15,7 +12,6 @@ import se.netwomen.NetWomenBackend.service.exceptions.EmailNotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.security.Principal;
 import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.*;
@@ -39,13 +35,11 @@ public class PostResource {
 
     @DELETE
     @Path("{postNumber}")
-    public Response deletePost(@PathParam("postNumber")String postNumber) {
+    public Response deletePost(@PathParam("postNumber") String postNumber) {
         String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal().toString());
-        if (postService.deletePost(postNumber, userNumber)){
-            return Response.status(OK).build();
-        }
-        return Response.status(NOT_FOUND).build();
+        postService.deletePost(postNumber, userNumber);
+        return Response.status(OK).build();
     }
 
     @POST
@@ -58,25 +52,35 @@ public class PostResource {
 
     @PUT
     @Path("{postNumber}")
-    public Response editPost(@PathParam("postNumber")String postNumber, String newText) {
+    public Response editPost(@PathParam("postNumber") String postNumber, String newText) {
         String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal().toString());
-        if(postService.editPost(postNumber, userNumber, newText)){
-            return Response.status(CREATED).build();
-        }
-        return Response.status(BAD_REQUEST).build();
+        postService.editPost(postNumber, userNumber, newText);
+        return Response.status(CREATED).build();
     }
 
     @POST
     @Path("{postNumber}/comments")
-    public Response createNewPostComment(@PathParam("postNumber") String postNumber, String newComment){
+    public Response createNewPostComment(@PathParam("postNumber") String postNumber, String newComment) {
         String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal().toString());
-        if(postService.createPostComment(postNumber, userNumber, newComment)){
-            return Response.status(CREATED).build();
-        }
-        return Response.status(BAD_REQUEST).build();
+        postService.createPostComment(postNumber, userNumber, newComment);
+        return Response.status(CREATED).build();
+
     }
+
+    @POST
+    @Path("{postNumber}/comments/{commentNumber}/reply")
+    public Response createNewPostCommentReply(@PathParam("postNumber") String postNumber,
+                                              @PathParam("commentNumber") String commentNumber,
+                                              String newComment) {
+        String userNumber = getUserNumberFromAuth(SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal().toString());
+        postService.createPostCommentReply(commentNumber, userNumber, newComment);
+        return Response.status(CREATED).build();
+
+    }
+
 
     // Paging, vilken sida + antal per sida (default 10 per sida)
     @GET
@@ -87,7 +91,7 @@ public class PostResource {
 
     @GET
     @Path("{postNumber}")
-    public Response getPost(@PathParam("postNumber") String postNumber){
+    public Response getPost(@PathParam("postNumber") String postNumber) {
         return Response.ok(postService.getPost(postNumber)).build();
     }
 
@@ -106,8 +110,8 @@ public class PostResource {
 
     // This is the method use to get the usernumber from the token, to always know which user is
     // sending the request
-    private String getUserNumberFromAuth(String auth){
-        if(auth == null){
+    private String getUserNumberFromAuth(String auth) {
+        if (auth == null) {
             throw new EmailNotFoundException("Usernumber not found.");
         }
         String userNumber = auth.split(";")[0];

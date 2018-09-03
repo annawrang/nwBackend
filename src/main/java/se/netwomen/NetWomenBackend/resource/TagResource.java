@@ -2,8 +2,6 @@ package se.netwomen.NetWomenBackend.resource;
 
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.network.tag.*;
-import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.TagUpdateAlternative;
-import se.netwomen.NetWomenBackend.model.data.network.tag.alternative.CountryTagAlternative;
 import se.netwomen.NetWomenBackend.service.NetworkService;
 
 import javax.ws.rs.*;

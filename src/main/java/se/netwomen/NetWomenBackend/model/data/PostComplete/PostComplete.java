@@ -2,8 +2,10 @@ package se.netwomen.NetWomenBackend.model.data.PostComplete;
 
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Post;
+import se.netwomen.NetWomenBackend.model.data.User;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,30 +13,31 @@ import java.util.List;
 public class PostComplete {
 
     private Post post;
-    private int likes;
+    private List<UserMinimum> likes = new ArrayList<>();
     private List<CommentMinimum> comment = new ArrayList<>();
-    private Timestamp creationTimestamp;
+    private LocalDateTime date;
 
-    protected PostComplete(){}
+    protected PostComplete() {
+    }
 
-    public PostComplete(Post post, int likes, List<CommentMinimum> comment) {
+    public PostComplete(Post post, List<UserMinimum> likes, List<CommentMinimum> comment) {
         this.post = post;
         this.likes = likes;
         this.comment = comment;
     }
 
-    public PostComplete(Post post, int likes, List<CommentMinimum> comment, Timestamp creationTimestamp) {
+    public PostComplete(Post post, List<UserMinimum> likes, List<CommentMinimum> comment, LocalDateTime date) {
         this.post = post;
         this.likes = likes;
         this.comment = comment;
-        this.creationTimestamp = creationTimestamp;
+        this.date = date;
     }
 
     public Post getPost() {
         return post;
     }
 
-    public int getLikes() {
+    public List<UserMinimum> getLikes() {
         return likes;
     }
 
@@ -42,7 +45,7 @@ public class PostComplete {
         return comment;
     }
 
-    public Timestamp getCreationTimestamp() {
-        return creationTimestamp;
+    public LocalDateTime getDate() {
+        return date;
     }
 }

@@ -2,17 +2,19 @@ package se.netwomen.NetWomenBackend.model.data;
 
 import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public final class Post {
 
     private UserMinimum user;
     private String text;
     private String pictureUrl;
-    private Timestamp creationTimestamp;
+    private LocalDateTime date;
     private String postNumber;
 
-    protected Post(){}
+    protected Post() {
+    }
 
     public Post(UserMinimum user, String text, String pictureUrl) {
         this.user = user;
@@ -20,11 +22,11 @@ public final class Post {
         this.pictureUrl = pictureUrl;
     }
 
-    public Post(UserMinimum user, String text, String pictureUrl, Timestamp creationTimestamp, String postNumber) {
+    public Post(UserMinimum user, String text, String pictureUrl, LocalDateTime date, String postNumber) {
         this.user = user;
         this.text = text;
         this.pictureUrl = pictureUrl;
-        this.creationTimestamp = creationTimestamp;
+        this.date = date;
         this.postNumber = postNumber;
     }
 
@@ -40,12 +42,12 @@ public final class Post {
         return pictureUrl;
     }
 
-    public Timestamp getCreationTimestamp() {
-        return creationTimestamp;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setCreationTimestamp(Timestamp creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public String getPostNumber() {

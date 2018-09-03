@@ -1,5 +1,8 @@
 package se.netwomen.NetWomenBackend.repository.DTO.dto.Post;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import javax.persistence.Entity;
@@ -7,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class PostDTO {
@@ -17,17 +21,19 @@ public class PostDTO {
     private UserDTO user;
     private String pictureUrl;
     private String text;
-    private Timestamp creationTimestamp;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern="dd/MM/yyyy hh:mm")
+    private LocalDateTime date;
     private String postNumber;
 
     protected PostDTO() {
     }
 
-    public PostDTO(UserDTO user, String pictureUrl, String text, Timestamp creationTimestamp, String postNumber) {
+    public PostDTO(UserDTO user, String pictureUrl, String text, LocalDateTime creationTimestamp, String postNumber) {
         this.user = user;
         this.pictureUrl = pictureUrl;
         this.text = text;
-        this.creationTimestamp = creationTimestamp;
+        this.date = creationTimestamp;
         this.postNumber = postNumber;
     }
 
@@ -47,12 +53,13 @@ public class PostDTO {
         return text;
     }
 
-    public Timestamp getCreationTimestamp() {
-        return creationTimestamp;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setUserDTO(UserDTO userDTO) {
+    public PostDTO setUserDTO(UserDTO userDTO) {
         this.user = userDTO;
+        return this;
     }
 
     public String getPostNumber() {

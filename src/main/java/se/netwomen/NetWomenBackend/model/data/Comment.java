@@ -1,13 +1,15 @@
 package se.netwomen.NetWomenBackend.model.data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public final class Comment {
 
     private User user;
     private Post post;
     private String text;
-    private Timestamp createdTimestamp;
+    private LocalDateTime date;
+    private String commentNumber;
 
     public Comment(User user, Post post, String text) {
         this.user = user;
@@ -15,11 +17,12 @@ public final class Comment {
         this.text = text;
     }
 
-    public Comment(User user, Post post, String text, Timestamp createdTimestamp) {
+    public Comment(User user, Post post, String text, LocalDateTime date, String commentNumber) {
         this.user = user;
         this.post = post;
         this.text = text;
-        this.createdTimestamp = createdTimestamp;
+        this.date = date;
+        this.commentNumber = commentNumber;
     }
 
     public User getUser() {
@@ -34,11 +37,15 @@ public final class Comment {
         return text;
     }
 
-    public Timestamp getCreatedTimestamp() {
-        return createdTimestamp;
+    public LocalDateTime getCreatedDate() {
+        return date;
     }
 
-    public void setCreatedTimestamp(Timestamp createdTimestamp) {
-        this.createdTimestamp = createdTimestamp;
+    public String getCommentNumber() {
+        return commentNumber;
+    }
+
+    public void setCreatedDate(LocalDateTime date) {
+        this.date = date;
     }
 }
