@@ -49,9 +49,6 @@ public class NetworkService {
     }
 
 
-
-
-
     public ForTagDTO saveForTag(ForTag forTag) {
         networkLogic.validateForTagDontExist(forTag);
         return forTagRepository.save(NetworkParser.forTagtoNewEntity(forTag));
@@ -64,7 +61,6 @@ public class NetworkService {
         }
         return null;
     }
-
 
 
     public Set<Network> getNetworks(NetworkParam param, String userNumber) {
@@ -87,12 +83,9 @@ public class NetworkService {
             networks = findNetworksByForTagNames(param);
             return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
-
-        networks = findAllNetworks(param, userNumber);
+        networks = findAllNetworks(param);
         return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
     }
-    
-
 
     private List<Network> findNetworksByForTagNames(NetworkParam param){
         Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsName(param.getForTag(), getPageRequest(param));
@@ -133,7 +126,7 @@ public class NetworkService {
             .collect(Collectors.toList());
     }
 
-    private List<Network> findAllNetworks(NetworkParam param, String userNumber) {
+    private List<Network> findAllNetworks(NetworkParam param) {
         Page<NetworkDTO> networkDTOPage = networkRepository.findAll(getPageRequest(param));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
@@ -193,9 +186,10 @@ public class NetworkService {
         Set<ForTagDTO> set = new HashSet<>();
             Optional.ofNullable(network.getForTags())
                     .orElseGet(Collections::emptySet)
-                    .forEach(tag ->
+                    .stream()
+                    .map(tag ->
                             forTagRepository.findByName(tag.getName())
-                                    .ifPresent(forTag -> set.add(forTag)));
+                                    .map(forTag -> set.add(forTag)));
        return set;
     }
 
