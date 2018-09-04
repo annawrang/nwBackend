@@ -100,16 +100,18 @@ public class NetworkService {
     }
 
     private Set<Network> changeNetworkToTrueIfUserHasItInMyNetworks(List<Network> networks, String userNumber) {
-        List<Network> allNetworks = Stream.concat(networks.stream(), findMyNetworksForUser(userNumber).stream()).collect(Collectors.toList());
-        Set<Network> unique = new HashSet<>();
-        for(Network network: allNetworks){
-            if(!unique.add(network)){
-                unique.remove(network);
-                network.setMyNetwork(true);
-                unique.add(network);
+        List<Network> myNetworksForUser = findMyNetworksForUser(userNumber);
+        Set<Network> customSet = new HashSet<>();
+        for (Network network : networks) {
+            if(myNetworksForUser.contains(network)){
+                network.setMyNetwork(true); //if duplicate
+                customSet.add(network);
+            } else {
+                network.setMyNetwork(false); // if not duplicate
+                customSet.add(network);
             }
         }
-        return unique;
+        return customSet;
     }
 
     private List<Network> findMyNetworksForUser(String usernumber) {
