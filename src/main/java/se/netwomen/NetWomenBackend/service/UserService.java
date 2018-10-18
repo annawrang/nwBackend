@@ -5,27 +5,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.User;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.ProfileRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.ProfileDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Profile.profile.ProfileRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
-import se.netwomen.NetWomenBackend.resource.security.JwtTokenProvider;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.user.UserRepository;
+import se.netwomen.NetWomenBackend.controller.security.JwtTokenProvider;
 import se.netwomen.NetWomenBackend.service.Parsers.UserParser;
 import se.netwomen.NetWomenBackend.service.exceptions.CustomException;
+import se.netwomen.NetWomenBackend.service.logic.UserLogic;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final UserLogic userLogic;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -34,37 +34,27 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository repository, ProfileRepository profileRepository) {
+    public UserService(UserRepository repository, ProfileRepository profileRepository, UserLogic userLogic) {
         this.userRepository = repository;
         this.profileRepository = profileRepository;
+        this.userLogic = userLogic;
     }
 
     public boolean saveNewUser(User user) {
-        if (user.getUserNumber() == null) {
-            user.setUserNumber(UUID.randomUUID().toString());
-        }
-        UserDTO userDTO = UserParser.toUserDTO(user);
-        userDTO = userRepository.save(userDTO);
-        if (createNewProfileForUser(userDTO)){
-            return true;
-        }
-        return false;
+        this.userLogic.validateEmailDoesntExists(user.getEmail());
+        user.setUserNumber(UUID.randomUUID().toString());
+        UserDTO userDTO = userRepository.save(UserParser.toUserDTO(user));
+        return createNewProfileForUser(userDTO);
     }
 
     private boolean createNewProfileForUser(UserDTO userDTO) {
         ProfileDTO profile = new ProfileDTO(userDTO);
         profile = profileRepository.save(profile);
-        if(profile.getId() != null){
-            return true;
-        } return false;
+        return (profile.getId() != null);
     }
 
     public User findByEmailAndPassword(String email, String password) {
-        Optional<UserDTO> userDTO = userRepository.findByEmailAndPassword(email, password);
-        if (userDTO.isPresent()) {
-            return UserParser.toUser(userDTO.get());
-        }
-        return null;
+        return UserParser.toUser(userLogic.validateUserByEmailPassword(email, password));
     }
 
 

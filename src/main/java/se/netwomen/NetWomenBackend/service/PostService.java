@@ -3,19 +3,16 @@ package se.netwomen.NetWomenBackend.service;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
-import se.netwomen.NetWomenBackend.repository.DTO.*;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentReplyDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostDTO;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostLikeDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.*;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.post.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
-import se.netwomen.NetWomenBackend.resource.param.PostParam;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.user.UserRepository;
+import se.netwomen.NetWomenBackend.controller.param.PostParam;
 import se.netwomen.NetWomenBackend.service.Parsers.PostParser;
 import se.netwomen.NetWomenBackend.service.logic.PostLogic;
+import se.netwomen.NetWomenBackend.service.logic.UserLogic;
 
-import javax.ws.rs.BadRequestException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,85 +23,79 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
     private final CommentReplyRepository commentReplyRepository;
+    private final CommentReplyLikeRepository replyLikeRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final PostLogic postLogic;
+    private final UserLogic userLogic;
 
     public PostService(PostRepository postRepository, UserRepository userRepository,
                        PostLikeRepository postLikeRepository, CommentRepository commentRepository,
-                       CommentReplyRepository commentReplyRepository, PostLogic postLogic) {
+                       CommentReplyLikeRepository replyLikeRepository, CommentLikeRepository commentLikeRepository,
+                       CommentReplyRepository commentReplyRepository, PostLogic postLogic,
+                       UserLogic userLogic) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postLikeRepository = postLikeRepository;
         this.commentRepository = commentRepository;
         this.commentReplyRepository = commentReplyRepository;
+        this.replyLikeRepository = replyLikeRepository;
+        this.commentLikeRepository = commentLikeRepository;
         this.postLogic = postLogic;
+        this.userLogic = userLogic;
     }
 
-    public List<PostComplete> getPostsAndLikesComments(PostParam param) {
-        if (param.page != null) {
-            return postLogic.makePaging(postRepository.findAllOrderedByDate(), param);
-        } else {
-            return PostParser.postDTOToPostCompleteList(postRepository.findAll());
-        }
+    public List<PostComplete> getPostsAndLikesComments(int page, int numbersPerPage) {
+            return postLogic.makePaging(postRepository.findAllOrderedByDate(), page, numbersPerPage);
+
+    }
+
+    public List<PostComplete> getUsersPosts(String userNumber, int page, int numbersPerPage) {
+        return postLogic.makePaging(postRepository.findByUserNumber(userNumber, page, numbersPerPage), page, numbersPerPage);
     }
 
 
     public void saveNewPost(String userNumber, Post post) {
-        if (postLogic.validateUserExists(userNumber)) {
-            Optional<UserDTO> userDTO = userRepository.findByUserNumber(userNumber);
-            post = postLogic.setPostCreationTime(post);
-            post.setPostNumber(UUID.randomUUID().toString());
-            PostDTO postDTO = PostParser.postToPostDTO(post);
-            postDTO = postRepository.save(postDTO.setUserDTO(userDTO.get()));
-        } else {
-            throw new BadRequestException();
-        }
+        UserDTO userDTO = userLogic.validateUserExists(userNumber);
+        post = postLogic.setPostCreationTime(post);
+        post.setPostNumber(UUID.randomUUID().toString());
+        PostDTO postDTO = PostParser.postToPostDTO(post);
+        postDTO = postRepository.save(postDTO.setUserDTO(userDTO));
     }
 
     public void saveNewPostLike(String postNumber, String userNumber) {
-        if (postLogic.validateUserExists(userNumber) && postLogic.validatePostExists(postNumber)) {
-            if (postLogic.validatePostLikeExists(postNumber, userNumber)) {
-                postLikeRepository.delete(postLikeRepository.findByPostNumberAndUserNumber(postNumber, userNumber).get());
-            } else {
-                PostLikeDTO newLikeDTO = new PostLikeDTO(userRepository.findByUserNumber(userNumber).get(),
-                        postRepository.findByPostNumber(postNumber).get());
-                newLikeDTO = postLikeRepository.save(newLikeDTO);
-            }
+        UserDTO user = userLogic.validateUserExists(userNumber);
+        PostDTO post = postLogic.validatePostExists(postNumber);
+        if (postLogic.doesPostLikeExists(postNumber, userNumber)) {
+            postLikeRepository.delete(postLogic.validatePostLikeExists(postNumber, userNumber));
         } else {
-            throw new BadRequestException();
+            PostLikeDTO newLikeDTO = new PostLikeDTO(user, post);
+            newLikeDTO = postLikeRepository.save(newLikeDTO);
         }
     }
 
 
     public void editPost(String postNumber, String userNumber, String newText) {
-        if (postLogic.validatePostExists(postNumber) && postLogic.validateUserExists(userNumber) &&
-                postLogic.validatePostIsWrittenByUser(postNumber, userNumber)) {
-            Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
-            post.get().setText(newText);
-            postRepository.save(post.get());
-        } else {
-            throw new BadRequestException();
-        }
+        PostDTO post = postLogic.validatePostExists(postNumber);
+        userLogic.validateUserExists(userNumber);
+        postLogic.validatePostIsWrittenByUser(postNumber, userNumber);
+        post = post.setText(newText);
+        postRepository.save(post);
+
     }
 
     public void createPostComment(String postNumber, String userNumber, String newComment) {
-        if (postLogic.validatePostExists(postNumber) && postLogic.validateUserExists(userNumber)) {
-            CommentDTO commentDTO = postLogic.createNewPostComment(userNumber, postNumber, newComment);
-            commentRepository.save(commentDTO);
-        } else {
-            throw new BadRequestException();
-        }
+        CommentDTO commentDTO = postLogic.createNewPostComment(userNumber, postNumber, newComment);
+        commentRepository.save(commentDTO);
     }
 
 
     public void deletePost(String postNumber, String userNumber) {
-        if (postLogic.validateUserExists(userNumber) && postLogic.validatePostExists(postNumber) &&
-                postLogic.validatePostIsWrittenByUser(postNumber, userNumber)) {
-            Optional<PostDTO> post = postRepository.findByPostNumber(postNumber);
-            postLogic.deleteCommentsAndPostLike(post.get());
-            postRepository.delete(post.get());
-        } else {
-            throw new BadRequestException();
-        }
+        PostDTO post = postLogic.validatePostExists(postNumber);
+        userLogic.validateUserExists(userNumber);
+        postLogic.validatePostIsWrittenByUser(postNumber, userNumber);
+
+        postLogic.deleteCommentsAndPostLike(post);
+        postRepository.delete(post);
     }
 
 
@@ -113,11 +104,30 @@ public class PostService {
     }
 
     public void createPostCommentReply(String commentNumber, String userNumber, String newComment) {
-        if (postLogic.validateUserExists(userNumber) && postLogic.validateCommentExists(commentNumber)) {
-            CommentReplyDTO reply = postLogic.createPostCommentReply(commentNumber, userNumber, newComment);
-            commentReplyRepository.save(reply);
+        CommentReplyDTO reply = postLogic.createPostCommentReply(commentNumber, userNumber, newComment);
+        commentReplyRepository.save(reply);
+    }
+
+
+    public void createPostCommentLike(String userNumber, String postNumber, String commentNumber) {
+        userLogic.validateUserExists(userNumber);
+        postLogic.validatePostExists(postNumber);
+        postLogic.validateCommentExists(commentNumber);
+        if (postLogic.doesCommentLikeExists(commentNumber, userNumber)) {
+            deleteCommentLike(commentNumber, userNumber);
         } else {
-            throw new BadRequestException();
+            CommentLikeDTO newLike = postLogic.createCommentLike(userNumber, commentNumber);
+            commentLikeRepository.save(newLike);
         }
     }
+
+    private void deleteCommentLike(String commentNumber, String userNumber) {
+        CommentLikeDTO like = postLogic.validateCommentLikeExists(commentNumber, userNumber);
+        commentLikeRepository.delete(like);
+    }
+
+//    private void deleteReplyLike(String replyNumber, String userNumber) {
+//        CommentReplyLikeDTO like = replyLikeRepository.findByCommentReplyNumber(replyNumber).get();
+//        replyLikeRepository.delete(like);
+//    }
 }

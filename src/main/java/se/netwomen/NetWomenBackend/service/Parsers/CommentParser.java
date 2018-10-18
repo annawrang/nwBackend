@@ -1,6 +1,7 @@
 package se.netwomen.NetWomenBackend.service.Parsers;
 
 import se.netwomen.NetWomenBackend.model.data.Comment;
+import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentLike;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentReply;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentMinimum;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
@@ -37,7 +38,7 @@ public final class CommentParser {
         return new CommentMinimum(UserParser.toUserMinimum(c.getUser()), c.getText(), c.getDate());
     }
 
-    public static CommentMinimum commentDTOToCommentMinimumWithReplies(CommentDTO c, List<CommentReply> commentReplies) {
-        return new CommentMinimum(UserParser.toUserMinimum(c.getUser()), c.getText(), c.getDate(), commentReplies, c.getCommentNumber());
+    public static CommentMinimum commentDTOToCommentMinimumWithRepliesLikes(CommentDTO c, List<CommentReply> commentReplies, List<CommentLike> commentLikes) {
+        return new CommentMinimum(UserParser.toUserMinimum(c.getUser()), c.getText(), c.getDate(), commentReplies, c.getCommentNumber(),commentLikes);
     }
 }

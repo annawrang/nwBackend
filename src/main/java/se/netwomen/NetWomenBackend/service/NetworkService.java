@@ -19,7 +19,7 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagAlternativeRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
-import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
+import se.netwomen.NetWomenBackend.controller.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.Parsers.AlternativeParser;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 
