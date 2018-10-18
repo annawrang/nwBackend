@@ -13,7 +13,7 @@ documentation:
 
 /posts:
   get:
-    description: get posts with comments and likes
+    description: get posts with with their comments, likes, comment-likes and comment-replies
     queryParameters:
       limit:
         description: The limit of the number of posts per page
@@ -29,36 +29,136 @@ documentation:
         example: 25
     responses:
       200:
-        description:
-          body:
-          example:
-       500:
-        description:
+        description: error
         body:
-          example:
+          example: !include examples/example.json
+      500:
+        description: error
+        body:
+          example: !include examples/example.json
   post:
+    description: creates a new post from a user
+    responses:
+      200:
+      400:
+      500:
+  /user:
+    /{userNumber}:
+      get:
+        description: get posts written by a user (plus the posts' comments, likes, replies, commentlikes)
+        responses:
+          200:
+          404:
+          500:
   /{postNumber}:
     get:
+      description: gets a post with its comments, likes, comment-likes and comment-replies
+      responses:
+        200:
+        404:
+        500:
     delete:
+      description: deletes a post with its comments, likes, comment-likes and comment-replies
+      responses:
+        200:
+        404:
+        500:
     put:
-      /likes:
-        post:
-        /{likeNumber}:
-          delete:
-      /comments:
-        post:
-        /{commentNumber}:
-          delete:
-          put:
+      description: updates a post
+      responses:
+        200:
+        400:
+        404:
+        500:
+          body:
+           example: !include examples/example.json
+    /likes:
+      post:
+        description: create a post-like from a user
+        responses:
+          200:
+          404:
+          500:
+      /{likeNumber}:
+        delete:
+          description: delete a post-like from a user (unlike)
+          responses:
+            200:
+            404:
+            500:
+              body:
+                example: !include examples/example.json
+    /comments:
+      post:
+        description: create a post-comment
+        responses:
+          200:
+          400:
+          404:
+          500:
+      /{commentNumber}:
+        delete:
+          description: delete a post-comment
+          responses:
+            200:
+            404:
+            500:
+        put:
+          description: update a post-comment
+          responses:
+            200:
+            400:
+            404:
+            500:
+        /likes:
+          post:
+            description: create a post-comment like
+            responses:
+              200:
+              404:
+              500:
+          /{likeNumber}:
+            delete:
+              description: delete a post-comment like (unlike)
+              responses:
+                200:
+                404:
+                500:
+        /replies:
+          post:
+            description: create a post-comment-reply
+            responses:
+              200:
+              400:
+              404:
+              500:
+          /{commentReplyNumber}:
+            put:
+              description: updates a post-comment-reply
+              responses:
+                200:
+                400:
+                404:
+                500:
+            delete:
+              description: deletes a post-comment-reply
+              responses:
+                200:
+                404:
+                500:
             /likes:
               post:
-              /{likeNumber}:
-                delete:
-            /replies:
-              post:
-                /{commentReplyNumber}:
-                  put:
-                  delete:
+                description: creates a post-comment-reply-like
+                responses:
+                  200:
+                  404:
+                  500:
+              delete:
+                description: deletes a post-comment-reply-like
+                responses:
+                  200:
+                  404:
+                  500:
 
 
 
