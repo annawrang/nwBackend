@@ -1,0 +1,64 @@
+#%RAML 0.8
+---
+
+title: "Api Docs 2"
+baseUri: http://localhost:8080/{version}
+version: 1.0
+protocols: [ HTTP ]
+mediaType: application/json
+documentation:
+  - title: RESTful API documentation for Api Docs 2
+    content: |
+      Api Docs 2 documentation
+
+/posts:
+  get:
+    description: get posts with comments and likes
+    queryParameters:
+      limit:
+        description: The limit of the number of posts per page
+        type: integer
+        required: false
+        default: 10
+        example: 20
+      offset:
+        description: The start of the post to return
+        type: integer
+        required: false
+        default: 0
+        example: 25
+    responses:
+      200:
+        description:
+          body:
+          example:
+       500:
+        description:
+        body:
+          example:
+  post:
+  /{postNumber}:
+    get:
+    delete:
+    put:
+      /likes:
+        post:
+        /{likeNumber}:
+          delete:
+      /comments:
+        post:
+        /{commentNumber}:
+          delete:
+          put:
+            /likes:
+              post:
+              /{likeNumber}:
+                delete:
+            /replies:
+              post:
+                /{commentReplyNumber}:
+                  put:
+                  delete:
+
+
+
