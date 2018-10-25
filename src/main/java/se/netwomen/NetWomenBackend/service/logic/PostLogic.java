@@ -4,34 +4,21 @@ import org.glassfish.jersey.internal.guava.Lists;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Post;
-<<<<<<< HEAD
 import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentMinimum;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentReply;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
-import se.netwomen.NetWomenBackend.repository.DTO.*;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.CommentRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.PostLikeRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.PostRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
+
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentReplyDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostLikeDTO;
-=======
 import se.netwomen.NetWomenBackend.model.data.PostComplete.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.post.*;
->>>>>>> master
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.user.UserRepository;
 import se.netwomen.NetWomenBackend.controller.param.PostParam;
 import se.netwomen.NetWomenBackend.service.Parsers.*;
-
-<<<<<<< HEAD
-import javax.ws.rs.BadRequestException;
-=======
->>>>>>> master
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

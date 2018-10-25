@@ -13,35 +13,34 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.CountryTagRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
-<<<<<<< HEAD
-import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
-=======
 import se.netwomen.NetWomenBackend.controller.param.NetworkParam;
-import se.netwomen.NetWomenBackend.service.Parsers.AlternativeParser;
->>>>>>> master
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.User.user.UserRepository;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 import se.netwomen.NetWomenBackend.service.logic.NetworkLogic;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class NetworkService {
     private final NetworkRepository networkRepository;
     private final ForTagRepository forTagRepository;
     private final CountryTagRepository countryTagRepository;
+    private final UserRepository userRepository;
     private final static Sort sortByName = new Sort(Sort.Direction.ASC, "name");
     private final NetworkLogic networkLogic;
 
-    public NetworkService(NetworkRepository networkRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository, NetworkLogic networkLogic) {
+    public NetworkService(NetworkRepository networkRepository, ForTagRepository forTagRepository, CountryTagRepository countryTagRepository, UserRepository userRepository, NetworkLogic networkLogic) {
         this.networkRepository = networkRepository;
         this.forTagRepository = forTagRepository;
         this.countryTagRepository = countryTagRepository;
+        this.userRepository = userRepository;
         this.networkLogic = networkLogic;
     }
 
@@ -137,5 +136,24 @@ public class NetworkService {
     private static <T> Predicate<T> distinctByName(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+
+    public void addNetworkToUser(String userNumber, Network network) {
+        UserDTO userDTO = userRepository.findOneWithNetworkDTOsByUserNumber(userNumber)
+                .orElseThrow(NotFoundException::new);
+        NetworkDTO networkDTO = networkRepository.findByNetworkNumber(network.getNetworkNumber())
+                .orElseThrow(NotFoundException::new);
+        userDTO.addNetworkDTO(networkDTO);
+        userRepository.save(userDTO);
+    }
+
+    public List<Network> findMyNetworksForUser(String userNumber, NetworkParam networkParam){
+        Page<NetworkDTO> networkDTOs = networkRepository.findByUsersUserNumber(userNumber, getPageRequest(networkParam));
+        return NetworkParser.parseNetworkEntities(networkDTOs.getContent());
+    }
+
+    private PageRequest getPageRequest(NetworkParam pageParam){
+        return PageRequest.of(pageParam.getPage(), pageParam.getSize());
     }
 }

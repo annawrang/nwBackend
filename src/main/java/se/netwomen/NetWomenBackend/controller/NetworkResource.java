@@ -2,28 +2,20 @@ package se.netwomen.NetWomenBackend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-<<<<<<< HEAD:src/main/java/se/netwomen/NetWomenBackend/resource/NetworkResource.java
-import se.netwomen.NetWomenBackend.model.data.User;
-=======
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
->>>>>>> master:src/main/java/se/netwomen/NetWomenBackend/controller/NetworkResource.java
 import se.netwomen.NetWomenBackend.model.data.network.Network;
-import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
-import se.netwomen.NetWomenBackend.model.data.network.tag.AreaTag;
-import se.netwomen.NetWomenBackend.model.data.network.tag.CountryTag;
+
 import se.netwomen.NetWomenBackend.controller.param.NetworkParam;
+import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
 import se.netwomen.NetWomenBackend.service.NetworkService;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -36,42 +28,40 @@ public class NetworkResource {
         this.networkService = networkService;
     }
 
-<<<<<<< HEAD:src/main/java/se/netwomen/NetWomenBackend/resource/NetworkResource.java
-    @POST
-    public Response createNetwork(NetworkForm network) {
-        networkService.saveNetworkForm(network);
-        return Response.status(Response.Status.CREATED).build();
-    }
-
-    @GET
-    @Path("{networkNumber}")
-    public Response getNetwork(@PathParam("networkNumber") String networkNumber){
-        return Response.ok(networkService.getNetwork(networkNumber)).build();
-    }
-    @GET
-    @Path("users/{userNumber}")
-    public Response getNetworks(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
-        return Response.ok(networkService.getAllNetworks(param, userNumber)).build();
-    }
-
-    @GET
-    @Path("/search")
-    public Response getNetworksFilterResults(@BeanParam NetworkParam param){
-        return Response.ok(networkService.getNetworksFilterSearchAutoSuggest(param)).build();
-=======
     @PostMapping
-    public ResponseEntity createNetwork(Network network) {
+    public ResponseEntity createNetwork(NetworkForm network) {
         System.out.println(network.getPictureUrl());
-        networkService.saveNetwork(network);
+        networkService.saveNetworkForm(network);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity getNetworks(@BeanParam NetworkParam param){
-        System.out.println("STORLEK " + param.getForTags().size());
-        param.getForTags().forEach(fortag -> System.out.println(" HWJJJJJ" + fortag));
-        return new ResponseEntity(networkService.getNetworks(param), HttpStatus.OK);
->>>>>>> master:src/main/java/se/netwomen/NetWomenBackend/controller/NetworkResource.java
+    @GetMapping(value="{networkNumber}")
+    public ResponseEntity getNetwork(@PathParam("networkNumber") String networkNumber){
+        return ResponseEntity.ok(networkService.getNetwork(networkNumber));
     }
+
+    @GetMapping(value="users/{userNumber]")
+    public ResponseEntity getNetworks(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
+        return ResponseEntity.ok(networkService.getAllNetworks(param, userNumber));
+    }
+
+    @GetMapping(value="search")
+    public ResponseEntity getNetworksFilterResults(@BeanParam NetworkParam param) {
+        return ResponseEntity.ok(networkService.getNetworksFilterSearchAutoSuggest(param));
+    }
+
+    //adds network to user
+    @PostMapping(value = "current-user/{userNumber}\"")
+    public ResponseEntity addNetworkToUser(@PathParam("userNumber") String userNumber, Network network){
+        networkService.addNetworkToUser(userNumber, network);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value="current-user/{userNumber}")
+    public ResponseEntity findMyNetworksForUser(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
+        return ResponseEntity.ok(networkService.findMyNetworksForUser(userNumber, param));
+    }
+
+
 
 }

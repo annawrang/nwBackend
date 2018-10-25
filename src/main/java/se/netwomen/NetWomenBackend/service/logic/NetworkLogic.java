@@ -3,6 +3,7 @@ package se.netwomen.NetWomenBackend.service.logic;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import se.netwomen.NetWomenBackend.controller.param.NetworkParam;
 import se.netwomen.NetWomenBackend.model.data.network.Network;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkFilter;
 import se.netwomen.NetWomenBackend.model.data.network.NetworkForm;
@@ -13,7 +14,6 @@ import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.CountryTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.NetworkRepository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.network.tag.ForTagRepository;
-import se.netwomen.NetWomenBackend.resource.param.NetworkParam;
 import se.netwomen.NetWomenBackend.service.Parsers.NetworkParser;
 
 import javax.ws.rs.BadRequestException;

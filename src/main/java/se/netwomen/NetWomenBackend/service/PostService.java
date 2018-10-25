@@ -3,20 +3,13 @@ package se.netwomen.NetWomenBackend.service;
 import org.springframework.stereotype.Service;
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.PostComplete;
-<<<<<<< HEAD
-import se.netwomen.NetWomenBackend.repository.DTO.*;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.CommentRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.PostLikeRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.PostRepository;
-import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.repository.UserRepository;
+
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.CommentReplyDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.PostLikeDTO;
-=======
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.*;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Post.post.*;
->>>>>>> master
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.user.UserRepository;
 import se.netwomen.NetWomenBackend.controller.param.PostParam;
