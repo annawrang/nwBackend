@@ -30,7 +30,7 @@ public class NetworkResource {
 
     @POST
     public Response createNetwork(NetworkForm network) {
-        networkService.saveNetwork(network);
+        networkService.saveNetworkForm(network);
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -42,13 +42,13 @@ public class NetworkResource {
     @GET
     @Path("users/{userNumber}")
     public Response getNetworks(@BeanParam NetworkParam param, @PathParam("userNumber") String userNumber){
-        return Response.ok(networkService.getNetworks(param, userNumber)).build();
+        return Response.ok(networkService.getAllNetworks(param, userNumber)).build();
     }
 
     @GET
-    @Path("/filter")
+    @Path("/search")
     public Response getNetworksFilterResults(@BeanParam NetworkParam param){
-        return Response.ok(networkService.getNetworksDropDownFilterResults(param)).build();
+        return Response.ok(networkService.getNetworksFilterSearchAutoSuggest(param)).build();
     }
 
 }

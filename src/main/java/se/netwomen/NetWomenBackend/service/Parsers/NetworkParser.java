@@ -42,41 +42,33 @@ public final class NetworkParser {
         return new CountryTag(country.getName(), areaTags);
     }
 
-    public static AreaTagDTO areaTagToNewEntity(AreaTag areaTag){
-        return new AreaTagDTO(null, areaTag.getName());
-    }
-
     public static AreaTag entityToExsistingAreaTag(AreaTagDTO areaTagDTO){
         return new AreaTag(areaTagDTO.getName());
     }
 
     public static Set<CountryTag> parseCountryTagEntities(Set<CountryTagDTO> countryTagDTOs){
-        return countryTagDTOs
-                .stream()
+        return countryTagDTOs.stream()
                 .map(country ->
                         entityToExistingCountryTag(country, parseAreaTagEntities(country.getAreaTagDTOs())))
                 .collect(Collectors.toSet());
     }
 
     public static List<CountryTag> parseCountryTagEntities(List<CountryTagDTO> countryTagDTOs){
-        return countryTagDTOs
-                .stream()
+        return countryTagDTOs.stream()
                 .map(country ->
                         entityToExistingCountryTag(country, parseAreaTagEntities(country.getAreaTagDTOs())))
                 .collect(Collectors.toList());
     }
 
     public static List<AreaTag> parseAreaTagEntities(Set<AreaTagDTO> areaTagDTOs){
-        return  areaTagDTOs
-                .stream()
+        return  areaTagDTOs.stream()
                 .map(NetworkParser::entityToExsistingAreaTag)
                 .collect(Collectors.toList());
     }
 
     public static Set<ForTag> parseForTagEntities(Set<ForTagDTO> forTagDTOs){
         return forTagDTOs.stream()
-                .map(forTag ->
-                        entityToExsistingForTag(forTag))
+                .map(NetworkParser::entityToExsistingForTag)
                 .collect(Collectors.toSet());
     }
 
@@ -90,9 +82,9 @@ public final class NetworkParser {
     public static List<Network> parseNetworkEntities(List<NetworkDTO> networkDTOs){
         return networkDTOs.stream()
                 .map(network ->
-                        entityToNetwork( network,
-                                parseCountryTagEntities(network.getCountryTags()),
-                                parseForTagEntities(network.getForTags())))
+                        entityToNetwork(network,
+                                        parseCountryTagEntities(network.getCountryTags()),
+                                        parseForTagEntities(network.getForTags())))
                 .collect(Collectors.toList());
     }
 
@@ -111,4 +103,4 @@ public final class NetworkParser {
         }
 
 
-}
+    }

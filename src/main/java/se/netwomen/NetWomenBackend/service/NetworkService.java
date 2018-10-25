@@ -40,101 +40,57 @@ public class NetworkService {
         this.networkLogic = networkLogic;
     }
 
-    public NetworkDTO saveNetwork(NetworkForm network) {
+    public NetworkDTO saveNetworkForm(NetworkForm network) {
         NetworkForm networkForm = networkLogic.addLocationIfNetworkIsGlobal(network);
         networkForm = networkLogic.checkIfImgExists(networkForm);
         return networkRepository.save(NetworkParser.networkToNewEntity( networkForm,
-                                                                        parseCountryTagsIfNotNull(networkForm),
-                                                                        parseForTagsIfNotNull(networkForm)));
+                                                                        networkLogic.parseCountryTagsIfNotNull(networkForm),
+                                                                        networkLogic.parseForTagsIfNotNull(networkForm)));
     }
 
+    public List<Network> getNetwork(String networkNumber) {
+        Network network = networkRepository.findByNetworkNumber(networkNumber)
+                .map(networkDTO ->
+                        NetworkParser.entityToNetwork(networkDTO,
+                                NetworkParser.parseCountryTagEntities(networkDTO.getCountryTags()),
+                                NetworkParser.parseForTagEntities(networkDTO.getForTags())))
+                .orElseThrow(BadRequestException::new);
+        return Arrays.asList(network);
+    }
+
+    public Set<Network> getAllNetworks(NetworkParam param, String userNumber) {
+        List<Network> networks;
+        if(networkLogic.countryParamHasValue(param) && networkLogic.forTagParamHasValue(param)) {
+            networks = networkLogic.findNetworksByForTagNamesAndCountryName(param);
+            if (networkLogic.areaParamHasValue(param)) {
+                networks = networkLogic.findNetworksByAreaTagName(networks, param);
+            }
+            return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
+        }
+        if(networkLogic.countryParamHasValue(param)){
+            networks = networkLogic.findNetworksByCountryTagName(param);
+            if (networkLogic.areaParamHasValue(param)) {
+                networks = networkLogic.findNetworksByAreaTagName(networks, param);
+            }
+            return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
+        }
+        if(networkLogic.forTagParamHasValue(param)){
+            networks = networkLogic.findNetworksByForTagNames(param);
+            return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
+        }
+        networks = networkLogic.findAllNetworks(param);
+        return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
+    }
+
+    public List<NetworkFilter> getNetworksFilterSearchAutoSuggest(NetworkParam param){
+            return networkLogic.filterAndConcatSearchAutosuggestReults(param.getSearchText().toLowerCase());
+    }
 
     public ForTagDTO saveForTag(ForTag forTag) {
-        networkLogic.validateForTagDontExist(forTag);
+        networkLogic.validateForTagDontAlreadyExist(forTag);
         return forTagRepository.save(NetworkParser.forTagtoNewEntity(forTag));
     }
 
-    public List<NetworkFilter> getNetworksDropDownFilterResults(NetworkParam param){
-        if(!"null".equalsIgnoreCase(param.getSearchText())){
-            String searchText = param.getSearchText().toLowerCase();
-            return networkLogic.filterAndConcatSearchReults(searchText);
-        }
-        return null;
-    }
-
-
-    public Set<Network> getNetworks(NetworkParam param, String userNumber) {
-        List<Network> networks;
-        if(networkLogic.countryParamHasValue(param) && networkLogic.forTagParamHasValue(param)) {
-            networks = findNetworksByForTagNamesAndCountryName(param);
-            if (networkLogic.areaParamHasValue(param)) {
-                networks = findNetworksByAreaTagName(networks, param);
-            }
-            return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
-        }
-        if(networkLogic.countryParamHasValue(param)){
-            networks = findNetworksByCountryTagName(param);
-            if (networkLogic.areaParamHasValue(param)) {
-                networks = findNetworksByAreaTagName(networks, param);
-            }
-            return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
-        }
-        if(networkLogic.forTagParamHasValue(param)){
-            networks = findNetworksByForTagNames(param);
-            return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
-        }
-        networks = findAllNetworks(param);
-        return changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
-    }
-
-    private List<Network> findNetworksByForTagNames(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsName(param.getForTag(), getPageRequest(param));
-        return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
-    }
-
-    private Set<Network> changeNetworkToTrueIfUserHasItInMyNetworks(List<Network> networks, String userNumber) {
-        List<Network> myNetworksForUser = findMyNetworksForUser(userNumber);
-        Set<Network> customSet = new HashSet<>();
-        for (Network network : networks) {
-            if(myNetworksForUser.contains(network)){
-                network.setMyNetwork(true); //if duplicate
-                customSet.add(network);
-            } else {
-                network.setMyNetwork(false); // if not duplicate
-                customSet.add(network);
-            }
-        }
-        return customSet;
-    }
-
-    private List<Network> findMyNetworksForUser(String usernumber) {
-        List<NetworkDTO> myNetworkDTOs = networkRepository.findByUsersUserNumber(usernumber);
-        return NetworkParser.parseNetworkEntities(myNetworkDTOs);
-    }
-
-    private List<Network> findNetworksByForTagNamesAndCountryName(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(param.getForTag(), param.getCountry(), getPageRequest(param));
-        return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
-    }
-
-    private List<Network> findNetworksByAreaTagName(List<Network> networks, NetworkParam param) {
-        return networks
-            .stream()
-            .filter(network -> network.getCountryTags().stream()
-                    .flatMap(countryTag ->  countryTag.getAreaTags().stream())
-                    .anyMatch(areaTag -> areaTag.getName().equalsIgnoreCase(param.getArea())))
-            .collect(Collectors.toList());
-    }
-
-    private List<Network> findAllNetworks(NetworkParam param) {
-        Page<NetworkDTO> networkDTOPage = networkRepository.findAll(getPageRequest(param));
-        return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
-    }
-
-    private List<Network> findNetworksByCountryTagName(NetworkParam param) {
-        Page<NetworkDTO> networkDTOPage = networkRepository.findByCountryTagsName(param.getCountry(), getPageRequest(param));
-        return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
-    }
 
 
     public Set<AreaTag> findAreaTagsFromCountryName(String country) {
@@ -156,7 +112,6 @@ public class NetworkService {
         return areaTags.stream().filter(distinctByName(p -> p.getName())).collect(Collectors.toSet());
     }
 
-
     public List<ForTag> getForTags(){
         return forTagRepository.findAll(sortByName).stream()
                 .map(NetworkParser::entityToExsistingForTag)
@@ -174,45 +129,8 @@ public class NetworkService {
         return new TagView(getCountryTags(), getForTags());
     }
 
-    private Set<CountryTagDTO> parseCountryTagsIfNotNull(NetworkForm network){
-        return Optional.ofNullable(network.getLocations())
-                .orElseGet(Collections::emptySet)
-                .stream()
-                .map(NetworkParser::locationToEntity)
-                .collect(Collectors.toSet());
-    }
-
-    private Set<ForTagDTO> parseForTagsIfNotNull(NetworkForm network){
-        Set<ForTagDTO> set = new HashSet<>();
-            Optional.ofNullable(network.getForTags())
-                    .orElseGet(Collections::emptySet)
-                    .stream()
-                    .map(tag ->
-                            forTagRepository.findByName(tag.getName())
-                                    .map(forTag -> set.add(forTag)));
-       return set;
-    }
-
-
-
     private static <T> Predicate<T> distinctByName(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
-
-    private PageRequest getPageRequest(NetworkParam pageParam){
-        return PageRequest.of(pageParam.getPage(), pageParam.getSize());
-    }
-
-    public List<Network> getNetwork(String networkNumber) {
-        Network network = networkRepository.findByNetworkNumber(networkNumber)
-                .map(networkDTO ->
-                        NetworkParser.entityToNetwork(networkDTO,
-                                                        NetworkParser.parseCountryTagEntities(networkDTO.getCountryTags()),
-                                                        NetworkParser.parseForTagEntities(networkDTO.getForTags())))
-                .orElseThrow(BadRequestException::new);
-        return Arrays.asList(network);
-
-    }
-
 }

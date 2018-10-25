@@ -1,5 +1,6 @@
 package se.netwomen.NetWomenBackend.service;
 
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
@@ -92,12 +93,12 @@ public class UserService {
     }
 
     public void addNetworkToUser(String userNumber, Network network) {
-        Optional<UserDTO> userDTO = userRepository.findOneWithNetworkDTOsByUserNumber(userNumber);
-        Optional<NetworkDTO> networkDTO = networkRepository.findByNetworkNumber(network.getNetworkNumber());
-        networkDTO.orElseThrow(NotFoundException::new);
-        userDTO.orElseThrow(NotFoundException::new);
-        userDTO.get().addNetworkDTO(networkDTO.get());
-        userRepository.save(userDTO.get());
+        UserDTO userDTO = userRepository.findOneWithNetworkDTOsByUserNumber(userNumber)
+                .orElseThrow(NotFoundException::new);
+        NetworkDTO networkDTO = networkRepository.findByNetworkNumber(network.getNetworkNumber())
+                .orElseThrow(NotFoundException::new);
+        userDTO.addNetworkDTO(networkDTO);
+        userRepository.save(userDTO);
     }
 
     public List<Network> findMyNetworksForUser(String userNumber, NetworkParam networkParam){

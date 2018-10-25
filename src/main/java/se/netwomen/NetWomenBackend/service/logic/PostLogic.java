@@ -1,6 +1,7 @@
 package se.netwomen.NetWomenBackend.service.logic;
 
 import org.glassfish.jersey.internal.guava.Lists;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.stereotype.Component;
 import se.netwomen.NetWomenBackend.model.data.Post;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.CommentMinimum;
@@ -24,6 +25,7 @@ import se.netwomen.NetWomenBackend.service.Parsers.PostLikeParser;
 import se.netwomen.NetWomenBackend.service.Parsers.PostParser;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
