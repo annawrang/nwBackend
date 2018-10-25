@@ -10,19 +10,64 @@ public class ProfileDTO {
     @Id
     @GeneratedValue
     private Long id;
-    private String description;
+    private String mission;
+    private String areasExpertise;
+    private String profilePicLink;
+    private String backgroundPicLink;
+    private String profileNumber;
     @OneToOne
     @JoinColumn(unique = true)
     private UserDTO user;
 
-    protected ProfileDTO(){}
+    protected ProfileDTO() {
+    }
 
     public ProfileDTO(String description, UserDTO user) {
-        this.description = description;
+        this.mission = description;
         this.user = user;
     }
 
-    public ProfileDTO(UserDTO user){
+    public String getProfileNumber() {
+        return profileNumber;
+    }
+
+    public void setProfileNumber(String profileNumber) {
+        this.profileNumber = profileNumber;
+    }
+
+    public void setMission(String mission) {
+        this.mission = mission;
+    }
+
+    public String getAreasExpertise() {
+        return areasExpertise;
+    }
+
+    public void setAreasExpertise(String areasExpertise) {
+        this.areasExpertise = areasExpertise;
+    }
+
+    public String getProfilePicLink() {
+        return profilePicLink;
+    }
+
+    public void setProfilePicLink(String profilePicLink) {
+        this.profilePicLink = profilePicLink;
+    }
+
+    public String getBackgroundPicLink() {
+        return backgroundPicLink;
+    }
+
+    public void setBackgroundPicLink(String backgroundPicLink) {
+        this.backgroundPicLink = backgroundPicLink;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
+    public ProfileDTO(UserDTO user) {
         this.user = user;
     }
 
@@ -30,8 +75,8 @@ public class ProfileDTO {
         return id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMission() {
+        return mission;
     }
 
     public UserDTO getUser() {

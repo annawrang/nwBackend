@@ -9,13 +9,16 @@ public class CommentMinimum {
     private LocalDateTime date;
     private List<CommentReply> commentReplies;
     private String commentNumber;
+    private List<CommentLike> commentLikes;
 
-    public CommentMinimum(UserMinimum user, String text, LocalDateTime date, List<CommentReply> commentReplies, String commentNumber) {
+    public CommentMinimum(UserMinimum user, String text, LocalDateTime date, List<CommentReply> commentReplies,
+                          String commentNumber, List<CommentLike> commentLikes) {
         this.user = user;
         this.text = text;
         this.date = date;
         this.commentReplies = commentReplies;
         this.commentNumber = commentNumber;
+        this.commentLikes = commentLikes;
     }
 
     public CommentMinimum(UserMinimum user, String text, LocalDateTime date) {
@@ -46,5 +49,9 @@ public class CommentMinimum {
 
     public void setCommentNumber(String commentNumber) {
         this.commentNumber = commentNumber;
+    }
+
+    public List<CommentLike> getCommentLikes() {
+        return commentLikes;
     }
 }

@@ -3,7 +3,6 @@ package se.netwomen.NetWomenBackend.model.data;
 import se.netwomen.NetWomenBackend.model.data.PostComplete.UserMinimum;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 public final class Post {
 

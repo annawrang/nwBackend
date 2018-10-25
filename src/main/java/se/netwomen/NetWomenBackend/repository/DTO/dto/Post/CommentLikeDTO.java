@@ -9,32 +9,30 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-public class PostDTO {
+public class CommentLikeDTO  {
     @Id
     @GeneratedValue
     private Long id;
     @ManyToOne
     private UserDTO user;
-    private String pictureUrl;
-    private String text;
+    @ManyToOne
+    private CommentDTO comment;
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonFormat(pattern="dd/MM/yyyy hh:mm")
+    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
     private LocalDateTime date;
-    private String postNumber;
+    private String commentLikeNumber;
 
-    protected PostDTO() {
+    protected CommentLikeDTO() {
     }
 
-    public PostDTO(UserDTO user, String pictureUrl, String text, LocalDateTime creationTimestamp, String postNumber) {
+    public CommentLikeDTO(UserDTO user, CommentDTO comment, LocalDateTime date, String commentLikeNumber) {
         this.user = user;
-        this.pictureUrl = pictureUrl;
-        this.text = text;
-        this.date = creationTimestamp;
-        this.postNumber = postNumber;
+        this.comment = comment;
+        this.date = date;
+        this.commentLikeNumber = commentLikeNumber;
     }
 
     public Long getId() {
@@ -45,33 +43,15 @@ public class PostDTO {
         return user;
     }
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public String getText() {
-        return text;
+    public CommentDTO getComment() {
+        return comment;
     }
 
     public LocalDateTime getDate() {
         return date;
     }
 
-    public PostDTO setUserDTO(UserDTO userDTO) {
-        this.user = userDTO;
-        return this;
-    }
-
-    public String getPostNumber() {
-        return postNumber;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public PostDTO setText(String text) {
-        this.text = text;
-        return this;
+    public String getCommentLikeNumber() {
+        return commentLikeNumber;
     }
 }
