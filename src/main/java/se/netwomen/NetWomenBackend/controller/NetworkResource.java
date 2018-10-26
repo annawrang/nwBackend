@@ -36,18 +36,18 @@ public class NetworkResource {
     }
 
     @GetMapping(value="users/{userNumber]")
-    public ResponseEntity getNetworks(@PathVariable("userNumber") String userNumber,@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+    public ResponseEntity getNetworks(@PathVariable("userNumber") String userNumber,
+                                      @RequestParam(name = "page", defaultValue = "0", required = false) int page,
                                       @RequestParam(name = "size", defaultValue = "18", required = false) int size,
-                                      @RequestParam(name = "country", defaultValue = "null", required = false) String country,
+                                      @RequestParam(name = "country", required = false) String country,
                                       @RequestParam(name = "area", required = false) String area,
-                                      @RequestParam(name = "fortag",  required = false) String fortag,
-                                      @RequestParam(name = "search", required = false) String search){
-        return ResponseEntity.ok(networkService.getAllNetworks(userNumber, page, size, country, area, fortag,search));
+                                      @RequestParam(name = "fortag",  required = false) String fortag){
+        return ResponseEntity.ok(networkService.getAllNetworks(userNumber, page, size, country, area, fortag));
     }
 
     @GetMapping(value="search")
-    public ResponseEntity getNetworksFilterResults(@BeanParam NetworkParam param) {
-        return ResponseEntity.ok(networkService.getNetworksFilterSearchAutoSuggest(param));
+    public ResponseEntity getNetworksFilterResults( @RequestParam(name = "search", required = false) String search) {
+        return ResponseEntity.ok(networkService.getNetworksFilterSearchAutoSuggest(search));
     }
 
     //adds network to user
@@ -58,10 +58,10 @@ public class NetworkResource {
     }
 
     @GetMapping(value="current-user/{userNumber}")
-    public ResponseEntity findMyNetworksForUser(@BeanParam NetworkParam param, @PathVariable("userNumber") String userNumber){
-        return ResponseEntity.ok(networkService.findMyNetworksForUser(userNumber, param));
+    public ResponseEntity findMyNetworksForUser( @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                 @RequestParam(name = "size", defaultValue = "18", required = false) int size,
+                                                 @PathVariable("userNumber") String userNumber){
+        return ResponseEntity.ok(networkService.findMyNetworksForUser(userNumber, page, size));
     }
-
-
 
 }

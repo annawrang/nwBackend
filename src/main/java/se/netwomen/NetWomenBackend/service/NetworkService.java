@@ -62,32 +62,32 @@ public class NetworkService {
         return Arrays.asList(network);
     }
 
-    public Set<Network> getAllNetworks(String userNumber, int page, int size, String country, String area, String forTag, String search) {
+    public Set<Network> getAllNetworks(String userNumber, int page, int size, String country, String area, String forTag) {
         List<Network> networks;
         if(networkLogic.paramHasValue(country) && networkLogic.paramHasValue(forTag)) {
-            networks = networkLogic.findNetworksByForTagNamesAndCountryName(page, size);
+            networks = networkLogic.findNetworksByForTagNamesAndCountryName(getPageRequest(page, size), forTag, country);
             if (networkLogic.paramHasValue(area)) {
-                networks = networkLogic.findNetworksByAreaTagName(networks, param);
+                networks = networkLogic.findNetworksByAreaTagName(networks, area);
             }
             return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
         if(networkLogic.paramHasValue(country)){
-            networks = networkLogic.findNetworksByCountryTagName(param);
+            networks = networkLogic.findNetworksByCountryTagName(getPageRequest(page, size), country);
             if (networkLogic.paramHasValue(area)) {
-                networks = networkLogic.findNetworksByAreaTagName(networks, param);
+                networks = networkLogic.findNetworksByAreaTagName(networks, area);
             }
             return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
         if(networkLogic.paramHasValue(forTag)){
-            networks = networkLogic.findNetworksByForTagNames(param);
+            networks = networkLogic.findNetworksByForTagNames(getPageRequest(page, size), forTag);
             return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
-        networks = networkLogic.findAllNetworks(param);
+        networks = networkLogic.findAllNetworks(getPageRequest(page, size));
         return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
     }
 
-    public List<NetworkFilter> getNetworksFilterSearchAutoSuggest(NetworkParam param){
-            return networkLogic.filterAndConcatSearchAutosuggestReults(param.getSearchText().toLowerCase());
+    public List<NetworkFilter> getNetworksFilterSearchAutoSuggest(String search){
+            return networkLogic.filterAndConcatSearchAutosuggestReults(search.toLowerCase());
     }
 
     public ForTagDTO saveForTag(ForTag forTag) {
@@ -148,12 +148,12 @@ public class NetworkService {
         userRepository.save(userDTO);
     }
 
-    public List<Network> findMyNetworksForUser(String userNumber, NetworkParam networkParam){
-        Page<NetworkDTO> networkDTOs = networkRepository.findByUsersUserNumber(userNumber, getPageRequest(networkParam));
+    public List<Network> findMyNetworksForUser(String userNumber, int page, int size){
+        Page<NetworkDTO> networkDTOs = networkRepository.findByUsersUserNumber(userNumber, getPageRequest(page, size));
         return NetworkParser.parseNetworkEntities(networkDTOs.getContent());
     }
 
-    private PageRequest getPageRequest(NetworkParam pageParam){
-        return PageRequest.of(pageParam.getPage(), pageParam.getSize());
+    private PageRequest getPageRequest(int page, int size){
+        return PageRequest.of(page, size);
     }
 }

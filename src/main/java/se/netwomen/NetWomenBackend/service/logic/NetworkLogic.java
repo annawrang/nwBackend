@@ -61,8 +61,8 @@ public final class NetworkLogic {
                 .ifPresent(forTagDTO ->  new BadRequestException());
     }
 
-    public List<Network> findNetworksByForTagNames(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsName(param.getForTag(), getPageRequest(param));
+    public List<Network> findNetworksByForTagNames(PageRequest pageRequest, String forTag){
+        Page<NetworkDTO> networkDTOPage = networkRepository.findByForTagsName(forTag, pageRequest);
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
@@ -86,27 +86,27 @@ public final class NetworkLogic {
         return NetworkParser.parseNetworkEntities(myNetworkDTOs);
     }
 
-    public List<Network> findNetworksByForTagNamesAndCountryName(int page, int size, String fortag, String country){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(fortag, country, getPageRequest(page, size));
+    public List<Network> findNetworksByForTagNamesAndCountryName(PageRequest pageRequest, String fortag, String country){
+        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(fortag, country, pageRequest);
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
-    public List<Network> findNetworksByAreaTagName(List<Network> networks, NetworkParam param) {
+    public List<Network> findNetworksByAreaTagName(List<Network> networks, String area) {
         return networks
                 .stream()
                 .filter(network -> network.getCountryTags().stream()
                         .flatMap(countryTag ->  countryTag.getAreaTags().stream())
-                        .anyMatch(areaTag -> areaTag.getName().equalsIgnoreCase(param.getArea())))
+                        .anyMatch(areaTag -> areaTag.getName().equalsIgnoreCase(area)))
                 .collect(Collectors.toList());
     }
 
-    public List<Network> findAllNetworks(NetworkParam param) {
-        Page<NetworkDTO> networkDTOPage = networkRepository.findAll(getPageRequest(param));
+    public List<Network> findAllNetworks(PageRequest pageRequest) {
+        Page<NetworkDTO> networkDTOPage = networkRepository.findAll(pageRequest);
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
-    public List<Network> findNetworksByCountryTagName(NetworkParam param) {
-        Page<NetworkDTO> networkDTOPage = networkRepository.findByCountryTagsName(param.getCountry(), getPageRequest(param));
+    public List<Network> findNetworksByCountryTagName(PageRequest pageRequest, String country) {
+        Page<NetworkDTO> networkDTOPage = networkRepository.findByCountryTagsName(country, pageRequest);
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
@@ -165,10 +165,6 @@ public final class NetworkLogic {
                         forTagRepository.findByName(tag.getName())
                                 .map(forTag -> set.add(forTag)));
         return set;
-    }
-
-    private PageRequest getPageRequest(int page, int size){
-        return PageRequest.of(page, size);
     }
 
 }
