@@ -47,17 +47,14 @@ public final class NetworkLogic {
 
 
     //getNetworks filter
-    public boolean countryParamHasValue(NetworkParam param){
-        return !(param.getCountry() == null || param.getCountry().equals("null"));
+    public boolean paramHasValue(String param){
+        return !(param== null || param.equals("null"));
     }
-
-    public boolean forTagParamHasValue(NetworkParam param){
+/*
+    public boolean forTagParamHasValue(){
         return !(param.getForTag() == null || param.getForTag().equals("null") ||  param.getForTag().equals(""));
     }
-
-    public boolean areaParamHasValue(NetworkParam param){
-        return !(param.getArea() == null|| param.getArea().equals("null"));
-    }
+*/
 
     public void validateForTagDontAlreadyExist(ForTag forTag) {
         forTagRepository.findByName(forTag.getName())
@@ -89,8 +86,8 @@ public final class NetworkLogic {
         return NetworkParser.parseNetworkEntities(myNetworkDTOs);
     }
 
-    public List<Network> findNetworksByForTagNamesAndCountryName(NetworkParam param){
-        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(param.getForTag(), param.getCountry(), getPageRequest(param));
+    public List<Network> findNetworksByForTagNamesAndCountryName(int page, int size, String fortag, String country){
+        Page<NetworkDTO> networkDTOPage = networkRepository.findDistinctByForTagsNameInAndCountryTagsName(fortag, country, getPageRequest(page, size));
         return NetworkParser.parseNetworkEntities(networkDTOPage.getContent());
     }
 
@@ -170,8 +167,8 @@ public final class NetworkLogic {
         return set;
     }
 
-    private PageRequest getPageRequest(NetworkParam pageParam){
-        return PageRequest.of(pageParam.getPage(), pageParam.getSize());
+    private PageRequest getPageRequest(int page, int size){
+        return PageRequest.of(page, size);
     }
 
 }

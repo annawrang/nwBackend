@@ -62,23 +62,23 @@ public class NetworkService {
         return Arrays.asList(network);
     }
 
-    public Set<Network> getAllNetworks(NetworkParam param, String userNumber) {
+    public Set<Network> getAllNetworks(String userNumber, int page, int size, String country, String area, String forTag, String search) {
         List<Network> networks;
-        if(networkLogic.countryParamHasValue(param) && networkLogic.forTagParamHasValue(param)) {
-            networks = networkLogic.findNetworksByForTagNamesAndCountryName(param);
-            if (networkLogic.areaParamHasValue(param)) {
+        if(networkLogic.paramHasValue(country) && networkLogic.paramHasValue(forTag)) {
+            networks = networkLogic.findNetworksByForTagNamesAndCountryName(page, size);
+            if (networkLogic.paramHasValue(area)) {
                 networks = networkLogic.findNetworksByAreaTagName(networks, param);
             }
             return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
-        if(networkLogic.countryParamHasValue(param)){
+        if(networkLogic.paramHasValue(country)){
             networks = networkLogic.findNetworksByCountryTagName(param);
-            if (networkLogic.areaParamHasValue(param)) {
+            if (networkLogic.paramHasValue(area)) {
                 networks = networkLogic.findNetworksByAreaTagName(networks, param);
             }
             return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
-        if(networkLogic.forTagParamHasValue(param)){
+        if(networkLogic.paramHasValue(forTag)){
             networks = networkLogic.findNetworksByForTagNames(param);
             return networkLogic.changeNetworkToTrueIfUserHasItInMyNetworks(networks, userNumber);
         }
