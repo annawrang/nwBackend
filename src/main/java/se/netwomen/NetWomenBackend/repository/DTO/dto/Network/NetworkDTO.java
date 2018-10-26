@@ -94,4 +94,7 @@ public class NetworkDTO {
         return users;
     }
 
+    public void removeForTag(ForTagDTO forTag) {
+        this.forTags.remove(forTag);
+    }
 }

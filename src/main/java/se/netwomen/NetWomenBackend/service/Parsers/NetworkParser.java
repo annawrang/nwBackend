@@ -103,4 +103,7 @@ public final class NetworkParser {
         }
 
 
+    public static NetworkDTO networkToUpdateEntity(NetworkDTO networkDTO, NetworkForm network,  Set<CountryTagDTO> countryTagDTOs, Set<ForTagDTO> forTags ) {
+        return new NetworkDTO(networkDTO.getId(), network.getName(),  network.getDescription(), network.getLink(), network.getPictureUrl(), countryTagDTOs, forTags, null, null, null, networkDTO.getNetworkNumber());
     }
+}

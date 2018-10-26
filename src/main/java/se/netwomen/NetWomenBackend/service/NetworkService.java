@@ -1,5 +1,6 @@
 package se.netwomen.NetWomenBackend.service;
 
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -155,5 +156,27 @@ public class NetworkService {
 
     private PageRequest getPageRequest(int page, int size){
         return PageRequest.of(page, size);
+    }
+
+    public void deleteForTag(String name) {
+        ForTagDTO forTagDTO = forTagRepository.findByName(name).orElseThrow(NotFoundException::new);
+        List<NetworkDTO> networks = networkRepository.findByForTags(forTagDTO);
+        for (NetworkDTO networkDTO: networks){
+            for (ForTagDTO forTag: networkDTO.getForTags()){
+                if(forTag.getName().equalsIgnoreCase(forTagDTO.getName())){
+                    networkDTO.removeForTag(forTag);
+                }
+            }
+        }
+        forTagRepository.delete(forTagDTO);
+    }
+
+    public void updateNetwork(String networkNumber, NetworkForm networkForm) {
+        NetworkDTO network = networkRepository.findByNetworkNumber(networkNumber)
+                .map(networkDTO -> NetworkParser.networkToUpdateEntity(networkDTO, networkForm, networkLogic.parseCountryTagsIfNotNull(networkForm),
+                        networkLogic.parseForTagsIfNotNull(networkForm)))
+                .orElseThrow(NotFoundException::new);
+        networkRepository.save(network);
+
     }
 }

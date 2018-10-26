@@ -35,6 +35,12 @@ public class NetworkResource {
         return ResponseEntity.ok(networkService.getNetwork(networkNumber));
     }
 
+    @PutMapping(value="{networkNumber}")
+    public ResponseEntity updateNetwork(@PathVariable("networkNumber") String networkNumber, @RequestBody NetworkForm networkForm){
+        networkService.updateNetwork(networkNumber, networkForm);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping(value="users/{userNumber}")
     public ResponseEntity getNetworks(@PathVariable("userNumber") String userNumber,
                                       @RequestParam(name = "page", defaultValue = "0", required = false) int page,

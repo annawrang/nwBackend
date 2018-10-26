@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.NetworkDTO;
+import se.netwomen.NetWomenBackend.repository.DTO.dto.Network.Tag.ForTagDTO;
 import se.netwomen.NetWomenBackend.repository.DTO.dto.User.UserDTO;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface NetworkRepository extends JpaRepository<NetworkDTO, Long> {
     Page<NetworkDTO> findByNameContainingIgnoreCase(String name, Pageable pageable);
     Page<NetworkDTO> findByUsersUserNumber(String userNumber, Pageable pageable);
     List<NetworkDTO> findByUsersUserNumber(String userNumber);
+
+    List<NetworkDTO> findByForTags(ForTagDTO forTagDTO);
 }

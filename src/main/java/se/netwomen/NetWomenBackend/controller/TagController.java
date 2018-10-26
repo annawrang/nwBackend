@@ -30,6 +30,12 @@ public class TagController {
         return ResponseEntity.ok(networkService.getForTags());
     }
 
+    @DeleteMapping(value = "for/{name}")
+    public ResponseEntity delteForTags(@PathVariable("name") String name){
+        networkService.deleteForTag(name);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping()
     public ResponseEntity getUsedTags() {
         return new ResponseEntity(networkService.getUsedTags(), HttpStatus.OK);
