@@ -20,15 +20,24 @@ public class TagController {
         this.networkService = networkService;
     }
 
-    @PostMapping(path = "/for")
+    @PostMapping(path = "for")
     public ResponseEntity createForTag(@RequestBody ForTag forTag) {
         networkService.saveForTag(forTag);
         return new ResponseEntity(HttpStatus.OK);
     }
+    @GetMapping(value = "for")
+    public ResponseEntity getForTags(){
+        return ResponseEntity.ok(networkService.getForTags());
+    }
 
-    @GetMapping(path = "/used")
+    @GetMapping()
     public ResponseEntity getUsedTags() {
         return new ResponseEntity(networkService.getUsedTags(), HttpStatus.OK);
+    }
+
+    @GetMapping(value ="{countryName}")
+    public ResponseEntity findAreaTagsFromCountryName(@PathVariable("countryName") String country){
+        return ResponseEntity.ok(networkService.findAreaTagsFromCountryName(country));
     }
 
 }

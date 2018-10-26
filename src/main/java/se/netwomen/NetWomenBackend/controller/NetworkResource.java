@@ -24,7 +24,7 @@ public class NetworkResource {
     }
 
     @PostMapping
-    public ResponseEntity createNetwork(NetworkForm network) {
+    public ResponseEntity createNetwork(@RequestBody NetworkForm network) {
         System.out.println(network.getPictureUrl());
         networkService.saveNetworkForm(network);
         return new ResponseEntity(HttpStatus.CREATED);
@@ -35,13 +35,14 @@ public class NetworkResource {
         return ResponseEntity.ok(networkService.getNetwork(networkNumber));
     }
 
-    @GetMapping(value="users/{userNumber]")
+    @GetMapping(value="users/{userNumber}")
     public ResponseEntity getNetworks(@PathVariable("userNumber") String userNumber,
                                       @RequestParam(name = "page", defaultValue = "0", required = false) int page,
                                       @RequestParam(name = "size", defaultValue = "18", required = false) int size,
                                       @RequestParam(name = "country", required = false) String country,
                                       @RequestParam(name = "area", required = false) String area,
                                       @RequestParam(name = "fortag",  required = false) String fortag){
+        System.out.println("halla" + userNumber);
         return ResponseEntity.ok(networkService.getAllNetworks(userNumber, page, size, country, area, fortag));
     }
 
@@ -52,7 +53,7 @@ public class NetworkResource {
 
     //adds network to user
     @PostMapping(value = "current-user/{userNumber}")
-    public ResponseEntity addNetworkToUser(@PathVariable("userNumber") String userNumber, Network network){
+    public ResponseEntity addNetworkToUser(@PathVariable("userNumber") String userNumber, @RequestBody Network network){
         networkService.addNetworkToUser(userNumber, network);
         return ResponseEntity.noContent().build();
     }
